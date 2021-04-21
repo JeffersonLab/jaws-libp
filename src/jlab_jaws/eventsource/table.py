@@ -1,0 +1,91 @@
+from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING
+from confluent_kafka.serialization import SerializationError
+
+
+class EventSourceTable:
+    __slots__ = ['_hash', '_config', '_on_initial_state', '_on_state_update', '_state', '_default_conf',
+                 '_empty', '_high', '_low', '_run']
+
+    def __init__(self, config, on_initial_state, on_state_update):
+        self._config = config
+        self._on_initial_state = on_initial_state
+        self._on_state_update = on_state_update
+
+        self._run = True
+        self._low = None
+        self._high = None
+        self._empty = False
+        self._default_conf = {}
+        self._state = {}
+
+        consumer_conf = {'bootstrap.servers': config['bootstrap.servers'],
+                         'key.deserializer': config['key.deserializer'],
+                         'value.deserializer': config['value.deserializer'],
+                         'group.id': config['group.id']}
+
+        c = DeserializingConsumer(consumer_conf)
+        c.subscribe([config['topic']], on_assign=self._my_on_assign)
+
+        while True:
+            try:
+                msg = c.poll(1.0)
+
+            except SerializationError as e:
+                print("Message deserialization failed for {}: {}".format(msg, e))
+                break
+
+            if self._empty:
+                break
+
+            if msg is None:
+                continue
+
+            if msg.error():
+                print("AvroConsumer error: {}".format(msg.error()))
+                continue
+
+            if msg.value() is None:
+                del self._state[msg.key()]
+            else:
+                self._state[msg.key()] = msg
+
+            if msg.offset() + 1 == self._high:
+                break
+
+        self._on_initial_state(self._state)
+
+        if not config['monitor']:
+            self._run = False
+
+        while self._run:
+            try:
+                msg = c.poll(1.0)
+
+            except SerializationError as e:
+                print("Message deserialization failed for {}: {}".format(msg, e))
+                break
+
+            if msg is None:
+                continue
+
+            if msg.error():
+                print("AvroConsumer error: {}".format(msg.error()))
+                continue
+
+            self._on_state_update(self._state)
+
+        c.close()
+
+    def stop(self):
+        self._run = False
+
+    def _my_on_assign(self, consumer, partitions):
+
+        for p in partitions:
+            p.offset = OFFSET_BEGINNING
+            self._low, self._high = consumer.get_watermark_offsets(p)
+
+            if self._high == 0:
+                self._empty = True
+
+        consumer.assign(partitions)
