@@ -63,7 +63,7 @@ class AvroSerializerWithReferences(AvroSerializer):
                              .format(", ".join(conf_copy.keys())))
 
         schema_dict = loads(schema.schema_str)
-        parsed_schema = parse_schema(schema_dict, _named_schemas=self._named_schemas)
+        parsed_schema = parse_schema(schema_dict, named_schemas=self._named_schemas)
         schema_name = parsed_schema.get('name', schema_dict['type'])
 
         self._schema = schema
@@ -140,7 +140,7 @@ class AvroDeserializerWithReferences(AvroDeserializer):
                 schema = self._registry.get_schema(schema_id)
                 prepared_schema = _schema_loads(schema.schema_str)
                 writer_schema = parse_schema(loads(
-                    prepared_schema.schema_str), _named_schemas=self._named_schemas)
+                    prepared_schema.schema_str), named_schemas=self._named_schemas)
                 self._writer_schemas[schema_id] = writer_schema
 
             obj_dict = schemaless_reader(payload,
