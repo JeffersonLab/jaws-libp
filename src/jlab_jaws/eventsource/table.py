@@ -39,6 +39,15 @@ class EventSourceTable:
             | ``value.deserializer``  | callable            |                                                     |
             |                         |                     | Deserializer used for message values.               |
             +-------------------------+---------------------+-----------------------------------------------------+
+            +-------------------------+---------------------+-----------------------------------------------------+
+            |                         |                     | Kafka topic name to consume messages from           |
+            | ``topic``               | str                 |                                                     |
+            |                         |                     |                                                     |
+            +-------------------------+---------------------+-----------------------------------------------------+
+            |                         |                     | True to monitor continuously, False to stop after   |
+            | ``monitor``             | bool                | determining initial state.  Defaults to False.      |
+            |                         |                     |                                                     |
+            +-------------------------+---------------------+-----------------------------------------------------+
 
          """
         self._config = config
