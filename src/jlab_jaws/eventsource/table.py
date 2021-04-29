@@ -1,12 +1,46 @@
+"""A module for Event Sourcing
+"""
 from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING
 from confluent_kafka.serialization import SerializationError
 
 
 class EventSourceTable:
+    """This class provides an Event Source Table abstraction.
+    """
+
     __slots__ = ['_hash', '_config', '_on_initial_state', '_on_state_update', '_state', '_default_conf',
                  '_empty', '_high', '_low', '_run']
 
     def __init__(self, config, on_initial_state, on_state_update):
+        """Create an EventSourceTable instance.
+
+         Args:
+             config (dict): Configuration
+             on_initial_state (callable(dict): Callback providing initial state of EventSourceTable
+             on_state_update (callable(dict)): Callback providing updated state
+
+         Note:
+             The configuration options include:
+
+            +-------------------------+---------------------+-----------------------------------------------------+
+            | Property Name           | Type                | Description                                         |
+            +=========================+=====================+=====================================================+
+            | ``bootstrap.servers``   | str                 | Comma-separated list of brokers.                    |
+            +-------------------------+---------------------+-----------------------------------------------------+
+            |                         |                     | Client group id string.                             |
+            | ``group.id``            | str                 | All clients sharing the same group.id belong to the |
+            |                         |                     | same group.                                         |
+            +-------------------------+---------------------+-----------------------------------------------------+
+            |                         |                     | Callable(SerializationContext, bytes) -> obj        |
+            | ``key.deserializer``    | callable            |                                                     |
+            |                         |                     | Deserializer used for message keys.                 |
+            +-------------------------+---------------------+-----------------------------------------------------+
+            |                         |                     | Callable(SerializationContext, bytes) -> obj        |
+            | ``value.deserializer``  | callable            |                                                     |
+            |                         |                     | Deserializer used for message values.               |
+            +-------------------------+---------------------+-----------------------------------------------------+
+
+         """
         self._config = config
         self._on_initial_state = on_initial_state
         self._on_state_update = on_state_update
@@ -77,6 +111,10 @@ class EventSourceTable:
         c.close()
 
     def stop(self):
+        """
+            Stop monitoring for state updates.
+        """
+
         self._run = False
 
     def _my_on_assign(self, consumer, partitions):
