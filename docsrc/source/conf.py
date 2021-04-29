@@ -12,7 +12,9 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath(os.path.join("..", "../src")))
+sys.path.insert(0, os.path.abspath("../../src"))
+
+print(sys.path)
 
 
 # -- Project information -----------------------------------------------------
@@ -40,6 +42,9 @@ extensions = [
     'sphinx_rtd_theme',
 ]
 
+autosummary_generate = True
+html_theme = "sphinx_rtd_theme"
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -51,12 +56,12 @@ exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
-html_theme = 'alabaster'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+source_suffix = ['.rst', '.md']
+
+master_doc = 'index'

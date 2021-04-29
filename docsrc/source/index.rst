@@ -6,14 +6,14 @@
 Welcome to jlab-jaws's documentation!
 =====================================
 
+Contents:
+
 .. autosummary::
   :toctree: _autosummary
   :template: custom-module-template.rst
   :recursive:
 
   jlab_jaws
-
-
 
 Indices and tables
 ==================
