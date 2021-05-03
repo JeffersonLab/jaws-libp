@@ -1,0 +1,6 @@
+jlab\_jaws.avro.subject\_schemas.serde.to\_dict\_registered\_alarm
+==================================================================
+
+.. currentmodule:: jlab_jaws.avro.subject_schemas.serde
+
+.. autofunction:: to_dict_registered_alarm

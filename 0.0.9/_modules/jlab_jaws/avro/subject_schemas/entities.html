@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>jlab_jaws.avro.subject_schemas.entities &mdash; jlab-jaws 0.0.6 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<link href="../../../../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> jlab-jaws
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/jlab_jaws.html">jlab_jaws</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">jlab-jaws</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>jlab_jaws.avro.subject_schemas.entities</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for jlab_jaws.avro.subject_schemas.entities</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Python entities corresponding to AVRO schemas.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">jlab_jaws.avro.referenced_schemas.entities</span> <span class="kn">import</span> <span class="n">AlarmClass</span><span class="p">,</span> <span class="n">AlarmLocation</span><span class="p">,</span> <span class="n">AlarmCategory</span><span class="p">,</span> <span class="n">AlarmPriority</span>
+
+
+<div class="viewcode-block" id="AlarmState"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.AlarmState.html#jlab_jaws.avro.subject_schemas.entities.AlarmState">[docs]</a><span class="k">class</span> <span class="nc">AlarmState</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">NormalDisabled</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">Disabled</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">NormalFiltered</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">Filtered</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">Masked</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">OnDelayed</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">OneShotShelved</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">NormalContinuousShelved</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">ContinuousShelved</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">OffDelayed</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">NormalLatched</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">Latched</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">Active</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">Normal</span> <span class="o">=</span> <span class="mi">14</span></div>
+
+
+<div class="viewcode-block" id="OverriddenAlarmType"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.OverriddenAlarmType.html#jlab_jaws.avro.subject_schemas.entities.OverriddenAlarmType">[docs]</a><span class="k">class</span> <span class="nc">OverriddenAlarmType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">Disabled</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">Filtered</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">Masked</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">OnDelayed</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">OffDelayed</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">Shelved</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">Latched</span> <span class="o">=</span> <span class="mi">7</span></div>
+
+
+<div class="viewcode-block" id="EPICSSEVR"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.EPICSSEVR.html#jlab_jaws.avro.subject_schemas.entities.EPICSSEVR">[docs]</a><span class="k">class</span> <span class="nc">EPICSSEVR</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">NO_ALARM</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">MINOR</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">MAJOR</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">INVALID</span> <span class="o">=</span> <span class="mi">4</span></div>
+
+
+<div class="viewcode-block" id="EPICSSTAT"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.EPICSSTAT.html#jlab_jaws.avro.subject_schemas.entities.EPICSSTAT">[docs]</a><span class="k">class</span> <span class="nc">EPICSSTAT</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">NO_ALARM</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">READ</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">WRITE</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">HIHI</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">HIGH</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">LOLO</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">LOW</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">STATE</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">COS</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">COMM</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">TIMEOUT</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">HW_LIMIT</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">CALC</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">SCAN</span> <span class="o">=</span> <span class="mi">14</span>
+    <span class="n">LINK</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">SOFT</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">BAD_SUB</span> <span class="o">=</span> <span class="mi">17</span>
+    <span class="n">UDF</span> <span class="o">=</span> <span class="mi">18</span>
+    <span class="n">DISABLE</span> <span class="o">=</span> <span class="mi">19</span>
+    <span class="n">SIMM</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">READ_ACCESS</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">WRITE_ACCESS</span> <span class="o">=</span> <span class="mi">22</span></div>
+
+
+<div class="viewcode-block" id="SimpleAlarming"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.SimpleAlarming.html#jlab_jaws.avro.subject_schemas.entities.SimpleAlarming">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">SimpleAlarming</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simple alarming record (no fields)</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoteAlarming"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.NoteAlarming.html#jlab_jaws.avro.subject_schemas.entities.NoteAlarming">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">NoteAlarming</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An alarming record with a note</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">note</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="EPICSAlarming"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.EPICSAlarming.html#jlab_jaws.avro.subject_schemas.entities.EPICSAlarming">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">EPICSAlarming</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An EPICS alarming record</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sevr</span><span class="p">:</span> <span class="n">EPICSSEVR</span>
+    <span class="n">stat</span><span class="p">:</span> <span class="n">EPICSSTAT</span></div>
+
+
+<div class="viewcode-block" id="SimpleProducer"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.SimpleProducer.html#jlab_jaws.avro.subject_schemas.entities.SimpleProducer">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">SimpleProducer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simple alarm producer (no fields)</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="EPICSProducer"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.EPICSProducer.html#jlab_jaws.avro.subject_schemas.entities.EPICSProducer">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">EPICSProducer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        EPICS alarm producer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="CALCProducer"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.CALCProducer.html#jlab_jaws.avro.subject_schemas.entities.CALCProducer">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CALCProducer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        CALC expression alarm producer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="DisabledAlarm"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.DisabledAlarm.html#jlab_jaws.avro.subject_schemas.entities.DisabledAlarm">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">DisabledAlarm</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disabled override</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">comments</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="FilteredAlarm"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.FilteredAlarm.html#jlab_jaws.avro.subject_schemas.entities.FilteredAlarm">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">FilteredAlarm</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filtered override</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">filtername</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="LatchedAlarm"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.LatchedAlarm.html#jlab_jaws.avro.subject_schemas.entities.LatchedAlarm">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">LatchedAlarm</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Latched override</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">placeholder</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="MaskedAlarm"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.MaskedAlarm.html#jlab_jaws.avro.subject_schemas.entities.MaskedAlarm">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">MaskedAlarm</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Masked override</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">placeholder</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="OnDelayedAlarm"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.OnDelayedAlarm.html#jlab_jaws.avro.subject_schemas.entities.OnDelayedAlarm">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">OnDelayedAlarm</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        On-Delay override</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">expiration</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="OffDelayedAlarm"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.OffDelayedAlarm.html#jlab_jaws.avro.subject_schemas.entities.OffDelayedAlarm">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">OffDelayedAlarm</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Off-Delay override</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">expiration</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+<div class="viewcode-block" id="ShelvedAlarm"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.ShelvedAlarm.html#jlab_jaws.avro.subject_schemas.entities.ShelvedAlarm">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ShelvedAlarm</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Shelved override</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">expiration</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">comments</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">oneshot</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+
+<div class="viewcode-block" id="ClassAlarmKey"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.ClassAlarmKey.html#jlab_jaws.avro.subject_schemas.entities.ClassAlarmKey">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ClassAlarmKey</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        registered-class-key subject</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">alarmClass</span><span class="p">:</span> <span class="n">AlarmClass</span></div>
+
+
+<div class="viewcode-block" id="ClassAlarm"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.ClassAlarm.html#jlab_jaws.avro.subject_schemas.entities.ClassAlarm">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ClassAlarm</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        registered-class-value subject</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">location</span><span class="p">:</span> <span class="n">AlarmLocation</span>
+    <span class="n">category</span><span class="p">:</span> <span class="n">AlarmCategory</span>
+    <span class="n">priority</span><span class="p">:</span> <span class="n">AlarmPriority</span>
+    <span class="n">rationale</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">corrective_action</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">point_of_contact_username</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">latching</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">filterable</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">on_delay_seconds</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">off_delay_seconds</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">masked_by</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">screen_path</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="RegisteredAlarm"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.RegisteredAlarm.html#jlab_jaws.avro.subject_schemas.entities.RegisteredAlarm">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">RegisteredAlarm</span><span class="p">(</span><span class="n">ClassAlarm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        registered-alarm-value subject</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">alarm_class</span><span class="p">:</span> <span class="n">AlarmClass</span>
+    <span class="n">producer</span><span class="p">:</span>  <span class="n">Union</span><span class="p">[</span><span class="n">SimpleProducer</span><span class="p">,</span> <span class="n">EPICSProducer</span><span class="p">,</span> <span class="n">CALCProducer</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ActiveAlarm"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.ActiveAlarm.html#jlab_jaws.avro.subject_schemas.entities.ActiveAlarm">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ActiveAlarm</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        active-alarm-value subject</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">msg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SimpleAlarming</span><span class="p">,</span> <span class="n">NoteAlarming</span><span class="p">,</span> <span class="n">EPICSAlarming</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="OverriddenAlarmKey"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.OverriddenAlarmKey.html#jlab_jaws.avro.subject_schemas.entities.OverriddenAlarmKey">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">OverriddenAlarmKey</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        overridden-alarms-key subject</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">OverriddenAlarmType</span></div>
+
+
+<div class="viewcode-block" id="OverriddenAlarmValue"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.OverriddenAlarmValue.html#jlab_jaws.avro.subject_schemas.entities.OverriddenAlarmValue">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">OverriddenAlarmValue</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        overridden-alarms-value subject</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">msg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DisabledAlarm</span><span class="p">,</span> <span class="n">FilteredAlarm</span><span class="p">,</span> <span class="n">LatchedAlarm</span><span class="p">,</span> <span class="n">MaskedAlarm</span><span class="p">,</span> <span class="n">OnDelayedAlarm</span><span class="p">,</span> <span class="n">OffDelayedAlarm</span><span class="p">,</span> <span class="n">ShelvedAlarm</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="AlarmStateValue"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.subject_schemas.entities.AlarmStateValue.html#jlab_jaws.avro.subject_schemas.entities.AlarmStateValue">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">AlarmStateValue</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        alarm-state-value subject</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">AlarmState</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jefferson Lab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
