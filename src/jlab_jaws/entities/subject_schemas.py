@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
+from dacite import from_dict
 from jlab_jaws.entities.referenced_schemas import AlarmClass, AlarmLocation, AlarmCategory, AlarmPriority
 
 @dataclass
@@ -16,3 +17,9 @@ class RegisteredAlarm:
     off_delay_seconds: int
     masked_by: str
     screen_path: str
+
+    def as_dict(self):
+        return asdict(self)
+
+    def from_dict(self, dict: dict):
+        return from_dict(data_class=self.__class__, data=dict)
