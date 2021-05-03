@@ -1,6 +1,6 @@
 from dataclasses import dataclass, asdict
 from dacite import from_dict
-from jlab_jaws.avro.referenced_schemas import AlarmClass, AlarmLocation, AlarmCategory, AlarmPriority
+from jlab_jaws.avro.referenced_schemas.entities import AlarmClass, AlarmLocation, AlarmCategory, AlarmPriority
 
 
 @dataclass
@@ -22,5 +22,5 @@ class RegisteredAlarm:
     def as_dict(self):
         return asdict(self)
 
-    def from_dict(self, dict: dict):
-        return from_dict(data_class=self.__class__, data=dict)
+    def from_dict(self, d: dict):
+        return from_dict(data_class=self.__class__, data=d)
