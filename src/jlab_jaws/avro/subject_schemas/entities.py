@@ -116,6 +116,65 @@ class CALCProducer:
 
 
 @dataclass
+class DisabledAlarm:
+    """
+        Disabled override
+    """
+    comments: str
+
+
+@dataclass
+class FilteredAlarm:
+    """
+        Filtered override
+    """
+    filtername: str
+
+
+@dataclass
+class LatchedAlarm:
+    """
+        Latched override
+    """
+    placeholder: int
+
+
+@dataclass
+class MaskedAlarm:
+    """
+        Masked override
+    """
+    placeholder: int
+
+
+@dataclass
+class OnDelayedAlarm:
+    """
+        On-Delay override
+    """
+    expiration: int
+
+
+@dataclass
+class OffDelayedAlarm:
+    """
+        Off-Delay override
+    """
+    expiration: int
+
+
+@dataclass
+class ShelvedAlarm:
+    """
+        Shelved override
+    """
+    expiration: int
+    comments: str
+    reason: str
+    oneshot: bool
+
+
+@dataclass
 class ClassAlarmKey:
     """
         registered-class-key subject
@@ -177,6 +236,14 @@ class OverriddenAlarmKey(SubjectEntity):
     """
     name: str
     type: OverriddenAlarmType
+
+
+@dataclass
+class OverriddenAlarmValue(SubjectEntity):
+    """
+        overridden-alarms-value subject
+    """
+    msg: Union[DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, OffDelayedAlarm, ShelvedAlarm]
 
 
 @dataclass
