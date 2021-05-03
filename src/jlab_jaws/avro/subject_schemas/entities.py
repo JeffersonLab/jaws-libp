@@ -74,7 +74,7 @@ class SimpleAlarming:
     """
         Simple alarming record (no fields)
     """
-    placeholder: int
+
 
 @dataclass
 class NoteAlarming:
@@ -82,6 +82,7 @@ class NoteAlarming:
         An alarming record with a note
     """
     note: str
+
 
 @dataclass
 class EPICSAlarming:
@@ -91,12 +92,12 @@ class EPICSAlarming:
     sevr: EPICSSEVR
     stat: EPICSSTAT
 
+
 @dataclass
 class SimpleProducer:
     """
         Simple alarm producer (no fields)
     """
-    placeholder: int
 
 
 @dataclass
@@ -217,7 +218,7 @@ class RegisteredAlarm(ClassAlarm):
     """
         registered-alarm-value subject
     """
-    alarmClass: AlarmClass
+    alarm_class: AlarmClass
     producer:  Union[SimpleProducer, EPICSProducer, CALCProducer]
 
 
