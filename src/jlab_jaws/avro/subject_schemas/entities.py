@@ -10,6 +10,23 @@ from dacite import from_dict
 from jlab_jaws.avro.referenced_schemas.entities import AlarmClass, AlarmLocation, AlarmCategory, AlarmPriority
 
 
+class AlarmState(Enum):
+    NormalDisabled = 1
+    Disabled = 2
+    NormalFiltered = 3
+    Filtered = 4
+    Masked = 5
+    OnDelayed = 6
+    OneShotShelved = 7
+    NormalContinuousShelved = 8
+    ContinuousShelved = 9
+    OffDelayed = 10
+    NormalLatched = 11
+    Latched = 12
+    Active = 13
+    Normal = 14
+
+
 class OverriddenAlarmType(Enum):
     Disabled = 1
     Filtered = 2
@@ -54,29 +71,47 @@ class EPICSSTAT(Enum):
 
 @dataclass
 class SimpleAlarming:
+    """
+        Simple alarming record (no fields)
+    """
     placeholder: int
 
 @dataclass
 class NoteAlarming:
+    """
+        An alarming record with a note
+    """
     note: str
 
 @dataclass
 class EPICSAlarming:
+    """
+        An EPICS alarming record
+    """
     sevr: EPICSSEVR
     stat: EPICSSTAT
 
 @dataclass
 class SimpleProducer:
+    """
+        Simple alarm producer (no fields)
+    """
     placeholder: int
 
 
 @dataclass
 class EPICSProducer:
+    """
+        EPICS alarm producer
+    """
     pv: str
 
 
 @dataclass
 class CALCProducer:
+    """
+        CALC expression alarm producer
+    """
     expression: str
 
 
@@ -142,3 +177,11 @@ class OverriddenAlarmKey(SubjectEntity):
     """
     name: str
     type: OverriddenAlarmType
+
+
+@dataclass
+class AlarmStateValue:
+    """
+        alarm-state-value subject
+    """
+    type: AlarmState
