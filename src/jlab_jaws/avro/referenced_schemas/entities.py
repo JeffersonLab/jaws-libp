@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class AlarmClass(Enum):
     Base_Class = 1
     BCM_Temperature = 2
@@ -14,6 +15,7 @@ class AlarmClass(Enum):
     Magnet_Communication_Error = 11
     Vacuum_Level = 12
     LCW_Supply_Pressure = 13
+
 
 class AlarmLocation(Enum):
     S1D = 1
@@ -64,6 +66,7 @@ class AlarmLocation(Enum):
     LERF = 46
     UITF = 47
 
+
 class AlarmCategory(Enum):
     Aperture = 1
     BCM = 2
@@ -84,6 +87,7 @@ class AlarmCategory(Enum):
     RADCON = 17
     RF = 18
     Vacuum = 19
+
 
 class AlarmPriority(Enum):
     P1_CRITICAL = 1
