@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>jlab_jaws.avro.referenced_schemas.entities &mdash; jlab-jaws 0.0.5 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<link href="../../../../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> jlab-jaws
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../_autosummary/jlab_jaws.html">jlab_jaws</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">jlab-jaws</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>jlab_jaws.avro.referenced_schemas.entities</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for jlab_jaws.avro.referenced_schemas.entities</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Python entities corresponding to AVRO schemas.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+
+<div class="viewcode-block" id="AlarmClass"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.referenced_schemas.entities.AlarmClass.html#jlab_jaws.avro.referenced_schemas.entities.AlarmClass">[docs]</a><span class="k">class</span> <span class="nc">AlarmClass</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">Base_Class</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">BCM_Temperature</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">Trim_Temperature</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">Shunt_Temperature</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">CAMAC_Temperature</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">CAMAC_Voltage</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">MPS_Voltage_Mismatch</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">MPS_Voltage_Fault</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">MPS_Setpoint_Invalid</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">Magnet_Mismatch</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">Magnet_Communication_Error</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">Vacuum_Level</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">LCW_Supply_Pressure</span> <span class="o">=</span> <span class="mi">13</span></div>
+
+
+<div class="viewcode-block" id="AlarmLocation"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.referenced_schemas.entities.AlarmLocation.html#jlab_jaws.avro.referenced_schemas.entities.AlarmLocation">[docs]</a><span class="k">class</span> <span class="nc">AlarmLocation</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">S1D</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">S2D</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">S3D</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">S4D</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">S5D</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">L1</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">L2</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">L3</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">L4</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">L5</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">L6</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">L7</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">L8</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">L9</span> <span class="o">=</span> <span class="mi">14</span>
+    <span class="n">LA</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">LB</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">A1</span> <span class="o">=</span> <span class="mi">17</span>
+    <span class="n">A2</span> <span class="o">=</span> <span class="mi">18</span>
+    <span class="n">A3</span> <span class="o">=</span> <span class="mi">19</span>
+    <span class="n">A4</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">A5</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">A6</span> <span class="o">=</span> <span class="mi">22</span>
+    <span class="n">A7</span> <span class="o">=</span> <span class="mi">23</span>
+    <span class="n">A8</span> <span class="o">=</span> <span class="mi">24</span>
+    <span class="n">A9</span> <span class="o">=</span> <span class="mi">25</span>
+    <span class="n">AA</span> <span class="o">=</span> <span class="mi">26</span>
+    <span class="n">BSY2</span> <span class="o">=</span> <span class="mi">27</span>
+    <span class="n">BSY4</span> <span class="o">=</span> <span class="mi">28</span>
+    <span class="n">BSY6</span> <span class="o">=</span> <span class="mi">29</span>
+    <span class="n">BSY8</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">BSYA</span> <span class="o">=</span> <span class="mi">31</span>
+    <span class="n">BSYD</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="n">INJ</span> <span class="o">=</span> <span class="mi">33</span>
+    <span class="n">NL</span> <span class="o">=</span> <span class="mi">34</span>
+    <span class="n">SL</span> <span class="o">=</span> <span class="mi">35</span>
+    <span class="n">EA</span> <span class="o">=</span> <span class="mi">36</span>
+    <span class="n">WA</span> <span class="o">=</span> <span class="mi">37</span>
+    <span class="n">BSY</span> <span class="o">=</span> <span class="mi">38</span>
+    <span class="n">HA</span> <span class="o">=</span> <span class="mi">39</span>
+    <span class="n">HB</span> <span class="o">=</span> <span class="mi">40</span>
+    <span class="n">HC</span> <span class="o">=</span> <span class="mi">41</span>
+    <span class="n">HD</span> <span class="o">=</span> <span class="mi">42</span>
+    <span class="n">ACC</span> <span class="o">=</span> <span class="mi">43</span>
+    <span class="n">CHL</span> <span class="o">=</span> <span class="mi">44</span>
+    <span class="n">MCC</span> <span class="o">=</span> <span class="mi">45</span>
+    <span class="n">LERF</span> <span class="o">=</span> <span class="mi">46</span>
+    <span class="n">UITF</span> <span class="o">=</span> <span class="mi">47</span></div>
+
+
+<div class="viewcode-block" id="AlarmCategory"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.referenced_schemas.entities.AlarmCategory.html#jlab_jaws.avro.referenced_schemas.entities.AlarmCategory">[docs]</a><span class="k">class</span> <span class="nc">AlarmCategory</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">Aperture</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">BCM</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">Box</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">BPM</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">CAMAC</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">Crate</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">Dump</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">Gun</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">Harp</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">Helicity</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">IC</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">IOC</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">Laser</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">LCW</span> <span class="o">=</span> <span class="mi">14</span>
+    <span class="n">Misc</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">ODH</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">RADCON</span> <span class="o">=</span> <span class="mi">17</span>
+    <span class="n">RF</span> <span class="o">=</span> <span class="mi">18</span>
+    <span class="n">Vacuum</span> <span class="o">=</span> <span class="mi">19</span></div>
+
+
+<div class="viewcode-block" id="AlarmPriority"><a class="viewcode-back" href="../../../../_autosummary/jlab_jaws.avro.referenced_schemas.entities.AlarmPriority.html#jlab_jaws.avro.referenced_schemas.entities.AlarmPriority">[docs]</a><span class="k">class</span> <span class="nc">AlarmPriority</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">P1_CRITICAL</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">P2_MAJOR</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">P3_MINOR</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">P4_INCIDENTAL</span> <span class="o">=</span> <span class="mi">4</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jefferson Lab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
