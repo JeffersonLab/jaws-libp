@@ -1,3 +1,7 @@
+"""
+    Python entities corresponding to AVRO schemas.
+"""
+
 from enum import Enum
 
 

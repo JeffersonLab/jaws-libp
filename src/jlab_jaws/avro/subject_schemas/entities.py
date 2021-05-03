@@ -1,3 +1,7 @@
+"""
+    Python entities corresponding to AVRO schemas.
+"""
+
 from dataclasses import dataclass, asdict
 from dacite import from_dict
 from jlab_jaws.avro.referenced_schemas.entities import AlarmClass, AlarmLocation, AlarmCategory, AlarmPriority
