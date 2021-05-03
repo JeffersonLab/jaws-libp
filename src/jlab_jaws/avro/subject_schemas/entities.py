@@ -2,11 +2,10 @@
     Python entities corresponding to AVRO schemas.
 """
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from enum import Enum
 from typing import Union
 
-from dacite import from_dict
 from jlab_jaws.avro.referenced_schemas.entities import AlarmClass, AlarmLocation, AlarmCategory, AlarmPriority
 
 
@@ -182,17 +181,6 @@ class ClassAlarmKey:
     """
     alarmClass: AlarmClass
 
-
-@dataclass
-class SubjectEntity:
-    """
-        Base class containing to/from dict methods
-    """
-    def as_dict(self):
-        return asdict(self)
-
-    def from_dict(self, d: dict):
-        return from_dict(data_class=self.__class__, data=d)
 
 @dataclass
 class ClassAlarm(SubjectEntity):
