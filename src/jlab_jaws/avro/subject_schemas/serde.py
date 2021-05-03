@@ -60,7 +60,7 @@ class RegisteredAlarmSerde:
             "ondelayseconds": obj.on_delay_seconds,
             "offdelayseconds": obj.off_delay_seconds,
             "maskedby": obj.masked_by,
-            "screenpath": obj.screenpath,
+            "screenpath": obj.screen_path,
             "class": obj.alarm_class,
             "producer": obj.producer
         }
