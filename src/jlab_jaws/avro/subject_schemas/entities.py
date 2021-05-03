@@ -183,7 +183,7 @@ class ClassAlarmKey:
 
 
 @dataclass
-class ClassAlarm(SubjectEntity):
+class ClassAlarm:
     """
         registered-class-value subject
     """
@@ -211,7 +211,7 @@ class RegisteredAlarm(ClassAlarm):
 
 
 @dataclass
-class ActiveAlarm(SubjectEntity):
+class ActiveAlarm:
     """
         active-alarm-value subject
     """
@@ -219,7 +219,7 @@ class ActiveAlarm(SubjectEntity):
 
 
 @dataclass
-class OverriddenAlarmKey(SubjectEntity):
+class OverriddenAlarmKey:
     """
         overridden-alarms-key subject
     """
@@ -228,7 +228,7 @@ class OverriddenAlarmKey(SubjectEntity):
 
 
 @dataclass
-class OverriddenAlarmValue(SubjectEntity):
+class OverriddenAlarmValue:
     """
         overridden-alarms-value subject
     """
