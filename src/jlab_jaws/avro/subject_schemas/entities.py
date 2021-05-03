@@ -2,6 +2,7 @@ from dataclasses import dataclass, asdict
 from dacite import from_dict
 from jlab_jaws.avro.referenced_schemas import AlarmClass, AlarmLocation, AlarmCategory, AlarmPriority
 
+
 @dataclass
 class RegisteredAlarm:
     alarmClass: AlarmClass
