@@ -25,6 +25,9 @@ def _unwrap_ref_tuple(ref):
 
 
 class RegisteredAlarmSerde:
+    """
+        Provides RegisteredAlarm serde utilities
+    """
     # TODO: Defaults should come from registered-class
     defaults = {
         "location": "CEBAF",
@@ -121,6 +124,12 @@ class RegisteredAlarmSerde:
 
     @staticmethod
     def get_registered_alarm_deserializer(schema_registry_client):
+        """
+            Return a RegisteredAlarm deserializer.
+
+            :param schema_registry_client: The Confluent Schema Registry Client
+            :return: Deserializer
+        """
         named_schemas = RegisteredAlarmSerde._get_registered_alarm_named_schemas()
 
         return AvroDeserializerWithReferences(schema_registry_client, None,
@@ -129,6 +138,12 @@ class RegisteredAlarmSerde:
 
     @staticmethod
     def get_registered_alarm_serializer(schema_registry_client):
+        """
+            Return a RegisteredAlarm serializer.
+
+            :param schema_registry_client: The Confluent Schema Registry client
+            :return: Serializer
+        """
         named_schemas = RegisteredAlarmSerde._get_registered_alarm_named_schemas()
 
         value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/registered-alarms-value.avsc")
