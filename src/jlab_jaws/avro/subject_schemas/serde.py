@@ -6,9 +6,10 @@ import pkgutil
 from json import loads
 
 from confluent_kafka.schema_registry import SchemaReference, Schema
+from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
 from fastavro import parse_schema
 
-from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm
+from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -47,7 +48,7 @@ class RegisteredAlarmSerde:
     }
 
     @staticmethod
-    def _to_dict_registered_alarm(obj, ctx):
+    def _to_dict(obj, ctx):
         return {
             "location": obj.location,
             "category": obj.category,
@@ -66,7 +67,7 @@ class RegisteredAlarmSerde:
         }
 
     @staticmethod
-    def _from_dict_registered_alarm(values, ctx):
+    def _from_dict(values, ctx):
         return RegisteredAlarm(_default_if_none(_unwrap_ref_tuple(values['location']),
                                                 RegisteredAlarmSerde.defaults['location']),
                                _default_if_none(_unwrap_ref_tuple(values['category']),
@@ -97,7 +98,7 @@ class RegisteredAlarmSerde:
                                                 RegisteredAlarmSerde.defaults['producer']))
 
     @staticmethod
-    def _get_registered_alarm_named_schemas():
+    def _named_schemas():
         class_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmClass.avsc")
         class_schema_str = class_bytes.decode('utf-8')
 
@@ -123,28 +124,28 @@ class RegisteredAlarmSerde:
         return named_schemas
 
     @staticmethod
-    def get_registered_alarm_deserializer(schema_registry_client):
+    def deserializer(schema_registry_client):
         """
             Return a RegisteredAlarm deserializer.
 
             :param schema_registry_client: The Confluent Schema Registry Client
             :return: Deserializer
         """
-        named_schemas = RegisteredAlarmSerde._get_registered_alarm_named_schemas()
+        named_schemas = RegisteredAlarmSerde._named_schemas()
 
         return AvroDeserializerWithReferences(schema_registry_client, None,
-                                              RegisteredAlarmSerde._from_dict_registered_alarm, True,
+                                              RegisteredAlarmSerde._from_dict, True,
                                               named_schemas)
 
     @staticmethod
-    def get_registered_alarm_serializer(schema_registry_client):
+    def serializer(schema_registry_client):
         """
             Return a RegisteredAlarm serializer.
 
             :param schema_registry_client: The Confluent Schema Registry client
             :return: Serializer
         """
-        named_schemas = RegisteredAlarmSerde._get_registered_alarm_named_schemas()
+        named_schemas = RegisteredAlarmSerde._named_schemas()
 
         value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/registered-alarms-value.avsc")
         value_schema_str = value_bytes.decode('utf-8')
@@ -158,5 +159,48 @@ class RegisteredAlarmSerde:
                         [class_schema_ref, location_schema_ref, category_schema_ref, priority_schema_ref])
 
         return AvroSerializerWithReferences(schema_registry_client, schema,
-                                            RegisteredAlarmSerde._to_dict_registered_alarm, None,
+                                            RegisteredAlarmSerde._to_dict, None,
                                             named_schemas)
+
+
+class ActiveAlarmSerde:
+    """
+        Provides ActiveAlarm serde utilities
+    """
+
+    @staticmethod
+    def _to_dict(obj, ctx):
+        return {
+            "msg": obj.msg
+        }
+
+    @staticmethod
+    def _from_dict(values, ctx):
+        return ActiveAlarm(values['msg'])
+
+    @staticmethod
+    def deserializer(schema_registry_client):
+        """
+            Return an ActiveAlarm deserializer.
+
+            :param schema_registry_client: The Confluent Schema Registry Client
+            :return: Deserializer
+        """
+
+        return AvroDeserializer(schema_registry_client, None,
+                                ActiveAlarmSerde._from_dict, True)
+
+    @staticmethod
+    def serializer(schema_registry_client):
+        """
+            Return an ActiveAlarm serializer.
+
+            :param schema_registry_client: The Confluent Schema Registry client
+            :return: Serializer
+        """
+
+        value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/registered-alarms-value.avsc")
+        value_schema_str = value_bytes.decode('utf-8')
+
+        return AvroSerializer(schema_registry_client, value_schema_str,
+                              ActiveAlarmSerde._to_dict, None)
