@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath("../../src"))
 # -- Project information -----------------------------------------------------
 
 project = 'jlab-jaws'
-copyright = '2021, Ryan Slominski'
+copyright = '2021, Jefferson Lab'
 author = 'Ryan Slominski'
 
 # The full version, including alpha/beta/rc tags
