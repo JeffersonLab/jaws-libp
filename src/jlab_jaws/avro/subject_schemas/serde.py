@@ -187,7 +187,18 @@ class ActiveAlarmSerde:
 
     @staticmethod
     def _from_dict(values, ctx):
-        return ActiveAlarm(values['msg'])
+        alarmingtuple = values['msg']
+        alarmingtype = alarmingtuple[0]
+        alarmingdict = alarmingtuple[1]
+
+        if alarmingtype == "org.jlab.jaws.entity.NoteAlarming":
+            obj = NoteAlarming(alarmingdict['note'])
+        elif alarmingtype == "org.jlab.jaws.entity.EPICSAlarming":
+            obj = EPICSAlarming(alarmingdict['sevr'], alarmingdict['stat'])
+        else:
+            obj = SimpleAlarming()
+
+        return ActiveAlarm(obj)
 
     @staticmethod
     def deserializer(schema_registry_client):
