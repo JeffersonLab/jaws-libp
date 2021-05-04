@@ -36,6 +36,12 @@ class OverriddenAlarmType(Enum):
     Latched = 7
 
 
+class ShelvedAlarmReason(Enum):
+    Stale_Alarm = 1
+    Chattering_Fleeting_Alarm = 2
+    Other = 3
+
+
 class EPICSSEVR(Enum):
     NO_ALARM = 1
     MINOR = 2
@@ -168,7 +174,7 @@ class ShelvedAlarm:
     """
     expiration: int
     comments: str
-    reason: str
+    reason: ShelvedAlarmReason
     oneshot: bool
 
 

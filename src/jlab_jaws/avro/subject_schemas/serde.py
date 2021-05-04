@@ -11,7 +11,7 @@ from fastavro import parse_schema
 
 from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, \
-    OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue, OverriddenAlarmType, OverriddenAlarmKey
+    OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue, OverriddenAlarmType, OverriddenAlarmKey, ShelvedAlarmReason
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -301,7 +301,7 @@ class OverriddenAlarmValueSerde:
         elif isinstance(obj.msg, ShelvedAlarm):
             uniontype = "org.jlab.jaws.entity.ShelvedAlarm"
             uniondict = {"expiration": obj.msg.expiration, "comments": obj.msg.comments,
-                         "reason": obj.msg.reason, "oneshot": obj.msg.oneshot}
+                         "reason": obj.msg.reason.name, "oneshot": obj.msg.oneshot}
         else:
             print("Unknown alarming union type: {}".format(obj.msg))
             uniontype = "org.jlab.jaws.entity.LatchedAlarm"
@@ -331,7 +331,7 @@ class OverriddenAlarmValueSerde:
             obj = OffDelayedAlarm(alarmingdict['expiration'])
         elif alarmingtype == "org.jlab.jaws.entity.ShelvedAlarm":
             obj = ShelvedAlarm(alarmingdict['expiration'], alarmingdict['comments'],
-                               alarmingdict['reason'], alarmingdict['oneshot'])
+                               ShelvedAlarmReason[alarmingdict['reason']], alarmingdict['oneshot'])
         else:
             print("Unknown alarming type: {}".format(values['msg']))
             obj = LatchedAlarm()
