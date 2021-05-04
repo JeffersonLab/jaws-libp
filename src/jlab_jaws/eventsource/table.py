@@ -49,6 +49,9 @@ class EventSourceTable:
             |                         |                     |                                                     |
             +-------------------------+---------------------+-----------------------------------------------------+
 
+            Note:
+                Keys must be hashable so your key deserializer generally must generate immutable types.
+
          """
         self._config = config
         self._on_initial_state = on_initial_state

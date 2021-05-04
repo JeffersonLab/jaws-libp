@@ -218,7 +218,7 @@ class ActiveAlarm:
     msg: Union[SimpleAlarming, NoteAlarming, EPICSAlarming]
 
 
-@dataclass
+@dataclass(frozen=True)
 class OverriddenAlarmKey:
     """
         overridden-alarms-key subject
