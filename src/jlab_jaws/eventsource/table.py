@@ -39,7 +39,6 @@ class EventSourceTable:
             | ``value.deserializer``  | callable            |                                                     |
             |                         |                     | Deserializer used for message values.               |
             +-------------------------+---------------------+-----------------------------------------------------+
-            +-------------------------+---------------------+-----------------------------------------------------+
             |                         |                     | Kafka topic name to consume messages from           |
             | ``topic``               | str                 |                                                     |
             |                         |                     |                                                     |
