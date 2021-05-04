@@ -231,7 +231,7 @@ class ActiveAlarmSerde:
 
 class OverriddenAlarmKeySerde:
     """
-        Provides OverriddenAlarm serde utilities
+        Provides OverriddenAlarmKey serde utilities
     """
 
     @staticmethod
@@ -275,7 +275,7 @@ class OverriddenAlarmKeySerde:
 
 class OverriddenAlarmValueSerde:
     """
-        Provides OverriddenAlarm serde utilities
+        Provides OverriddenAlarmValue serde utilities
     """
 
     @staticmethod
