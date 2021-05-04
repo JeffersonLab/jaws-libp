@@ -10,7 +10,8 @@ from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserialize
 from fastavro import parse_schema
 
 from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
-    EPICSAlarming, NoteAlarming
+    EPICSAlarming, NoteAlarming, DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, \
+    OffDelayedAlarm, ShelvedAlarm
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -226,3 +227,96 @@ class ActiveAlarmSerde:
 
         return AvroSerializer(schema_registry_client, value_schema_str,
                               ActiveAlarmSerde._to_dict, None)
+
+
+class OverriddenAlarmSerde:
+    """
+        Provides OverriddenAlarm serde utilities
+    """
+
+    @staticmethod
+    def _to_dict(obj, ctx):
+        if isinstance(obj.msg, DisabledAlarm):
+            uniontype = "org.jlab.jaws.entity.DisabledAlarm"
+            uniondict = {"comments": obj.msg.comments}
+        elif isinstance(obj.msg, FilteredAlarm):
+            uniontype = "org.jlab.jaws.entity.FilteredAlarm"
+            uniondict = {"filtername": obj.msg.filtername}
+        elif isinstance(obj.msg, LatchedAlarm):
+            uniontype = "org.jlab.jaws.entity.LatchedAlarm"
+            uniondict = {}
+        elif isinstance(obj.msg, MaskedAlarm):
+            uniontype = "org.jlab.jaws.entity.MaskedAlarm"
+            uniondict = {}
+        elif isinstance(obj.msg, OnDelayedAlarm):
+            uniontype = "org.jlab.jaws.entity.OnDelayedAlarm"
+            uniondict = {"expiration": obj.msg.expiration}
+        elif isinstance(obj.msg, OffDelayedAlarm):
+            uniontype = "org.jlab.jaws.entity.OffDelayedAlarm"
+            uniondict = {"expiration": obj.msg.expiration}
+        elif isinstance(obj.msg, ShelvedAlarm):
+            uniontype = "org.jlab.jaws.entity.ShelvedAlarm"
+            uniondict = {"expiration": obj.msg.expiration, "comments": obj.msg.comments,
+                         "reason": obj.msg.reason, "oneshot": obj.msg.oneshot}
+        else:
+            print("Unknown alarming union type: {}".format(obj.msg))
+            uniontype = "org.jlab.jaws.entity.LatchedAlarm"
+            uniondict = {}
+
+        return {
+            "msg": (uniontype, uniondict)
+        }
+
+    @staticmethod
+    def _from_dict(values, ctx):
+        alarmingtuple = values['msg']
+        alarmingtype = alarmingtuple[0]
+        alarmingdict = alarmingtuple[1]
+
+        if alarmingtype == "org.jlab.jaws.entity.DisabledAlarm":
+            obj = DisabledAlarm(alarmingdict['comments'])
+        elif alarmingtype == "org.jlab.jaws.entity.FilteredAlarm":
+            obj = FilteredAlarm(alarmingdict['filtername'])
+        elif alarmingtype == "org.jlab.jaws.entity.LatchedAlarm":
+            obj = LatchedAlarm()
+        elif alarmingtype == "org.jlab.jaws.entity.MaskedAlarm":
+            obj = MaskedAlarm()
+        elif alarmingtype == "org.jlab.jaws.entity.OnDelayedAlarm":
+            obj = OnDelayedAlarm(alarmingdict['expiration'])
+        elif alarmingtype == "org.jlab.jaws.entity.OffDelayedAlarm":
+            obj = OffDelayedAlarm(alarmingdict['expiration'])
+        elif alarmingtype == "org.jlab.jaws.entity.ShelvedAlarm":
+            obj = ShelvedAlarm(alarmingdict['expiration'], alarmingdict['comments'],
+                               alarmingdict['reason'], alarmingdict['oneshot'])
+        else:
+            print("Unknown alarming type: {}".format(values['msg']))
+            obj = LatchedAlarm()
+
+        return ActiveAlarm(obj)
+
+    @staticmethod
+    def deserializer(schema_registry_client):
+        """
+            Return an OverriddenAlarm deserializer.
+
+            :param schema_registry_client: The Confluent Schema Registry Client
+            :return: Deserializer
+        """
+
+        return AvroDeserializer(schema_registry_client, None,
+                                OverriddenAlarmSerde._from_dict, True)
+
+    @staticmethod
+    def serializer(schema_registry_client):
+        """
+            Return an OverriddenAlarm serializer.
+
+            :param schema_registry_client: The Confluent Schema Registry client
+            :return: Serializer
+        """
+
+        value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/overridden-alarms-value.avsc")
+        value_schema_str = value_bytes.decode('utf-8')
+
+        return AvroSerializer(schema_registry_client, value_schema_str,
+                              OverriddenAlarmSerde._to_dict, None)
