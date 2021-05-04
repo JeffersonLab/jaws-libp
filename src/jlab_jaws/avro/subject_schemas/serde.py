@@ -199,7 +199,7 @@ class ActiveAlarmSerde:
             :return: Serializer
         """
 
-        value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/registered-alarms-value.avsc")
+        value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/active-alarms-value.avsc")
         value_schema_str = value_bytes.decode('utf-8')
 
         return AvroSerializer(schema_registry_client, value_schema_str,
