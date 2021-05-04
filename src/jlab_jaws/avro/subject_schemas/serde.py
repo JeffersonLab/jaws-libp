@@ -11,7 +11,7 @@ from fastavro import parse_schema
 
 from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, \
-    OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue
+    OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue, OverriddenAlarmType, OverriddenAlarmKey
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -229,7 +229,51 @@ class ActiveAlarmSerde:
                               ActiveAlarmSerde._to_dict, None)
 
 
-class OverriddenAlarmSerde:
+class OverriddenAlarmKeySerde:
+    """
+        Provides OverriddenAlarm serde utilities
+    """
+
+    @staticmethod
+    def _to_dict(obj, ctx):
+        return {
+            "name": obj.name,
+            "type": obj.type.name
+        }
+
+    @staticmethod
+    def _from_dict(values, ctx):
+        return OverriddenAlarmKey(values['name'], OverriddenAlarmType[values['type']])
+
+    @staticmethod
+    def deserializer(schema_registry_client):
+        """
+            Return an OverriddenAlarmKey deserializer.
+
+            :param schema_registry_client: The Confluent Schema Registry Client
+            :return: Deserializer
+        """
+
+        return AvroDeserializer(schema_registry_client, None,
+                                OverriddenAlarmKeySerde._from_dict, True)
+
+    @staticmethod
+    def serializer(schema_registry_client):
+        """
+            Return an OverriddenAlarmKey serializer.
+
+            :param schema_registry_client: The Confluent Schema Registry client
+            :return: Serializer
+        """
+
+        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/overridden-alarms-key.avsc")
+        subject_schema_str = subject_bytes.decode('utf-8')
+
+        return AvroSerializer(schema_registry_client, subject_schema_str,
+                              OverriddenAlarmKeySerde._to_dict, None)
+
+
+class OverriddenAlarmValueSerde:
     """
         Provides OverriddenAlarm serde utilities
     """
@@ -297,26 +341,26 @@ class OverriddenAlarmSerde:
     @staticmethod
     def deserializer(schema_registry_client):
         """
-            Return an OverriddenAlarm deserializer.
+            Return an OverriddenAlarmValue deserializer.
 
             :param schema_registry_client: The Confluent Schema Registry Client
             :return: Deserializer
         """
 
         return AvroDeserializer(schema_registry_client, None,
-                                OverriddenAlarmSerde._from_dict, True)
+                                OverriddenAlarmValueSerde._from_dict, True)
 
     @staticmethod
     def serializer(schema_registry_client):
         """
-            Return an OverriddenAlarm serializer.
+            Return an OverriddenAlarmValue serializer.
 
             :param schema_registry_client: The Confluent Schema Registry client
             :return: Serializer
         """
 
-        value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/overridden-alarms-value.avsc")
-        value_schema_str = value_bytes.decode('utf-8')
+        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/overridden-alarms-value.avsc")
+        subject_schema_str = subject_bytes.decode('utf-8')
 
-        return AvroSerializer(schema_registry_client, value_schema_str,
-                              OverriddenAlarmSerde._to_dict, None)
+        return AvroSerializer(schema_registry_client, subject_schema_str,
+                              OverriddenAlarmValueSerde._to_dict, None)
