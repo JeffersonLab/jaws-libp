@@ -11,7 +11,7 @@ from fastavro import parse_schema
 
 from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, \
-    OffDelayedAlarm, ShelvedAlarm
+    OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -292,7 +292,7 @@ class OverriddenAlarmSerde:
             print("Unknown alarming type: {}".format(values['msg']))
             obj = LatchedAlarm()
 
-        return ActiveAlarm(obj)
+        return OverriddenAlarmValue(obj)
 
     @staticmethod
     def deserializer(schema_registry_client):
