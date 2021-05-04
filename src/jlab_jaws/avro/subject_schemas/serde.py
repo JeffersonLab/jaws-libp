@@ -9,7 +9,8 @@ from confluent_kafka.schema_registry import SchemaReference, Schema
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
 from fastavro import parse_schema
 
-from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm
+from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
+    EPICSAlarming, NoteAlarming
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -170,8 +171,18 @@ class ActiveAlarmSerde:
 
     @staticmethod
     def _to_dict(obj, ctx):
+        if isinstance(obj.msg, SimpleAlarming):
+            uniondict = {}
+        elif isinstance(obj.msg, EPICSAlarming):
+            uniondict = {"sevr": obj.msg.sevr, "stat": obj.msg.stat}
+        elif isinstance(obj.msg, NoteAlarming):
+            uniondict = {"note": obj.msg.note}
+        else:
+            print("Unknown alarming union type: {}".format(obj.msg))
+            uniondict = {}
+
         return {
-            "msg": obj.msg
+            "msg": uniondict
         }
 
     @staticmethod
