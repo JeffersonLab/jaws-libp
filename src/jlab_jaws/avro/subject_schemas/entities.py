@@ -136,7 +136,6 @@ class LatchedAlarm:
     """
         Latched override
     """
-    placeholder: int
 
 
 @dataclass
@@ -144,7 +143,6 @@ class MaskedAlarm:
     """
         Masked override
     """
-    placeholder: int
 
 
 @dataclass
