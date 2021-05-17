@@ -128,6 +128,12 @@ class RegisteredClassSerde:
 
     @staticmethod
     def setClassDefaults(alarm: RegisteredAlarm, alarm_class: RegisteredClass):
+        """
+        Merge a RegisteredClass into a RegisteredAlarm (apply class default values).
+
+        :param alarm: The RegisteredAlarm
+        :param alarm_class: The RegisteredClass
+        """
         if alarm.priority is None:
             alarm.priority = alarm_class.priority
 
