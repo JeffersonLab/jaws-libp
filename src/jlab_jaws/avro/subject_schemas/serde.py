@@ -304,7 +304,7 @@ class RegisteredAlarmSerde:
             uniontype = "org.jlab.jaws.entity.CALCProducer"
             uniondict = {"expression": obj.producer.expression}
         else:
-            raise Exception("Unknown alarming union type: {}".format(obj.msg))
+            raise Exception("Unknown alarming union type: {}".format(obj.producer))
 
         if union_encoding is UnionEncoding.TUPLE:
             union = (uniontype, uniondict)
