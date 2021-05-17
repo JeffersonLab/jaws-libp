@@ -86,7 +86,7 @@ class EventSourceTable:
                 continue
 
             if msg.error():
-                print("AvroConsumer error: {}".format(msg.error()))
+                print("Consumer error: {}".format(msg.error()))
                 continue
 
             if msg.value() is None:
@@ -114,7 +114,7 @@ class EventSourceTable:
                 continue
 
             if msg.error():
-                print("AvroConsumer error: {}".format(msg.error()))
+                print("Consumer error: {}".format(msg.error()))
                 continue
 
             self._on_state_update(msg)
