@@ -381,7 +381,7 @@ class RegisteredAlarmSerde:
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
-        return RegisteredAlarmSerde._from_dict_with_ctx(the_dict)
+        return RegisteredAlarmSerde.from_dict(the_dict)
 
     @staticmethod
     def _named_schemas():
