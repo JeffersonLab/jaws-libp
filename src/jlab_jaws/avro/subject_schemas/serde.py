@@ -221,7 +221,7 @@ class RegisteredClassSerde:
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
-        return RegisteredClassSerde._from_dict_with_ctx(the_dict)
+        return RegisteredClassSerde.from_dict(the_dict)
 
     @staticmethod
     def _named_schemas():
