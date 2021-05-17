@@ -3,7 +3,6 @@
 """
 
 import pkgutil
-from enum import Enum
 from json import loads
 
 from confluent_kafka.schema_registry import SchemaReference, Schema
@@ -14,7 +13,7 @@ from jlab_jaws.avro.referenced_schemas.entities import AlarmLocation, AlarmCateg
 from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, \
     OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue, OverriddenAlarmType, OverriddenAlarmKey, ShelvedAlarmReason, \
-    EPICSSEVR, EPICSSTAT, UnionEncoding
+    EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -49,26 +48,35 @@ class RegisteredAlarmSerde:
     """
         Provides RegisteredAlarm serde utilities
     """
-    # TODO: Defaults should come from registered-class
-    defaults = {
-        "location": "CEBAF",
-        "category": "RF",
-        "priority": "P1",
-        "rationale": "Timely operator action is required",
-        "correctiveaction": "Call Department Leadership",
-        "pointofcontactusername": "erb",
-        "latching": True,
-        "filterable": True,
-        "ondelayseconds": None,
-        "offdelayseconds": None,
-        "maskedby": None,
-        "screenpath": None,
-        "class": "Base_Class",
-        "producer": SimpleProducer()
-    }
-
     @staticmethod
-    def _to_dict(obj, ctx):
+    def to_dict(obj, union_encoding=UnionEncoding.TUPLE):
+        """
+        Converts a RegisteredAlarm to a dict.
+
+        :param obj: The RegisteredAlarm
+        :param union_encoding: How the union should be encoded
+        :return: A dict
+        """
+
+        if isinstance(obj.producer, SimpleProducer):
+            uniontype = "org.jlab.jaws.entity.SimpleProducer"
+            uniondict = {}
+        elif isinstance(obj.producer, EPICSProducer):
+            uniontype = "org.jlab.jaws.entity.EPICSProducer"
+            uniondict = {"pv": obj.producer.pv}
+        elif isinstance(obj.producer, CALCProducer):
+            uniontype = "org.jlab.jaws.entity.CALCProducer"
+            uniondict = {"expression": obj.producer.expression}
+        else:
+            raise Exception("Unknown alarming union type: {}".format(obj.msg))
+
+        if union_encoding is UnionEncoding.TUPLE:
+            union = (uniontype, uniondict)
+        elif union_encoding is UnionEncoding.DICT_WITH_TYPE:
+            union = {uniontype: uniondict}
+        else:
+            union = uniondict
+
         return {
             "location": obj.location.name,
             "category": obj.category.name,
@@ -83,25 +91,61 @@ class RegisteredAlarmSerde:
             "maskedby": obj.masked_by,
             "screenpath": obj.screen_path,
             "class": obj.alarm_class.name,
-            "producer": obj.producer
+            "producer": union
         }
 
     @staticmethod
-    def _from_dict(values, ctx):
-        return RegisteredAlarm(_unwrap_enum(values.get('location'), AlarmLocation),
-                               _unwrap_enum(values.get('category'), AlarmCategory),
-                               _unwrap_enum(values.get('priority'), AlarmPriority),
-                               values.get('rationale'),
-                               values.get('correctiveaction'),
-                               values.get('pointofcontactusername'),
-                               values.get('latching'),
-                               values.get('filterable'),
-                               values.get('ondelayseconds'),
-                               values.get('offdelayseconds'),
-                               values.get('maskedby'),
-                               values.get('screenpath'),
-                               _unwrap_enum(values['class'], AlarmClass),  # Not optional - we want error if missing
-                               values['producer'])  # Also not optional
+    def _to_dict_with_ctx(obj, ctx):
+        return RegisteredAlarmSerde.to_dict(obj)
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to a RegisteredAlarm.
+
+        Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
+
+        :param the_dict: The dict
+        :return: The ActiveAlarm
+        """
+
+        unionobj = the_dict['producer']
+
+        if type(unionobj) is tuple:
+            uniontype = unionobj[0]
+            uniondict = unionobj[1]
+        elif type(unionobj is dict):
+            value = next(iter(unionobj.items()))
+            uniontype = value[0]
+            uniondict = value[1]
+        else:
+            raise Exception("Unsupported union encoding")
+
+        if uniontype == "org.jlab.jaws.entity.CalcProducer":
+            producer = CALCProducer(uniondict['expression'])
+        elif uniontype == "org.jlab.jaws.entity.EPICSProducer":
+            producer = EPICSProducer(uniondict['pv'])
+        else:
+            producer = SimpleProducer()
+
+        return RegisteredAlarm(_unwrap_enum(the_dict.get('location'), AlarmLocation),
+                               _unwrap_enum(the_dict.get('category'), AlarmCategory),
+                               _unwrap_enum(the_dict.get('priority'), AlarmPriority),
+                               the_dict.get('rationale'),
+                               the_dict.get('correctiveaction'),
+                               the_dict.get('pointofcontactusername'),
+                               the_dict.get('latching'),
+                               the_dict.get('filterable'),
+                               the_dict.get('ondelayseconds'),
+                               the_dict.get('offdelayseconds'),
+                               the_dict.get('maskedby'),
+                               the_dict.get('screenpath'),
+                               _unwrap_enum(the_dict['class'], AlarmClass),  # Not optional - we want error if missing
+                               producer)  # Also not optional
+
+    @staticmethod
+    def _from_dict_with_ctx(the_dict, ctx):
+        return RegisteredAlarmSerde._from_dict_with_ctx(the_dict)
 
     @staticmethod
     def _named_schemas():
@@ -140,7 +184,7 @@ class RegisteredAlarmSerde:
         named_schemas = RegisteredAlarmSerde._named_schemas()
 
         return AvroDeserializerWithReferences(schema_registry_client, None,
-                                              RegisteredAlarmSerde._from_dict, True,
+                                              RegisteredAlarmSerde._from_dict_with_ctx, True,
                                               named_schemas)
 
     @staticmethod
@@ -165,7 +209,7 @@ class RegisteredAlarmSerde:
                         [class_schema_ref, location_schema_ref, category_schema_ref, priority_schema_ref])
 
         return AvroSerializerWithReferences(schema_registry_client, schema,
-                                            RegisteredAlarmSerde._to_dict, None,
+                                            RegisteredAlarmSerde._to_dict_with_ctx, None,
                                             named_schemas)
 
 
@@ -220,22 +264,22 @@ class ActiveAlarmSerde:
         :param the_dict: The dict
         :return: The ActiveAlarm
         """
-        alarmingobj = the_dict['msg']
+        unionobj = the_dict['msg']
 
-        if type(alarmingobj) is tuple:
-            alarmingtype = alarmingobj[0]
-            alarmingdict = alarmingobj[1]
-        elif type(alarmingobj is dict):
-            value = next(iter(alarmingobj.items()))
-            alarmingtype = value[0]
-            alarmingdict = value[1]
+        if type(unionobj) is tuple:
+            uniontype = unionobj[0]
+            uniondict = unionobj[1]
+        elif type(unionobj is dict):
+            value = next(iter(unionobj.items()))
+            uniontype = value[0]
+            uniondict = value[1]
         else:
             raise Exception("Unsupported union encoding")
 
-        if alarmingtype == "org.jlab.jaws.entity.NoteAlarming":
-            obj = NoteAlarming(alarmingdict['note'])
-        elif alarmingtype == "org.jlab.jaws.entity.EPICSAlarming":
-            obj = EPICSAlarming(_unwrap_enum(alarmingdict['sevr'], EPICSSEVR), _unwrap_enum(alarmingdict['stat'],
+        if uniontype == "org.jlab.jaws.entity.NoteAlarming":
+            obj = NoteAlarming(uniondict['note'])
+        elif uniontype == "org.jlab.jaws.entity.EPICSAlarming":
+            obj = EPICSAlarming(_unwrap_enum(uniondict['sevr'], EPICSSEVR), _unwrap_enum(uniondict['stat'],
                                                                                             EPICSSTAT))
         else:
             obj = SimpleAlarming()
@@ -393,7 +437,7 @@ class OverriddenAlarmValueSerde:
 
     @staticmethod
     def _to_dict_with_ctx(obj, ctx):
-        return OverriddenAlarmValueSerde.to_dict(obj, True)
+        return OverriddenAlarmValueSerde.to_dict(obj)
 
     @staticmethod
     def from_dict(the_dict):
