@@ -84,7 +84,7 @@ class RegisteredAlarmSerde:
                                values.get('offdelayseconds'),
                                values.get('maskedby'),
                                values.get('screenpath'),
-                               values['class'],  # Not optional - we want key error if this is missing
+                               _unwrap_ref_tuple(values['class']),  # Not optional - we want error if missing
                                values['producer'])  # Also not optional
 
     @staticmethod
