@@ -9,9 +9,11 @@ from confluent_kafka.schema_registry import SchemaReference, Schema
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
 from fastavro import parse_schema
 
+from jlab_jaws.avro.referenced_schemas.entities import AlarmLocation, AlarmCategory, AlarmPriority, AlarmClass
 from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, \
-    OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue, OverriddenAlarmType, OverriddenAlarmKey, ShelvedAlarmReason
+    OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue, OverriddenAlarmType, OverriddenAlarmKey, ShelvedAlarmReason, \
+    EPICSSEVR, EPICSSTAT
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -19,13 +21,26 @@ def _default_if_none(value, default):
     return default if value is None else value
 
 
-def _unwrap_ref_tuple(ref):
-    if ref is None:
+def _unwrap_enum(value, enum_class):
+    """
+    When instantiating classes using _from_dict often a variable intended to be an enum is encountered that
+    may actually be a String, a Tuple, or an Enum so this function attempts to convert to an Enum if needed.
+
+    A tuple is allowed due to fastavro supporting tuples for complex types.
+
+    :param value: The value to massage into the correct type
+    :param enum_class: Enum class to instantiate
+    :return: A value likely as an Enum or None
+    """
+
+    if value is None:
         result = None
-    elif type(ref) is tuple:
-        result = ref[1]
-    else:  # not None and not a tuple, so return as is
-        result = ref
+    elif type(value) is tuple:
+        result = enum_class[value[1]]
+    elif type(value) is str:
+        result = enum_class[value]
+    else:  # return as is (hopefully already an Enum)
+        result = value
     return result
 
 
@@ -72,9 +87,9 @@ class RegisteredAlarmSerde:
 
     @staticmethod
     def _from_dict(values, ctx):
-        return RegisteredAlarm(_unwrap_ref_tuple(values.get('location')),
-                               _unwrap_ref_tuple(values.get('category')),
-                               _unwrap_ref_tuple(values.get('priority')),
+        return RegisteredAlarm(_unwrap_enum(values.get('location'), AlarmLocation),
+                               _unwrap_enum(values.get('category'), AlarmCategory),
+                               _unwrap_enum(values.get('priority'), AlarmPriority),
                                values.get('rationale'),
                                values.get('correctiveaction'),
                                values.get('pointofcontactusername'),
@@ -84,7 +99,7 @@ class RegisteredAlarmSerde:
                                values.get('offdelayseconds'),
                                values.get('maskedby'),
                                values.get('screenpath'),
-                               _unwrap_ref_tuple(values['class']),  # Not optional - we want error if missing
+                               _unwrap_enum(values['class'], AlarmClass),  # Not optional - we want error if missing
                                values['producer'])  # Also not optional
 
     @staticmethod
@@ -163,7 +178,7 @@ class ActiveAlarmSerde:
         if isinstance(obj.msg, SimpleAlarming):
             uniondict = {}
         elif isinstance(obj.msg, EPICSAlarming):
-            uniondict = {"sevr": obj.msg.sevr, "stat": obj.msg.stat}
+            uniondict = {"sevr": obj.msg.sevr.name, "stat": obj.msg.stat.name}
         elif isinstance(obj.msg, NoteAlarming):
             uniondict = {"note": obj.msg.note}
         else:
@@ -183,7 +198,8 @@ class ActiveAlarmSerde:
         if alarmingtype == "org.jlab.jaws.entity.NoteAlarming":
             obj = NoteAlarming(alarmingdict['note'])
         elif alarmingtype == "org.jlab.jaws.entity.EPICSAlarming":
-            obj = EPICSAlarming(alarmingdict['sevr'].name, alarmingdict['stat'].name)
+            obj = EPICSAlarming(_unwrap_enum(alarmingdict['sevr'], EPICSSEVR), _unwrap_enum(alarmingdict['stat'],
+                                                                                            EPICSSTAT))
         else:
             obj = SimpleAlarming()
 
@@ -231,7 +247,7 @@ class OverriddenAlarmKeySerde:
 
     @staticmethod
     def _from_dict(values, ctx):
-        return OverriddenAlarmKey(values['name'], OverriddenAlarmType[values['type']])
+        return OverriddenAlarmKey(values['name'], _unwrap_enum(values['type'], OverriddenAlarmType))
 
     @staticmethod
     def deserializer(schema_registry_client):
@@ -319,7 +335,7 @@ class OverriddenAlarmValueSerde:
             obj = OffDelayedAlarm(alarmingdict['expiration'])
         elif alarmingtype == "org.jlab.jaws.entity.ShelvedAlarm":
             obj = ShelvedAlarm(alarmingdict['expiration'], alarmingdict['comments'],
-                               ShelvedAlarmReason[alarmingdict['reason']], alarmingdict['oneshot'])
+                               _unwrap_enum(alarmingdict['reason'], ShelvedAlarmReason), alarmingdict['oneshot'])
         else:
             print("Unknown alarming type: {}".format(values['msg']))
             obj = LatchedAlarm()
