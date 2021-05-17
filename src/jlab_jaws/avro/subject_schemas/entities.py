@@ -9,6 +9,15 @@ from typing import Union
 from jlab_jaws.avro.referenced_schemas.entities import AlarmClass, AlarmLocation, AlarmCategory, AlarmPriority
 
 
+class UnionEncoding(Enum):
+    """
+        Enum of possible ways to encode an AVRO union in Python.
+    """
+    TUPLE = 1
+    DICT_WITH_TYPE = 2
+    POSSIBLY_AMBIGUOUS_DICT = 3
+
+
 class AlarmState(Enum):
     NormalDisabled = 1
     Disabled = 2

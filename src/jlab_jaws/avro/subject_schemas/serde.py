@@ -14,7 +14,7 @@ from jlab_jaws.avro.referenced_schemas.entities import AlarmLocation, AlarmCateg
 from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, \
     OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue, OverriddenAlarmType, OverriddenAlarmKey, ShelvedAlarmReason, \
-    EPICSSEVR, EPICSSTAT
+    EPICSSEVR, EPICSSTAT, UnionEncoding
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -175,26 +175,62 @@ class ActiveAlarmSerde:
     """
 
     @staticmethod
-    def _to_dict(obj, ctx):
+    def to_dict(obj, union_encoding=UnionEncoding.TUPLE):
+        """
+        Converts an OverriddenAlarmValue to a dict.
+
+        :param obj: The OverriddenAlarmValue
+        :param union_encoding: How the union should be encoded
+        :return: A dict
+        """
         if isinstance(obj.msg, SimpleAlarming):
+            uniontype = "org.jlab.jaws.entity.SimpleAlarming"
             uniondict = {}
         elif isinstance(obj.msg, EPICSAlarming):
+            uniontype = "org.jlab.jaws.entity.EPICSAlarming"
             uniondict = {"sevr": obj.msg.sevr.name, "stat": obj.msg.stat.name}
         elif isinstance(obj.msg, NoteAlarming):
+            uniontype = "org.jlab.jaws.entity.NoteAlarming"
             uniondict = {"note": obj.msg.note}
         else:
-            print("Unknown alarming union type: {}".format(obj.msg))
-            uniondict = {}
+            raise Exception("Unknown alarming union type: {}".format(obj.msg))
+
+        if union_encoding is UnionEncoding.TUPLE:
+            union = (uniontype, uniondict)
+        elif union_encoding is UnionEncoding.DICT_WITH_TYPE:
+            union = {uniontype: uniondict}
+        else:
+            union = uniondict
 
         return {
-            "msg": uniondict
+            "msg": union
         }
 
     @staticmethod
-    def _from_dict(values, ctx):
-        alarmingtuple = values['msg']
-        alarmingtype = alarmingtuple[0]
-        alarmingdict = alarmingtuple[1]
+    def _to_dict_with_ctx(obj, ctx):
+        return ActiveAlarmSerde.to_dict(obj)
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to an ActiveAlarm.
+
+        Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
+
+        :param the_dict: The dict
+        :return: The ActiveAlarm
+        """
+        alarmingobj = the_dict['msg']
+
+        if type(alarmingobj) is tuple:
+            alarmingtype = alarmingobj[0]
+            alarmingdict = alarmingobj[1]
+        elif type(alarmingobj is dict):
+            value = next(iter(alarmingobj.items()))
+            alarmingtype = value[0]
+            alarmingdict = value[1]
+        else:
+            raise Exception("Unsupported union encoding")
 
         if alarmingtype == "org.jlab.jaws.entity.NoteAlarming":
             obj = NoteAlarming(alarmingdict['note'])
@@ -207,6 +243,10 @@ class ActiveAlarmSerde:
         return ActiveAlarm(obj)
 
     @staticmethod
+    def _from_dict_with_ctx(the_dict, ctx):
+        ActiveAlarmSerde.from_dict(the_dict)
+
+    @staticmethod
     def deserializer(schema_registry_client):
         """
             Return an ActiveAlarm deserializer.
@@ -216,7 +256,7 @@ class ActiveAlarmSerde:
         """
 
         return AvroDeserializer(schema_registry_client, None,
-                                ActiveAlarmSerde._from_dict, True)
+                                ActiveAlarmSerde._from_dict_with_ctx, True)
 
     @staticmethod
     def serializer(schema_registry_client):
@@ -231,7 +271,7 @@ class ActiveAlarmSerde:
         value_schema_str = value_bytes.decode('utf-8')
 
         return AvroSerializer(schema_registry_client, value_schema_str,
-                              ActiveAlarmSerde._to_dict, None)
+                              ActiveAlarmSerde._to_dict_with_ctx, None)
 
 
 class OverriddenAlarmKeySerde:
@@ -296,15 +336,6 @@ class OverriddenAlarmKeySerde:
 
         return AvroSerializer(schema_registry_client, subject_schema_str,
                               OverriddenAlarmKeySerde._to_dict_with_ctx, None)
-
-
-class UnionEncoding(Enum):
-    """
-        Enum of possible ways to encode an AVRO union in Python.
-    """
-    TUPLE = 1
-    DICT_WITH_TYPE = 2
-    POSSIBLY_AMBIGUOUS_DICT = 3
 
 
 class OverriddenAlarmValueSerde:
