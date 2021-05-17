@@ -17,10 +17,6 @@ from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAl
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
-def _default_if_none(value, default):
-    return default if value is None else value
-
-
 def _unwrap_enum(value, enum_class):
     """
     When instantiating classes using _from_dict often a variable intended to be an enum is encountered that
@@ -129,6 +125,44 @@ class RegisteredClassSerde:
     """
         Provides RegisteredClass serde utilities
     """
+
+    @staticmethod
+    def setClassDefaults(alarm: RegisteredAlarm, alarm_class: RegisteredClass):
+        if alarm.priority is None:
+            alarm.priority = alarm_class.priority
+
+        if alarm.category is None:
+            alarm.category = alarm_class.category
+
+        if alarm.location is None:
+            alarm.location = alarm_class.location
+
+        if alarm.corrective_action is None:
+            alarm.corrective_action = alarm_class.corrective_action
+
+        if alarm.filterable is None:
+            alarm.filterable = alarm_class.filterable
+
+        if alarm.latching is None:
+            alarm.latching = alarm_class.latching
+
+        if alarm.masked_by is None:
+            alarm.masked_by = alarm_class.masked_by
+
+        if alarm.off_delay_seconds is None:
+            alarm.off_delay_seconds = alarm_class.off_delay_seconds
+
+        if alarm.on_delay_seconds is None:
+            alarm.on_delay_seconds = alarm_class.on_delay_seconds
+
+        if alarm.point_of_contact_username is None:
+            alarm.point_of_contact_username = alarm_class.point_of_contact_username
+
+        if alarm.rationale is None:
+            alarm.rationale = alarm_class.rationale
+
+        if alarm.screen_path is None:
+            alarm.screen_path = alarm_class.screen_path
 
     @staticmethod
     def to_dict(obj):
