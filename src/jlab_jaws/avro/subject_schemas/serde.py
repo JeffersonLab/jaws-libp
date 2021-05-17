@@ -254,9 +254,9 @@ class RegisteredAlarmSerde:
             union = uniondict
 
         return {
-            "location": obj.location.name,
-            "category": obj.category.name,
-            "priority": obj.priority.name,
+            "location": obj.location.name if obj.location is not None else None,
+            "category": obj.category.name if obj.category is not None else None,
+            "priority": obj.priority.name if obj.priority is not None else None,
             "rationale": obj.rationale,
             "correctiveaction": obj.corrective_action,
             "pointofcontactusername": obj.point_of_contact_username,
