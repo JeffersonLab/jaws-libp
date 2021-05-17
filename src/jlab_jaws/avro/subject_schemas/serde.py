@@ -72,34 +72,20 @@ class RegisteredAlarmSerde:
 
     @staticmethod
     def _from_dict(values, ctx):
-        return RegisteredAlarm(_default_if_none(_unwrap_ref_tuple(values['location']),
-                                                RegisteredAlarmSerde.defaults['location']),
-                               _default_if_none(_unwrap_ref_tuple(values['category']),
-                                                RegisteredAlarmSerde.defaults['category']),
-                               _default_if_none(_unwrap_ref_tuple(values['priority']),
-                                                RegisteredAlarmSerde.defaults['priority']),
-                               _default_if_none(values['rationale'],
-                                                RegisteredAlarmSerde.defaults['rationale']),
-                               _default_if_none(values['correctiveaction'],
-                                                RegisteredAlarmSerde.defaults['correctiveaction']),
-                               _default_if_none(values['pointofcontactusername'],
-                                                RegisteredAlarmSerde.defaults['pointofcontactusername']),
-                               _default_if_none(values['latching'],
-                                                RegisteredAlarmSerde.defaults['latching']),
-                               _default_if_none(values['filterable'],
-                                                RegisteredAlarmSerde.defaults['filterable']),
-                               _default_if_none(values['ondelayseconds'],
-                                                RegisteredAlarmSerde.defaults['ondelayseconds']),
-                               _default_if_none(values['offdelayseconds'],
-                                                RegisteredAlarmSerde.defaults['offdelayseconds']),
-                               _default_if_none(values['maskedby'],
-                                                RegisteredAlarmSerde.defaults['maskedby']),
-                               _default_if_none(values['screenpath'],
-                                                RegisteredAlarmSerde.defaults['screenpath']),
-                               _default_if_none(values['class'],
-                                                RegisteredAlarmSerde.defaults['class']),
-                               _default_if_none(values['producer'],
-                                                RegisteredAlarmSerde.defaults['producer']))
+        return RegisteredAlarm(_unwrap_ref_tuple(values.get('location')),
+                               _unwrap_ref_tuple(values.get('category')),
+                               _unwrap_ref_tuple(values.get('priority')),
+                               values.get('rationale'),
+                               values.get('correctiveaction'),
+                               values.get('pointofcontactusername'),
+                               values.get('latching'),
+                               values.get('filterable'),
+                               values.get('ondelayseconds'),
+                               values.get('offdelayseconds'),
+                               values.get('maskedby'),
+                               values.get('screenpath'),
+                               values['class'],  # Not optional - we want key error if this is missing
+                               values['producer'])  # Also not optional
 
     @staticmethod
     def _named_schemas():
