@@ -54,9 +54,9 @@ class RegisteredAlarmSerde:
     @staticmethod
     def _to_dict(obj, ctx):
         return {
-            "location": obj.location,
-            "category": obj.category,
-            "priority": obj.priority,
+            "location": obj.location.name,
+            "category": obj.category.name,
+            "priority": obj.priority.name,
             "rationale": obj.rationale,
             "correctiveaction": obj.corrective_action,
             "pointofcontactusername": obj.point_of_contact_username,
@@ -66,7 +66,7 @@ class RegisteredAlarmSerde:
             "offdelayseconds": obj.off_delay_seconds,
             "maskedby": obj.masked_by,
             "screenpath": obj.screen_path,
-            "class": obj.alarm_class,
+            "class": obj.alarm_class.name,
             "producer": obj.producer
         }
 
@@ -197,7 +197,7 @@ class ActiveAlarmSerde:
         if alarmingtype == "org.jlab.jaws.entity.NoteAlarming":
             obj = NoteAlarming(alarmingdict['note'])
         elif alarmingtype == "org.jlab.jaws.entity.EPICSAlarming":
-            obj = EPICSAlarming(alarmingdict['sevr'], alarmingdict['stat'])
+            obj = EPICSAlarming(alarmingdict['sevr'].name, alarmingdict['stat'].name)
         else:
             obj = SimpleAlarming()
 
