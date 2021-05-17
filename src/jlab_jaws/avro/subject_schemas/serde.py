@@ -80,6 +80,17 @@ class RegisteredClassKeySerde:
         return RegisteredClassKeySerde.from_dict(the_dict)
 
     @staticmethod
+    def _named_schemas():
+        class_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmClass.avsc")
+        class_schema_str = class_bytes.decode('utf-8')
+
+        named_schemas = {}
+        ref_dict = loads(class_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+
+        return named_schemas
+
+    @staticmethod
     def deserializer(schema_registry_client):
         """
             Return a RegisteredClassKey deserializer.
@@ -88,8 +99,9 @@ class RegisteredClassKeySerde:
             :return: Deserializer
         """
 
-        return AvroDeserializer(schema_registry_client, None,
-                                RegisteredClassKeySerde._from_dict_with_ctx, True)
+        return AvroDeserializerWithReferences(schema_registry_client, None,
+                                              RegisteredClassKeySerde._from_dict_with_ctx, True,
+                                              RegisteredClassKeySerde._named_schemas())
 
     @staticmethod
     def serializer(schema_registry_client):
@@ -103,14 +115,21 @@ class RegisteredClassKeySerde:
         subject_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/registered-class-key.avsc")
         subject_schema_str = subject_bytes.decode('utf-8')
 
-        return AvroSerializer(schema_registry_client, subject_schema_str,
-                              RegisteredClassKeySerde._to_dict_with_ctx, None)
+        class_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-class", 1)
+
+        schema = Schema(subject_schema_str, "AVRO",
+                        [class_schema_ref])
+
+        return AvroSerializerWithReferences(schema_registry_client, schema,
+                                            RegisteredClassKeySerde._to_dict_with_ctx,
+                                            RegisteredClassKeySerde._named_schemas())
 
 
 class RegisteredClassSerde:
     """
         Provides RegisteredClass serde utilities
     """
+
     @staticmethod
     def to_dict(obj):
         """
@@ -224,6 +243,7 @@ class RegisteredAlarmSerde:
     """
         Provides RegisteredAlarm serde utilities
     """
+
     @staticmethod
     def to_dict(obj, union_encoding=UnionEncoding.TUPLE):
         """
@@ -442,7 +462,7 @@ class ActiveAlarmSerde:
             obj = NoteAlarming(uniondict['note'])
         elif uniontype == "org.jlab.jaws.entity.EPICSAlarming":
             obj = EPICSAlarming(_unwrap_enum(uniondict['sevr'], EPICSSEVR), _unwrap_enum(uniondict['stat'],
-                                                                                            EPICSSTAT))
+                                                                                         EPICSSTAT))
         else:
             obj = SimpleAlarming()
 
@@ -595,7 +615,6 @@ class OverriddenAlarmValueSerde:
         return {
             "msg": union
         }
-
 
     @staticmethod
     def _to_dict_with_ctx(obj, ctx):
