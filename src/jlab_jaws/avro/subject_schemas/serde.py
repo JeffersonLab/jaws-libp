@@ -240,15 +240,35 @@ class OverriddenAlarmKeySerde:
     """
 
     @staticmethod
-    def _to_dict(obj, ctx):
+    def to_dict(obj):
+        """
+        Converts an OverriddenAlarmKey to a dict.
+
+        :param obj: The OverriddenAlarmKey
+        :return: A dict
+        """
         return {
             "name": obj.name,
             "type": obj.type.name
         }
 
     @staticmethod
-    def _from_dict(values, ctx):
-        return OverriddenAlarmKey(values['name'], _unwrap_enum(values['type'], OverriddenAlarmType))
+    def _to_dict_with_ctx(obj, ctx):
+        return OverriddenAlarmKeySerde.to_dict(obj)
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to an OverriddenAlarmKey.
+
+        :param the_dict: The dict
+        :return: The OverriddenAlarmKey
+        """
+        return OverriddenAlarmKey(the_dict['name'], _unwrap_enum(the_dict['type'], OverriddenAlarmType))
+
+    @staticmethod
+    def _from_dict_with_ctx(the_dict, ctx):
+        return OverriddenAlarmKeySerde.from_dict(the_dict)
 
     @staticmethod
     def deserializer(schema_registry_client):
@@ -260,7 +280,7 @@ class OverriddenAlarmKeySerde:
         """
 
         return AvroDeserializer(schema_registry_client, None,
-                                OverriddenAlarmKeySerde._from_dict, True)
+                                OverriddenAlarmKeySerde._from_dict_with_ctx, True)
 
     @staticmethod
     def serializer(schema_registry_client):
@@ -275,10 +295,13 @@ class OverriddenAlarmKeySerde:
         subject_schema_str = subject_bytes.decode('utf-8')
 
         return AvroSerializer(schema_registry_client, subject_schema_str,
-                              OverriddenAlarmKeySerde._to_dict, None)
+                              OverriddenAlarmKeySerde._to_dict_with_ctx, None)
 
 
 class UnionEncoding(Enum):
+    """
+        Enum of possible ways to encode an AVRO union in Python.
+    """
     TUPLE = 1
     DICT_WITH_TYPE = 2
     POSSIBLY_AMBIGUOUS_DICT = 3
