@@ -3,6 +3,7 @@
 """
 
 import pkgutil
+from enum import Enum
 from json import loads
 
 from confluent_kafka.schema_registry import SchemaReference, Schema
@@ -277,13 +278,26 @@ class OverriddenAlarmKeySerde:
                               OverriddenAlarmKeySerde._to_dict, None)
 
 
+class UnionEncoding(Enum):
+    TUPLE = 1
+    DICT_WITH_TYPE = 2
+    POSSIBLY_AMBIGUOUS_DICT = 3
+
+
 class OverriddenAlarmValueSerde:
     """
         Provides OverriddenAlarmValue serde utilities
     """
 
     @staticmethod
-    def _to_dict(obj, ctx):
+    def to_dict(obj, union_encoding=UnionEncoding.TUPLE):
+        """
+        Converts an OverriddenAlarmValue to a dict.
+
+        :param obj: The OverriddenAlarmValue
+        :param union_encoding: How the union should be encoded
+        :return: A dict
+        """
         if isinstance(obj.msg, DisabledAlarm):
             uniontype = "org.jlab.jaws.entity.DisabledAlarm"
             uniondict = {"comments": obj.msg.comments}
@@ -311,15 +325,45 @@ class OverriddenAlarmValueSerde:
             uniontype = "org.jlab.jaws.entity.LatchedAlarm"
             uniondict = {}
 
+        if union_encoding is UnionEncoding.TUPLE:
+            union = (uniontype, uniondict)
+        elif union_encoding is UnionEncoding.DICT_WITH_TYPE:
+            union = {uniontype: uniondict}
+        else:
+            union = uniondict
+
         return {
-            "msg": (uniontype, uniondict)
+            "msg": union
         }
 
+
     @staticmethod
-    def _from_dict(values, ctx):
-        alarmingtuple = values['msg']
-        alarmingtype = alarmingtuple[0]
-        alarmingdict = alarmingtuple[1]
+    def _to_dict_with_ctx(obj, ctx):
+        return OverriddenAlarmValueSerde.to_dict(obj, True)
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to an OverriddenAlarmValue.
+
+        Note: Both UnionEncoding.TUPLE and UnionEncoding.DICT_WITH_TYPE are supported,
+        but UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported at this time
+        because I'm lazy and not going to try to guess what type is in your union.
+
+        :param the_dict: The dict (or maybe it's a duck)
+        :return: The OverriddenAlarmValue
+        """
+        alarmingobj = the_dict['msg']
+
+        if type(alarmingobj) is tuple:
+            alarmingtype = alarmingobj[0]
+            alarmingdict = alarmingobj[1]
+        elif type(alarmingobj is dict):
+            value = next(iter(alarmingobj.items()))
+            alarmingtype = value[0]
+            alarmingdict = value[1]
+        else:
+            raise Exception("Unsupported union encoding")
 
         if alarmingtype == "org.jlab.jaws.entity.DisabledAlarm":
             obj = DisabledAlarm(alarmingdict['comments'])
@@ -337,10 +381,14 @@ class OverriddenAlarmValueSerde:
             obj = ShelvedAlarm(alarmingdict['expiration'], alarmingdict['comments'],
                                _unwrap_enum(alarmingdict['reason'], ShelvedAlarmReason), alarmingdict['oneshot'])
         else:
-            print("Unknown alarming type: {}".format(values['msg']))
+            print("Unknown alarming type: {}".format(the_dict['msg']))
             obj = LatchedAlarm()
 
         return OverriddenAlarmValue(obj)
+
+    @staticmethod
+    def _from_dict_with_ctx(the_dict, ctx):
+        return OverriddenAlarmValueSerde.from_dict(the_dict)
 
     @staticmethod
     def deserializer(schema_registry_client):
@@ -352,7 +400,7 @@ class OverriddenAlarmValueSerde:
         """
 
         return AvroDeserializer(schema_registry_client, None,
-                                OverriddenAlarmValueSerde._from_dict, True)
+                                OverriddenAlarmValueSerde._from_dict_with_ctx, True)
 
     @staticmethod
     def serializer(schema_registry_client):
@@ -367,4 +415,4 @@ class OverriddenAlarmValueSerde:
         subject_schema_str = subject_bytes.decode('utf-8')
 
         return AvroSerializer(schema_registry_client, subject_schema_str,
-                              OverriddenAlarmValueSerde._to_dict, None)
+                              OverriddenAlarmValueSerde._to_dict_with_ctx, None)
