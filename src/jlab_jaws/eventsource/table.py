@@ -117,7 +117,7 @@ class EventSourceTable:
                 print("AvroConsumer error: {}".format(msg.error()))
                 continue
 
-            self._on_state_update(self._state)
+            self._on_state_update(msg)
 
         c.close()
 
