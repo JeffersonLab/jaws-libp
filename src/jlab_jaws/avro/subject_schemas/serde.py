@@ -13,7 +13,7 @@ from jlab_jaws.avro.referenced_schemas.entities import AlarmLocation, AlarmCateg
 from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, \
     OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue, OverriddenAlarmType, OverriddenAlarmKey, ShelvedAlarmReason, \
-    EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer
+    EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, RegisteredClass, RegisteredClassKey
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -42,6 +42,182 @@ def _unwrap_enum(value, enum_class):
     else:  # return as is (hopefully already an Enum)
         result = value
     return result
+
+
+class RegisteredClassKeySerde:
+    """
+        Provides RegisteredClassKey serde utilities
+    """
+
+    @staticmethod
+    def to_dict(obj):
+        """
+        Converts a RegisteredClassKey to a dict.
+
+        :param obj: The RegisteredClassKey
+        :return: A dict
+        """
+        return {
+            "class": obj.alarm_class.name
+        }
+
+    @staticmethod
+    def _to_dict_with_ctx(obj, ctx):
+        return RegisteredClassKeySerde.to_dict(obj)
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to a RegisteredClassKey.
+
+        :param the_dict: The dict
+        :return: The RegisteredClassKey
+        """
+        return RegisteredClassKey(_unwrap_enum(the_dict['class'], AlarmClass))
+
+    @staticmethod
+    def _from_dict_with_ctx(the_dict, ctx):
+        return RegisteredClassKeySerde.from_dict(the_dict)
+
+    @staticmethod
+    def deserializer(schema_registry_client):
+        """
+            Return a RegisteredClassKey deserializer.
+
+            :param schema_registry_client: The Confluent Schema Registry Client
+            :return: Deserializer
+        """
+
+        return AvroDeserializer(schema_registry_client, None,
+                                RegisteredClassKeySerde._from_dict_with_ctx, True)
+
+    @staticmethod
+    def serializer(schema_registry_client):
+        """
+            Return a RegisteredClassKey serializer.
+
+            :param schema_registry_client: The Confluent Schema Registry client
+            :return: Serializer
+        """
+
+        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/registered-class-key.avsc")
+        subject_schema_str = subject_bytes.decode('utf-8')
+
+        return AvroSerializer(schema_registry_client, subject_schema_str,
+                              RegisteredClassKeySerde._to_dict_with_ctx, None)
+
+
+class RegisteredClassSerde:
+    """
+        Provides RegisteredClass serde utilities
+    """
+    @staticmethod
+    def to_dict(obj):
+        """
+        Converts a RegisteredClass to a dict.
+
+        :param obj: The RegisteredClass
+        :return: A dict
+        """
+
+        return {
+            "location": obj.location.name,
+            "category": obj.category.name,
+            "priority": obj.priority.name,
+            "rationale": obj.rationale,
+            "correctiveaction": obj.corrective_action,
+            "pointofcontactusername": obj.point_of_contact_username,
+            "latching": obj.latching,
+            "filterable": obj.filterable,
+            "ondelayseconds": obj.on_delay_seconds,
+            "offdelayseconds": obj.off_delay_seconds,
+            "maskedby": obj.masked_by,
+            "screenpath": obj.screen_path,
+        }
+
+    @staticmethod
+    def _to_dict_with_ctx(obj, ctx):
+        return RegisteredClassSerde.to_dict(obj)
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to a RegisteredClass.
+
+        :param the_dict: The dict
+        :return: The RegisteredClass
+        """
+        return RegisteredClass(_unwrap_enum(the_dict.get('location'), AlarmLocation),
+                               _unwrap_enum(the_dict.get('category'), AlarmCategory),
+                               _unwrap_enum(the_dict.get('priority'), AlarmPriority),
+                               the_dict.get('rationale'),
+                               the_dict.get('correctiveaction'),
+                               the_dict.get('pointofcontactusername'),
+                               the_dict.get('latching'),
+                               the_dict.get('filterable'),
+                               the_dict.get('ondelayseconds'),
+                               the_dict.get('offdelayseconds'),
+                               the_dict.get('maskedby'),
+                               the_dict.get('screenpath'))
+
+    @staticmethod
+    def _from_dict_with_ctx(the_dict, ctx):
+        return RegisteredClassSerde._from_dict_with_ctx(the_dict)
+
+    @staticmethod
+    def _named_schemas():
+        location_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmLocation.avsc")
+        location_schema_str = location_bytes.decode('utf-8')
+
+        category_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmCategory.avsc")
+        category_schema_str = category_bytes.decode('utf-8')
+
+        priority_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmPriority.avsc")
+        priority_schema_str = priority_bytes.decode('utf-8')
+
+        named_schemas = {}
+        ref_dict = loads(location_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(category_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(priority_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+
+        return named_schemas
+
+    @staticmethod
+    def deserializer(schema_registry_client):
+        """
+            Return a RegisteredClass deserializer.
+
+            :param schema_registry_client: The Confluent Schema Registry Client
+            :return: Deserializer
+        """
+        return AvroDeserializerWithReferences(schema_registry_client, None,
+                                              RegisteredClassSerde._from_dict_with_ctx, True,
+                                              RegisteredClassSerde._named_schemas())
+
+    @staticmethod
+    def serializer(schema_registry_client):
+        """
+            Return a RegisteredClass serializer.
+
+            :param schema_registry_client: The Confluent Schema Registry client
+            :return: Serializer
+        """
+        value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/registered-alarms-value.avsc")
+        value_schema_str = value_bytes.decode('utf-8')
+
+        location_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmLocation", "alarm-location", 1)
+        category_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmCategory", "alarm-category", 1)
+        priority_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmPriority", "alarm-priority", 1)
+
+        schema = Schema(value_schema_str, "AVRO",
+                        [location_schema_ref, category_schema_ref, priority_schema_ref])
+
+        return AvroSerializerWithReferences(schema_registry_client, schema,
+                                            RegisteredClassSerde._to_dict_with_ctx, None,
+                                            RegisteredClassSerde._named_schemas())
 
 
 class RegisteredAlarmSerde:
@@ -106,7 +282,7 @@ class RegisteredAlarmSerde:
         Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
 
         :param the_dict: The dict
-        :return: The ActiveAlarm
+        :return: The RegisteredAlarm
         """
 
         unionobj = the_dict['producer']
@@ -149,26 +325,12 @@ class RegisteredAlarmSerde:
 
     @staticmethod
     def _named_schemas():
+        named_schemas = RegisteredClassSerde._named_schemas()
+
         class_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmClass.avsc")
         class_schema_str = class_bytes.decode('utf-8')
 
-        location_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmLocation.avsc")
-        location_schema_str = location_bytes.decode('utf-8')
-
-        category_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmCategory.avsc")
-        category_schema_str = category_bytes.decode('utf-8')
-
-        priority_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmPriority.avsc")
-        priority_schema_str = priority_bytes.decode('utf-8')
-
-        named_schemas = {}
         ref_dict = loads(class_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(location_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(category_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(priority_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
 
         return named_schemas

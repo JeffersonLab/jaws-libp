@@ -187,16 +187,16 @@ class ShelvedAlarm:
     oneshot: bool
 
 
-@dataclass
-class ClassAlarmKey:
+@dataclass(frozen=True)
+class RegisteredClassKey:
     """
         registered-class-key subject
     """
-    alarmClass: AlarmClass
+    alarm_class: AlarmClass
 
 
 @dataclass
-class ClassAlarm:
+class RegisteredClass:
     """
         registered-class-value subject
     """
@@ -215,7 +215,7 @@ class ClassAlarm:
 
 
 @dataclass
-class RegisteredAlarm(ClassAlarm):
+class RegisteredAlarm(RegisteredClass):
     """
         registered-alarm-value subject
     """
