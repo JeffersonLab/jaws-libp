@@ -20,10 +20,12 @@ def _default_if_none(value, default):
 
 
 def _unwrap_ref_tuple(ref):
-    if ref is not None:
-        result = ref[1]
-    else:
+    if ref is None:
         result = None
+    elif type(ref) is tuple:
+        result = ref[1]
+    else:  # not None and not a tuple, so return as is
+        result = ref
     return result
 
 
