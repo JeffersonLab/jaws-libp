@@ -403,9 +403,9 @@ class ActiveAlarmSerde:
     @staticmethod
     def to_dict(obj, union_encoding=UnionEncoding.TUPLE):
         """
-        Converts an OverriddenAlarmValue to a dict.
+        Converts an ActiveAlarmValue to a dict.
 
-        :param obj: The OverriddenAlarmValue
+        :param obj: The ActiveAlarmValue
         :param union_encoding: How the union should be encoded
         :return: A dict
         """
