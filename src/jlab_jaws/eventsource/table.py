@@ -90,7 +90,8 @@ class EventSourceTable:
                 continue
 
             if msg.value() is None:
-                del self._state[msg.key()]
+                if msg.key() in self._state:
+                    del self._state[msg.key()]
             else:
                 self._state[msg.key()] = msg
 
