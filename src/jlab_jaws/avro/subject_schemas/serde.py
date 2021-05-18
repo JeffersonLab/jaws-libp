@@ -117,7 +117,7 @@ class RegisteredClassKeySerde:
                         [class_schema_ref])
 
         return AvroSerializerWithReferences(schema_registry_client, schema,
-                                            RegisteredClassKeySerde._to_dict_with_ctx,
+                                            RegisteredClassKeySerde._to_dict_with_ctx, None,
                                             RegisteredClassKeySerde._named_schemas())
 
 
