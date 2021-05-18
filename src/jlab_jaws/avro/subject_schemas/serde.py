@@ -510,7 +510,7 @@ class ActiveAlarmSerde:
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
-        ActiveAlarmSerde.from_dict(the_dict)
+        return ActiveAlarmSerde.from_dict(the_dict)
 
     @staticmethod
     def deserializer(schema_registry_client):
