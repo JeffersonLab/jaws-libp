@@ -264,7 +264,7 @@ class RegisteredClassSerde:
             :param schema_registry_client: The Confluent Schema Registry client
             :return: Serializer
         """
-        value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/registered-alarms-value.avsc")
+        value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/registered-class-value.avsc")
         value_schema_str = value_bytes.decode('utf-8')
 
         location_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmLocation", "alarm-location", 1)
