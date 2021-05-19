@@ -63,13 +63,17 @@ class EventSourceTable:
         self._default_conf = {}
         self._state = {}
 
-        consumer_conf = {'bootstrap.servers': config['bootstrap.servers'],
-                         'key.deserializer': config['key.deserializer'],
-                         'value.deserializer': config['value.deserializer'],
-                         'group.id': config['group.id']}
+    def start(self):
+        """
+            Start monitoring for state updates.
+        """
+        consumer_conf = {'bootstrap.servers': self._config['bootstrap.servers'],
+                         'key.deserializer': self._config['key.deserializer'],
+                         'value.deserializer': self._config['value.deserializer'],
+                         'group.id': self._config['group.id']}
 
         c = DeserializingConsumer(consumer_conf)
-        c.subscribe([config['topic']], on_assign=self._my_on_assign)
+        c.subscribe([self._config['topic']], on_assign=self._my_on_assign)
 
         while True:
             try:
@@ -100,7 +104,7 @@ class EventSourceTable:
 
         self._on_initial_state(self._state)
 
-        if not config['monitor']:
+        if not self._config['monitor']:
             self._run = False
 
         while self._run:
