@@ -12,10 +12,10 @@
   ]},
   {"file": "avro/subject_schemas/overridden-alarms-value.avsc", "subject": "overridden-alarms-value", "references": []},
   {"file": "avro/subject_schemas/overridden-alarms-key.avsc", "subject": "overridden-alarms-key", "references": []},
-  {"file": "avro/subject_schemas/registered-class-key.avsc", "subject": "registered-class-key", "references": [
+  {"file": "avro/subject_schemas/registered-classes-key.avsc", "subject": "registered-classes-key", "references": [
     {"name": "org.jlab.jaws.entity.AlarmClass", "subject": "alarm-class", "version": "1"}
   ]},
-  {"file": "avro/subject_schemas/registered-class-value.avsc", "subject": "registered-class-value", "references": [
+  {"file": "avro/subject_schemas/registered-classes-value.avsc", "subject": "registered-classes-value", "references": [
     {"name": "org.jlab.jaws.entity.AlarmLocation", "subject": "alarm-location", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
