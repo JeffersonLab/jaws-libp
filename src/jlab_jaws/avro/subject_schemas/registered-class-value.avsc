@@ -20,6 +20,21 @@
       "doc": "The alarm priority"
     },
     {
+      "name": "rationale",
+      "type": "string",
+      "doc": "Markdown formatted text describing the reason this alarm is necessary"
+    },
+    {
+      "name": "correctiveaction",
+      "type": "string",
+      "doc": "Markdown formatted text describing the corrective action to take when the alarm becomes active"
+    },
+    {
+      "name": "pointofcontactusername",
+      "type": "string",
+      "doc": "Username (identifier) of point of contact.  Full contact info should be obtained from user database (LDAP for example)"
+    },
+    {
       "name": "latching",
       "type": "boolean",
       "doc": "Indicates whether this alarm latches when activated and can only be cleared after an explicit acknowledgement",
