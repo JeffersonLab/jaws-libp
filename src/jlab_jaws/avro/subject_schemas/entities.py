@@ -11,44 +11,80 @@ from jlab_jaws.avro.referenced_schemas.entities import AlarmClass, AlarmLocation
 
 class UnionEncoding(Enum):
     """
-        Enum of possible ways to encode an AVRO union in Python.
+        Enum of possible ways to encode an AVRO union instance in Python.
     """
     TUPLE = 1
+    """Instance is a two-tuple of (str - type name, dict); this is how fastavro works 
+    (https://fastavro.readthedocs.io/en/latest/writer.html#using-the-tuple-notation-to-specify-which-branch-of-a-union-to-take)"""
     DICT_WITH_TYPE = 2
+    """Instance is a dict with one entry of key type name str and value dict; this serializes to JSON as AVRO expects 
+    (except for logical types and bytes) - See:  http://avro.apache.org/docs/current/spec.html#json_encoding"""
     POSSIBLY_AMBIGUOUS_DICT = 3
+    """Instance dict provided without type name - which in the case of records with identical fields there is no way
+    to determine which is which (example: union of classes A and B where each has identical fields)"""
 
 
 class AlarmState(Enum):
     NormalDisabled = 1
+    """Effectively Normal, Actually Normal, out-of-service"""
     Disabled = 2
+    """Effectively Normal, Actually Active, out-of-service"""
     NormalFiltered = 3
+    """Effectively Normal, Actually Normal, suppressed by design"""
     Filtered = 4
+    """Effectively Normal, Actually Active, suppressed by design"""
     Masked = 5
+    """Effectively Normal, Actually Active, hidden by parent alarm"""
     OnDelayed = 6
+    """Effectively Normal, Actually Active, temporarily suppressed upon activation"""
     OneShotShelved = 7
+    """Effectively Normal, Actually Active, temporarily suppressed until next deactivation or expiration"""
     NormalContinuousShelved = 8
+    """Effectively Normal, Actually Normal, temporarily suppressed until expiration"""
     ContinuousShelved = 9
+    """Effectively Normal, Actually Active, temporarily suppressed until expiration"""
     OffDelayed = 10
+    """Effectively Active, Actually Normal, temporarily incited upon deactivation"""
     NormalLatched = 11
+    """Effectively Active, Actually Normal, temporarily incited upon activation"""
     Latched = 12
+    """Effectively Active, Actually Active, temporarily incited upon activation"""
     Active = 13
+    """Effectively Active, Actually Active, timely operator action required"""
     Normal = 14
+    """Effectively Normal, Actually Normal, no action required"""
 
 
 class OverriddenAlarmType(Enum):
     Disabled = 1
+    """A broken alarm can be flagged as out-of-service"""
     Filtered = 2
+    """An alarm can be "suppressed by design" - generally a group of alarms are filtered out when not needed for the
+    current machine program. The Filter Processor helps operators filter multiple alarms with simple grouping
+    commands (like by area)."""
     Masked = 3
+    """An alarm can be suppressed by a parent alarm to minimize confusion during an alarm flood and build an 
+    alarm hierarchy"""
     OnDelayed = 4
+    """An alarm with an on-delay is temporarily suppressed upon activation to minimize fleeting/chattering"""
     OffDelayed = 5
+    """An alarm with an off-delay is temporarily incited upon de-activation to minimize fleeting/chattering"""
     Shelved = 6
+    """An alarm can be temporarily suppressed via manual operator command"""
     Latched = 7
+    """A fleeting alarm (one that toggles between active and not active too quickly) can be configured to require 
+    acknowledgement by operators - the alarm is latched once active and won't clear to Normal (or Active) until 
+    acknowledged"""
 
 
 class ShelvedAlarmReason(Enum):
     Stale_Alarm = 1
+    """Nuisance alarm which remains active for an extended period of time"""
     Chattering_Fleeting_Alarm = 2
+    """Nuisance alarm which toggles between active and normal states quickly (fleeting) and may do this often
+    (chattering)"""
     Other = 3
+    """Some other reason"""
 
 
 class EPICSSEVR(Enum):
