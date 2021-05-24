@@ -13,7 +13,8 @@ from jlab_jaws.avro.referenced_schemas.entities import AlarmLocation, AlarmCateg
 from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, \
     OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue, OverriddenAlarmType, OverriddenAlarmKey, ShelvedAlarmReason, \
-    EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, RegisteredClass, RegisteredClassKey
+    EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, RegisteredClass, RegisteredClassKey, \
+    AlarmStateValue, AlarmStateEnum
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -735,3 +736,66 @@ class OverriddenAlarmValueSerde:
 
         return AvroSerializer(schema_registry_client, subject_schema_str,
                               OverriddenAlarmValueSerde._to_dict_with_ctx, None)
+
+
+class AlarmStateSerde:
+    """
+        Provides AlarmState serde utilities
+    """
+
+    @staticmethod
+    def to_dict(obj):
+        """
+        Converts AlarmState to a dict.
+
+        :param obj: The AlarmState
+        :return: A dict
+        """
+        return {
+            "type": obj.type.name
+        }
+
+    @staticmethod
+    def _to_dict_with_ctx(obj, ctx):
+        return AlarmStateSerde.to_dict(obj)
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to AlarmState.
+
+        :param the_dict: The dict
+        :return: The AlarmState
+        """
+        return AlarmStateValue(_unwrap_enum(the_dict['type'], AlarmStateEnum))
+
+    @staticmethod
+    def _from_dict_with_ctx(the_dict, ctx):
+        return AlarmStateSerde.from_dict(the_dict)
+
+    @staticmethod
+    def deserializer(schema_registry_client):
+        """
+            Return an AlarmState deserializer.
+
+            :param schema_registry_client: The Confluent Schema Registry Client
+            :return: Deserializer
+        """
+
+        return AvroDeserializer(schema_registry_client, None,
+                                AlarmStateSerde._from_dict_with_ctx, True)
+
+    @staticmethod
+    def serializer(schema_registry_client):
+        """
+            Return an AlarmState serializer.
+
+            :param schema_registry_client: The Confluent Schema Registry client
+            :return: Serializer
+        """
+
+        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/alarm-state-value.avsc")
+        subject_schema_str = subject_bytes.decode('utf-8')
+
+        return AvroSerializer(schema_registry_client, subject_schema_str,
+                              AlarmStateSerde._to_dict_with_ctx, None)

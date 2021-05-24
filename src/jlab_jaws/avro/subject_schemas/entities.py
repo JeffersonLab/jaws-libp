@@ -24,7 +24,7 @@ class UnionEncoding(Enum):
     to determine which is which (example: union of classes A and B where each has identical fields)"""
 
 
-class AlarmState(Enum):
+class AlarmStateEnum(Enum):
     NormalDisabled = 1
     """Effectively Normal, Actually Normal, out-of-service"""
     Disabled = 2
@@ -325,5 +325,5 @@ class AlarmStateValue:
     """
         alarm-state-value subject
     """
-    type: AlarmState
+    type: AlarmStateEnum
     """The Alarm State"""
