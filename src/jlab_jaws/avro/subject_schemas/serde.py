@@ -748,7 +748,7 @@ class AlarmStateSerde:
         """
         Converts AlarmState to a dict.
 
-        :param obj: The AlarmState
+        :param obj: The AlarmStateValue
         :return: A dict
         """
         return {
@@ -765,7 +765,7 @@ class AlarmStateSerde:
         Converts a dict to AlarmState.
 
         :param the_dict: The dict
-        :return: The AlarmState
+        :return: The AlarmStateValue
         """
         return AlarmStateValue(_unwrap_enum(the_dict['type'], AlarmStateEnum))
 
@@ -776,7 +776,7 @@ class AlarmStateSerde:
     @staticmethod
     def deserializer(schema_registry_client):
         """
-            Return an AlarmState deserializer.
+            Return an AlarmStateValue deserializer.
 
             :param schema_registry_client: The Confluent Schema Registry Client
             :return: Deserializer
@@ -788,7 +788,7 @@ class AlarmStateSerde:
     @staticmethod
     def serializer(schema_registry_client):
         """
-            Return an AlarmState serializer.
+            Return an AlarmStateValue serializer.
 
             :param schema_registry_client: The Confluent Schema Registry client
             :return: Serializer
