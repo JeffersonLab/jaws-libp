@@ -63,13 +63,17 @@ class EventSourceTable:
         self._default_conf = {}
         self._state = {}
 
-        consumer_conf = {'bootstrap.servers': config['bootstrap.servers'],
-                         'key.deserializer': config['key.deserializer'],
-                         'value.deserializer': config['value.deserializer'],
-                         'group.id': config['group.id']}
+    def start(self):
+        """
+            Start monitoring for state updates.
+        """
+        consumer_conf = {'bootstrap.servers': self._config['bootstrap.servers'],
+                         'key.deserializer': self._config['key.deserializer'],
+                         'value.deserializer': self._config['value.deserializer'],
+                         'group.id': self._config['group.id']}
 
         c = DeserializingConsumer(consumer_conf)
-        c.subscribe([config['topic']], on_assign=self._my_on_assign)
+        c.subscribe([self._config['topic']], on_assign=self._my_on_assign)
 
         while True:
             try:
@@ -86,11 +90,12 @@ class EventSourceTable:
                 continue
 
             if msg.error():
-                print("AvroConsumer error: {}".format(msg.error()))
+                print("Consumer error: {}".format(msg.error()))
                 continue
 
             if msg.value() is None:
-                del self._state[msg.key()]
+                if msg.key() in self._state:
+                    del self._state[msg.key()]
             else:
                 self._state[msg.key()] = msg
 
@@ -99,7 +104,7 @@ class EventSourceTable:
 
         self._on_initial_state(self._state)
 
-        if not config['monitor']:
+        if not self._config['monitor']:
             self._run = False
 
         while self._run:
@@ -114,10 +119,10 @@ class EventSourceTable:
                 continue
 
             if msg.error():
-                print("AvroConsumer error: {}".format(msg.error()))
+                print("Consumer error: {}".format(msg.error()))
                 continue
 
-            self._on_state_update(self._state)
+            self._on_state_update(msg)
 
         c.close()
 
