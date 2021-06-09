@@ -153,8 +153,11 @@
             
   <h1>Source code for jlab_jaws.utils</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; </span>
-<span class="sd">.. module:: utils</span>
-<span class="sd">   :synopsis : common utilities</span>
+<span class="sd">.. currentmodule:: jlab_jaws.utils</span>
+<span class="sd">.. automodule: utils</span>
+<span class="sd">   :synopsis : common utilities for use with the JAWS alarm system</span>
+<span class="sd">   </span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">time</span>
@@ -162,11 +165,18 @@
 <span class="kn">import</span> <span class="nn">pytz</span>
 
 <div class="viewcode-block" id="convert_timestamp"><a class="viewcode-back" href="../../_autosummary/jlab_jaws.utils.convert_timestamp.html#jlab_jaws.utils.convert_timestamp">[docs]</a><span class="k">def</span> <span class="nf">convert_timestamp</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span> <span class="p">:</span>
-   <span class="sd">&quot;&quot;&quot; Convert the message timestamp to local timezone.</span>
+   <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">      .. automethod:: convert_timestamp</span>
+<span class="sd">      .. rubric:: Methods</span>
+<span class="sd">            </span>
+<span class="sd">      Convert the message timestamp to local timezone.</span>
 <span class="sd">       </span>
-<span class="sd">       :param seconds : number of seconds</span>
-<span class="sd">       :type seconds : int</span>
-<span class="sd">       :returns date string for local timezone</span>
+<span class="sd">       </span>
+<span class="sd">       Parameters:</span>
+<span class="sd">         seconds(int) : number of seconds</span>
+<span class="sd">       </span>
+<span class="sd">       Returns:</span>
+<span class="sd">         datestring in local time: &quot;2021-06-09 09:26:09-04:00&quot;</span>
 <span class="sd">      </span>
 <span class="sd">   &quot;&quot;&quot;</span>     
 
