@@ -1,6 +1,9 @@
 """ 
-.. module:: utils
-   :synopsis : common utilities
+.. currentmodule:: jlab_jaws.utils
+.. automodule: utils
+   :synopsis : common utilities for use with the JAWS alarm system
+   
+
 """
 
 import time
@@ -8,11 +11,18 @@ from datetime import datetime
 import pytz
 
 def convert_timestamp(seconds) :
-   """ Convert the message timestamp to local timezone.
+   """ 
+      .. automethod:: convert_timestamp
+      .. rubric:: Methods
+            
+      Convert the message timestamp to local timezone.
        
-       :param seconds : number of seconds
-       :type seconds : int
-       :returns date string for local timezone
+       
+       Parameters:
+         seconds(int) : number of seconds
+       
+       Returns:
+         datestring in local time: "2021-06-09 09:26:09-04:00"
       
    """     
 
