@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Union, Optional
 
-from jlab_jaws.avro.referenced_schemas.entities import AlarmClass, AlarmLocation, AlarmCategory, AlarmPriority
+from jlab_jaws.avro.referenced_schemas.entities import AlarmLocation, AlarmCategory, AlarmPriority
 
 
 class UnionEncoding(Enum):
@@ -237,15 +237,6 @@ class ShelvedAlarm:
     """Indicates whether the override expires immediately upon next alarm deactivation (unless timestamp expiration occurs first)"""
 
 
-@dataclass(frozen=True)
-class RegisteredClassKey:
-    """
-        registered-class-key subject
-    """
-    alarm_class: AlarmClass
-    """The Alarm Class"""
-
-
 @dataclass
 class RegisteredClass:
     """
@@ -285,7 +276,7 @@ class RegisteredAlarm(RegisteredClass):
         Note: Any attributes inherited from RegisteredClass can be set to None which indicate the class value
         should be used.
     """
-    alarm_class: AlarmClass
+    alarm_class: str
     """The Alarm Class"""
     producer:  Union[SimpleProducer, EPICSProducer, CALCProducer]
     """The Alarm Producer"""
