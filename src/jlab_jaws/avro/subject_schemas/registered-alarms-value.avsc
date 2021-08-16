@@ -6,8 +6,8 @@
   "fields": [
     {
       "name": "class",
-      "type": "AlarmClass",
-      "default": "Base_Class",
+      "type": "string",
+      "default": "base",
       "doc": "The alarm class; provides inheritable shared field values, fields are only overridden if null, the producer field is required and cannot be overridden"
     },
     {
