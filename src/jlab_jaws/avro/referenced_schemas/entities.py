@@ -5,22 +5,6 @@
 from enum import Enum
 
 
-class AlarmClass(Enum):
-    Base_Class = 1
-    BCM_Temperature = 2
-    Trim_Temperature = 3
-    Shunt_Temperature = 4
-    CAMAC_Temperature = 5
-    CAMAC_Voltage = 6
-    MPS_Voltage_Mismatch = 7
-    MPS_Voltage_Fault = 8
-    MPS_Setpoint_Invalid = 9
-    Magnet_Mismatch = 10
-    Magnet_Communication_Error = 11
-    Vacuum_Level = 12
-    LCW_Supply_Pressure = 13
-
-
 class AlarmLocation(Enum):
     S1D = 1
     S2D = 2
