@@ -1,0 +1,25 @@
+[
+  {"file": "avro/referenced_schemas/AlarmClass.avsc", "subject": "alarm-class", "references": []},
+  {"file": "avro/referenced_schemas/AlarmLocation.avsc", "subject": "alarm-location", "references": []},
+  {"file": "avro/referenced_schemas/AlarmCategory.avsc", "subject": "alarm-category", "references": []},
+  {"file": "avro/referenced_schemas/AlarmPriority.avsc", "subject": "alarm-priority", "references": []},
+  {"file": "avro/subject_schemas/active-alarms-value.avsc", "subject": "active-alarms-value", "references": []},
+  {"file": "avro/subject_schemas/registered-alarms-value.avsc", "subject": "registered-alarms-value", "references": [
+    {"name": "org.jlab.jaws.entity.AlarmClass", "subject": "alarm-class", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmLocation", "subject": "alarm-location", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
+  ]},
+  {"file": "avro/subject_schemas/overridden-alarms-value.avsc", "subject": "overridden-alarms-value", "references": []},
+  {"file": "avro/subject_schemas/overridden-alarms-key.avsc", "subject": "overridden-alarms-key", "references": []},
+  {"file": "avro/subject_schemas/registered-classes-key.avsc", "subject": "registered-classes-key", "references": [
+    {"name": "org.jlab.jaws.entity.AlarmClass", "subject": "alarm-class", "version": "1"}
+  ]},
+  {"file": "avro/subject_schemas/registered-classes-value.avsc", "subject": "registered-classes-value", "references": [
+    {"name": "org.jlab.jaws.entity.AlarmLocation", "subject": "alarm-location", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
+  ]},
+  {"file": "avro/subject_schemas/alarm-state-value.avsc", "subject": "alarm-state-value", "references": []},
+  {"file": "avro/subject_schemas/jaws-config-value.avsc", "subject": "jaws-config-value", "references": []}
+]
