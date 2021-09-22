@@ -5,3 +5,4 @@
 /.venv/
 /docsrc/source/_autosummary/
 /.idea_venv/
+__pycache__/
