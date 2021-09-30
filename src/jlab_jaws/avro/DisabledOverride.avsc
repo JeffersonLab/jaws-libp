@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "name": "DisabledOverride",
+  "namespace": "org.jlab.jaws.entity",
+  "doc": "A disabled override",
+  "fields": [
+    {
+      "name": "comments",
+      "type": [
+        "null",
+        "string"
+      ],
+      "doc": "Operator explanation"
+    }
+  ]
+}
