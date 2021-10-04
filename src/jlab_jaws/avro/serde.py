@@ -9,8 +9,8 @@ from confluent_kafka.schema_registry import SchemaReference, Schema
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
 from fastavro import parse_schema
 
-from jlab_jaws.avro.referenced_schemas.entities import AlarmLocation, AlarmCategory, AlarmPriority
-from jlab_jaws.avro.subject_schemas.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
+from jlab_jaws.avro.entities import AlarmLocation, AlarmCategory, AlarmPriority
+from jlab_jaws.avro.entities import SimpleProducer, RegisteredAlarm, ActiveAlarm, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, \
     OffDelayedAlarm, ShelvedAlarm, OverriddenAlarmValue, OverriddenAlarmType, OverriddenAlarmKey, ShelvedAlarmReason, \
     EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, RegisteredClass, \
