@@ -31,12 +31,17 @@
     {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
   ]},
   {"file": "avro/schemas/AlarmState.avsc", "subject": "alarm-state", "references": []},
+  {"file": "avro/schemas/AlarmOverrides.avsc", "subject": "alarm-overrides", "references": []},
+  {"file": "avro/schemas/ProcessorTransitions.avsc", "subject": "processor-transitions", "references": []},
   {"file": "avro/schemas/Alarm.avsc", "subject": "alarms-value", "references": [
     {"name": "org.jlab.jaws.entity.AlarmLocation", "subject": "alarm-location", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmRegistration", "subject": "registered-alarms-value", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmClass", "subject": "alarm-classes-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmActivation", "subject": "active-alarms-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmOverrides", "subject": "alarm-overrides", "version": "1"},
+    {"name": "org.jlab.jaws.entity.ProcessorTransitions", "subject": "processor-transitions", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmState", "subject": "alarm-state", "version": "1"}
   ]}
 ]
