@@ -145,13 +145,13 @@ class RegisteredClassSerde:
 
     @staticmethod
     def _named_schemas():
-        location_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmLocation.avsc")
+        location_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmLocation.avsc")
         location_schema_str = location_bytes.decode('utf-8')
 
-        category_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmCategory.avsc")
+        category_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmCategory.avsc")
         category_schema_str = category_bytes.decode('utf-8')
 
-        priority_bytes = pkgutil.get_data("jlab_jaws", "avro/referenced_schemas/AlarmPriority.avsc")
+        priority_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmPriority.avsc")
         priority_schema_str = priority_bytes.decode('utf-8')
 
         named_schemas = {}
@@ -184,7 +184,7 @@ class RegisteredClassSerde:
             :param schema_registry_client: The Confluent Schema Registry client
             :return: Serializer
         """
-        value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/registered-classes-value.avsc")
+        value_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/registered-classes-value.avsc")
         value_schema_str = value_bytes.decode('utf-8')
 
         location_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmLocation", "alarm-location", 1)
@@ -333,7 +333,7 @@ class RegisteredAlarmSerde:
         """
         named_schemas = RegisteredAlarmSerde._named_schemas()
 
-        value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/registered-alarms-value.avsc")
+        value_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/registered-alarms-value.avsc")
         value_schema_str = value_bytes.decode('utf-8')
 
         location_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmLocation", "alarm-location", 1)
@@ -446,7 +446,7 @@ class ActiveAlarmSerde:
             :return: Serializer
         """
 
-        value_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/active-alarms-value.avsc")
+        value_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/active-alarms-value.avsc")
         value_schema_str = value_bytes.decode('utf-8')
 
         return AvroSerializer(schema_registry_client, value_schema_str,
@@ -510,7 +510,7 @@ class OverriddenAlarmKeySerde:
             :return: Serializer
         """
 
-        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/overridden-alarms-key.avsc")
+        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/overridden-alarms-key.avsc")
         subject_schema_str = subject_bytes.decode('utf-8')
 
         return AvroSerializer(schema_registry_client, subject_schema_str,
@@ -643,7 +643,7 @@ class OverriddenAlarmValueSerde:
             :return: Serializer
         """
 
-        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/overridden-alarms-value.avsc")
+        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/overridden-alarms-value.avsc")
         subject_schema_str = subject_bytes.decode('utf-8')
 
         return AvroSerializer(schema_registry_client, subject_schema_str,
@@ -706,7 +706,7 @@ class AlarmStateSerde:
             :return: Serializer
         """
 
-        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/subject_schemas/alarm-state-value.avsc")
+        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/alarm-state-value.avsc")
         subject_schema_str = subject_bytes.decode('utf-8')
 
         return AvroSerializer(schema_registry_client, subject_schema_str,
