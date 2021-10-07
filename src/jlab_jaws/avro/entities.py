@@ -99,34 +99,26 @@ class UnionEncoding(Enum):
     to determine which is which (example: union of classes A and B where each has identical fields)"""
 
 
-class AlarmStateEnum(Enum):
+class AlarmState(Enum):
     NormalDisabled = 1
-    """Effectively Normal, Actually Normal, out-of-service"""
-    Disabled = 2
-    """Effectively Normal, Actually Active, out-of-service"""
-    NormalFiltered = 3
-    """Effectively Normal, Actually Normal, suppressed by design"""
-    Filtered = 4
-    """Effectively Normal, Actually Active, suppressed by design"""
-    Masked = 5
-    """Effectively Normal, Actually Active, hidden by parent alarm"""
-    OnDelayed = 6
-    """Effectively Normal, Actually Active, temporarily suppressed upon activation"""
-    OneShotShelved = 7
-    """Effectively Normal, Actually Active, temporarily suppressed until next deactivation or expiration"""
-    NormalContinuousShelved = 8
-    """Effectively Normal, Actually Normal, temporarily suppressed until expiration"""
-    ContinuousShelved = 9
-    """Effectively Normal, Actually Active, temporarily suppressed until expiration"""
-    OffDelayed = 10
-    """Effectively Active, Actually Normal, temporarily incited upon deactivation"""
-    NormalLatched = 11
-    """Effectively Active, Actually Normal, temporarily incited upon activation"""
-    Latched = 12
-    """Effectively Active, Actually Active, temporarily incited upon activation"""
-    Active = 13
+    """Effectively Normal, out-of-service"""
+    NormalFiltered = 2
+    """Effectively Normal, suppressed by design"""
+    NormalMasked = 3
+    """Effectively Normal, hidden by parent alarm"""
+    NormalOnDelayed = 4
+    """Effectively Normal, temporarily suppressed upon activation"""
+    NormalOneShotShelved = 5
+    """Effectively Normal, temporarily suppressed until next deactivation or expiration"""
+    NormalContinuousShelved = 6
+    """Effectively Normal, temporarily suppressed until expiration"""
+    ActiveOffDelayed = 7
+    """Effectively Active, temporarily incited upon deactivation"""
+    ActiveLatched = 8
+    """Effectively Active, temporarily incited upon activation"""
+    Active = 9
     """Effectively Active, Actually Active, timely operator action required"""
-    Normal = 14
+    Normal = 10
     """Effectively Normal, Actually Normal, no action required"""
 
 
@@ -396,3 +388,6 @@ class Alarm:
 
     registration: AlarmRegistration
     """The Alarm Registration"""
+
+    state: AlarmState
+    """The Alarm State"""

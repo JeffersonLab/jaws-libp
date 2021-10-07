@@ -727,7 +727,8 @@ class AlarmSerde:
         """
         return {
             "alarm_class": obj.alarm_class,
-            "registration": obj.registration
+            "registration": obj.registration,
+            "state": obj.state
         }
 
     @staticmethod
@@ -742,7 +743,7 @@ class AlarmSerde:
         :param the_dict: The dict
         :return: The Alarm
         """
-        return Alarm(the_dict['alarm_class'], the_dict['registration'])
+        return Alarm(the_dict['alarm_class'], the_dict['registration'], the_dict['state'])
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
@@ -754,9 +755,11 @@ class AlarmSerde:
 
         classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
         registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration", "alarm-registrations-value", 1)
+        state_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmState", "alarm-state", 1)
 
         references.append(classes_schema_ref)
         references.append(registration_schema_ref)
+        references.append(state_schema_ref)
 
         return references
 
@@ -768,11 +771,16 @@ class AlarmSerde:
         registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmRegistration.avsc")
         registrations_schema_str = registrations_bytes.decode('utf-8')
 
+        state_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmState.avsc")
+        state_schema_str = state_bytes.decode('utf-8')
+
         named_schemas = AlarmClassSerde.named_schemas()
 
         ref_dict = loads(classes_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
         ref_dict = loads(registrations_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(state_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
 
         return named_schemas
