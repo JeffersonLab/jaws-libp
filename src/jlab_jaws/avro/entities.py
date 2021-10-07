@@ -401,6 +401,29 @@ class AlarmOverrideSet:
 
 
 @dataclass
+class ProcessorTransitions:
+    """
+        Set of transition states as alarm data is joined and processed
+    """
+    transitionToActive: bool
+    """true when record is first one to indicate Active after being Normal"""
+    transitionToNormal: bool
+    """true when record is first one to indicate Normal after being Active"""
+    latching: bool
+    """true when record is in-process of latching, LatchOverride forthcoming"""
+    unshelving: bool
+    """true when record is in-process of being unshelved after one-shot, ShelvedOverride clearing"""
+    masking: bool
+    """true when record is in-process of being masked, MaskedOverride forthcoming"""
+    unmasking: bool
+    """true when record is in-process of being unmasked, MaskedOverride clearing"""
+    ondelaying: bool
+    """true when record is in-process of being on-delayed, OnDelayedOverride forthcoming"""
+    offdelaying: bool
+    """true when record is in-process of being off-delayed, OffDelayedOverride forthcoming"""
+
+
+@dataclass
 class Alarm:
     """
         alarm-value subject
@@ -419,6 +442,9 @@ class Alarm:
 
     overrides: AlarmOverrideSet
     """The Alarm Overrides"""
+
+    transitions: ProcessorTransitions
+    """The Processor Transitions"""
 
     state: AlarmState
     """The Alarm State"""

@@ -731,6 +731,7 @@ class AlarmSerde:
             "effective_registration": obj.effective_registration,
             "activation": obj.activation,
             "overrides": obj.overrides,
+            "transitions": obj.transitions,
             "state": obj.state
         }
 
@@ -751,6 +752,7 @@ class AlarmSerde:
                      the_dict['effective_registration'],
                      the_dict['activation'],
                      the_dict['overrides'],
+                     the_dict['transitions'],
                      the_dict['state'])
 
     @staticmethod
@@ -770,12 +772,15 @@ class AlarmSerde:
                                                 "alarm-activations-value", 1)
         overrides_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmOverrideSet",
                                                "alarm-override-set", 1)
+        transitions_schema_ref = SchemaReference("org.jlab.jaws.entity.ProcessorTransitions",
+                                                 "processor-transitions", 1)
         state_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmState", "alarm-state", 1)
 
         references.append(classes_schema_ref)
         references.append(registration_schema_ref)
         references.append(activation_schema_ref)
         references.append(overrides_schema_ref)
+        references.append(transitions_schema_ref)
         references.append(state_schema_ref)
 
         return references
@@ -794,6 +799,9 @@ class AlarmSerde:
         overrides_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideSet.avsc")
         overrides_schema_str = overrides_bytes.decode('utf-8')
 
+        transitions_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ProcessorTransitions.avsc")
+        transitions_schema_str = transitions_bytes.decode('utf-8')
+
         state_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmState.avsc")
         state_schema_str = state_bytes.decode('utf-8')
 
@@ -808,6 +816,8 @@ class AlarmSerde:
         ref_dict = loads(activation_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
         ref_dict = loads(overrides_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(transitions_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
         ref_dict = loads(state_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
