@@ -755,10 +755,12 @@ class AlarmSerde:
 
         classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
         registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration", "alarm-registrations-value", 1)
+        activation_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmActivationUnion", "alarm-activations-value", 1)
         state_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmState", "alarm-state", 1)
 
         references.append(classes_schema_ref)
         references.append(registration_schema_ref)
+        references.append(activation_schema_ref)
         references.append(state_schema_ref)
 
         return references
@@ -771,6 +773,9 @@ class AlarmSerde:
         registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmRegistration.avsc")
         registrations_schema_str = registrations_bytes.decode('utf-8')
 
+        activation_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmActivationUnion.avsc")
+        activation_schema_str = activation_bytes.decode('utf-8')
+
         state_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmState.avsc")
         state_schema_str = state_bytes.decode('utf-8')
 
@@ -779,6 +784,8 @@ class AlarmSerde:
         ref_dict = loads(classes_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
         ref_dict = loads(registrations_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(activation_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
         ref_dict = loads(state_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
