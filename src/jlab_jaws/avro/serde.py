@@ -728,7 +728,8 @@ class AlarmSerde:
         :return: A dict
         """
         return {
-            "type": obj.type.name
+            "alarm_class": obj.alarm_class,
+            "registration": obj.registration
         }
 
     @staticmethod
@@ -743,11 +744,27 @@ class AlarmSerde:
         :param the_dict: The dict
         :return: The Alarm
         """
-        return Alarm(_unwrap_enum(the_dict['type'], AlarmStateEnum))
+        return Alarm(the_dict['alarm_class'], the_dict['registration'])
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
         return Alarm.from_dict(the_dict)
+
+    @staticmethod
+    def _named_schemas():
+        classes_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
+        classes_schema_str = classes_bytes.decode('utf-8')
+
+        registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmRegistration.avsc")
+        registrations_schema_str = registrations_bytes.decode('utf-8')
+
+        named_schemas = {}
+        ref_dict = loads(classes_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(registrations_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+
+        return named_schemas
 
     @staticmethod
     def deserializer(schema_registry_client):
@@ -758,8 +775,10 @@ class AlarmSerde:
             :return: Deserializer
         """
 
-        return AvroDeserializer(schema_registry_client, None,
-                                Alarm._from_dict_with_ctx, True)
+        named_schemas = AlarmSerde._named_schemas()
+
+        return AvroDeserializerWithReferences(schema_registry_client, None,
+                                AlarmSerde._from_dict_with_ctx, True, named_schemas)
 
     @staticmethod
     def serializer(schema_registry_client):
@@ -773,5 +792,14 @@ class AlarmSerde:
         subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/Alarm.avsc")
         subject_schema_str = subject_bytes.decode('utf-8')
 
-        return AvroSerializer(schema_registry_client, subject_schema_str,
-                              Alarm._to_dict_with_ctx, None)
+        named_schemas = AlarmSerde._named_schemas()
+
+        classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
+        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration", "alarm-registrations-value", 1)
+
+        schema = Schema(subject_schema_str, "AVRO",
+                        [classes_schema_ref,
+                         registration_schema_ref])
+
+        return AvroSerializerWithReferences(schema_registry_client, schema,
+                              AlarmSerde._to_dict_with_ctx, None, named_schemas)
