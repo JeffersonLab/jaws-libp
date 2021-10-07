@@ -144,7 +144,15 @@ class AlarmClassSerde:
         return AlarmClassSerde.from_dict(the_dict)
 
     @staticmethod
-    def _named_schemas():
+    def references():
+        location_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmLocation", "alarm-location", 1)
+        category_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmCategory", "alarm-category", 1)
+        priority_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmPriority", "alarm-priority", 1)
+
+        return [location_schema_ref, category_schema_ref, priority_schema_ref]
+
+    @staticmethod
+    def named_schemas():
         location_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmLocation.avsc")
         location_schema_str = location_bytes.decode('utf-8')
 
@@ -174,7 +182,7 @@ class AlarmClassSerde:
         """
         return AvroDeserializerWithReferences(schema_registry_client, None,
                                               AlarmClassSerde._from_dict_with_ctx, True,
-                                              AlarmClassSerde._named_schemas())
+                                              AlarmClassSerde.named_schemas())
 
     @staticmethod
     def serializer(schema_registry_client):
@@ -187,16 +195,12 @@ class AlarmClassSerde:
         value_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
         value_schema_str = value_bytes.decode('utf-8')
 
-        location_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmLocation", "alarm-location", 1)
-        category_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmCategory", "alarm-category", 1)
-        priority_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmPriority", "alarm-priority", 1)
-
         schema = Schema(value_schema_str, "AVRO",
-                        [location_schema_ref, category_schema_ref, priority_schema_ref])
+                        AlarmClassSerde.references())
 
         return AvroSerializerWithReferences(schema_registry_client, schema,
                                             AlarmClassSerde._to_dict_with_ctx, None,
-                                            AlarmClassSerde._named_schemas())
+                                            AlarmClassSerde.named_schemas())
 
 
 class AlarmRegistrationSerde:
@@ -304,10 +308,12 @@ class AlarmRegistrationSerde:
         return AlarmRegistrationSerde.from_dict(the_dict)
 
     @staticmethod
-    def _named_schemas():
-        named_schemas = AlarmClassSerde._named_schemas()
+    def references():
+        return AlarmClassSerde.references()
 
-        return named_schemas
+    @staticmethod
+    def named_schemas():
+        return AlarmClassSerde.named_schemas()
 
     @staticmethod
     def deserializer(schema_registry_client):
@@ -317,11 +323,9 @@ class AlarmRegistrationSerde:
             :param schema_registry_client: The Confluent Schema Registry Client
             :return: Deserializer
         """
-        named_schemas = AlarmRegistrationSerde._named_schemas()
-
         return AvroDeserializerWithReferences(schema_registry_client, None,
                                               AlarmRegistrationSerde._from_dict_with_ctx, True,
-                                              named_schemas)
+                                              AlarmRegistrationSerde.named_schemas())
 
     @staticmethod
     def serializer(schema_registry_client):
@@ -331,21 +335,15 @@ class AlarmRegistrationSerde:
             :param schema_registry_client: The Confluent Schema Registry client
             :return: Serializer
         """
-        named_schemas = AlarmRegistrationSerde._named_schemas()
-
         value_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmRegistration.avsc")
         value_schema_str = value_bytes.decode('utf-8')
 
-        location_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmLocation", "alarm-location", 1)
-        category_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmCategory", "alarm-category", 1)
-        priority_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmPriority", "alarm-priority", 1)
-
         schema = Schema(value_schema_str, "AVRO",
-                        [location_schema_ref, category_schema_ref, priority_schema_ref])
+                        AlarmRegistrationSerde.references())
 
         return AvroSerializerWithReferences(schema_registry_client, schema,
                                             AlarmRegistrationSerde._to_dict_with_ctx, None,
-                                            named_schemas)
+                                            AlarmRegistrationSerde.named_schemas())
 
 
 class AlarmActivationUnionSerde:
@@ -623,7 +621,25 @@ class AlarmOverrideUnionSerde:
         return AlarmOverrideUnionSerde.from_dict(the_dict)
 
     @staticmethod
-    def _named_schemas():
+    def references():
+        disabled_schema_ref = SchemaReference("org.jlab.jaws.entity.DisabledOverride", "disabled-override", 1)
+        filtered_schema_ref = SchemaReference("org.jlab.jaws.entity.FilteredOverride", "filtered-override", 1)
+        latched_schema_ref = SchemaReference("org.jlab.jaws.entity.LatchedOverride", "latched-override", 1)
+        masked_schema_ref = SchemaReference("org.jlab.jaws.entity.MaskedOverride", "masked-override", 1)
+        off_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OffDelayedOverride", "off-delayed-override", 1)
+        on_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OnDelayedOverride", "on-delayed-override", 1)
+        shelved_schema_ref = SchemaReference("org.jlab.jaws.entity.ShelvedOverride", "shelved-override", 1)
+
+        return [disabled_schema_ref,
+                filtered_schema_ref,
+                latched_schema_ref,
+                masked_schema_ref,
+                off_delayed_schema_ref,
+                on_delayed_schema_ref,
+                shelved_schema_ref]
+
+    @staticmethod
+    def named_schemas():
         disabled_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/DisabledOverride.avsc")
         disabled_schema_str = disabled_bytes.decode('utf-8')
 
@@ -672,11 +688,9 @@ class AlarmOverrideUnionSerde:
             :return: Deserializer
         """
 
-        named_schemas = AlarmOverrideUnionSerde._named_schemas()
-
         return AvroDeserializerWithReferences(schema_registry_client, None,
                                               AlarmOverrideUnionSerde._from_dict_with_ctx, True,
-                                              named_schemas)
+                                              AlarmOverrideUnionSerde.named_schemas())
 
     @staticmethod
     def serializer(schema_registry_client):
@@ -690,28 +704,12 @@ class AlarmOverrideUnionSerde:
         subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideUnion.avsc")
         subject_schema_str = subject_bytes.decode('utf-8')
 
-        named_schemas = AlarmOverrideUnionSerde._named_schemas()
-
-        disabled_schema_ref = SchemaReference("org.jlab.jaws.entity.DisabledOverride", "disabled-override", 1)
-        filtered_schema_ref = SchemaReference("org.jlab.jaws.entity.FilteredOverride", "filtered-override", 1)
-        latched_schema_ref = SchemaReference("org.jlab.jaws.entity.LatchedOverride", "latched-override", 1)
-        masked_schema_ref = SchemaReference("org.jlab.jaws.entity.MaskedOverride", "masked-override", 1)
-        off_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OffDelayedOverride", "off-delayed-override", 1)
-        on_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OnDelayedOverride", "on-delayed-override", 1)
-        shelved_schema_ref = SchemaReference("org.jlab.jaws.entity.ShelvedOverride", "shelved-override", 1)
-
         schema = Schema(subject_schema_str, "AVRO",
-                        [disabled_schema_ref,
-                         filtered_schema_ref,
-                         latched_schema_ref,
-                         masked_schema_ref,
-                         off_delayed_schema_ref,
-                         on_delayed_schema_ref,
-                         shelved_schema_ref])
+                        AlarmOverrideUnionSerde.references())
 
         return AvroSerializerWithReferences(schema_registry_client, schema,
                                             AlarmOverrideUnionSerde._to_dict_with_ctx, None,
-                                            named_schemas)
+                                            AlarmOverrideUnionSerde.named_schemas())
 
 
 class AlarmSerde:
@@ -751,14 +749,27 @@ class AlarmSerde:
         return Alarm.from_dict(the_dict)
 
     @staticmethod
-    def _named_schemas():
+    def references():
+        references = AlarmClassSerde.references()
+
+        classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
+        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration", "alarm-registrations-value", 1)
+
+        references.append(classes_schema_ref)
+        references.append(registration_schema_ref)
+
+        return references
+
+    @staticmethod
+    def named_schemas():
         classes_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
         classes_schema_str = classes_bytes.decode('utf-8')
 
         registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmRegistration.avsc")
         registrations_schema_str = registrations_bytes.decode('utf-8')
 
-        named_schemas = {}
+        named_schemas = AlarmClassSerde.named_schemas()
+
         ref_dict = loads(classes_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
         ref_dict = loads(registrations_schema_str)
@@ -775,10 +786,8 @@ class AlarmSerde:
             :return: Deserializer
         """
 
-        named_schemas = AlarmSerde._named_schemas()
-
         return AvroDeserializerWithReferences(schema_registry_client, None,
-                                AlarmSerde._from_dict_with_ctx, True, named_schemas)
+                                              AlarmSerde._from_dict_with_ctx, True, AlarmSerde.named_schemas())
 
     @staticmethod
     def serializer(schema_registry_client):
@@ -792,14 +801,8 @@ class AlarmSerde:
         subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/Alarm.avsc")
         subject_schema_str = subject_bytes.decode('utf-8')
 
-        named_schemas = AlarmSerde._named_schemas()
-
-        classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
-        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration", "alarm-registrations-value", 1)
-
         schema = Schema(subject_schema_str, "AVRO",
-                        [classes_schema_ref,
-                         registration_schema_ref])
+                        AlarmSerde.references())
 
         return AvroSerializerWithReferences(schema_registry_client, schema,
-                              AlarmSerde._to_dict_with_ctx, None, named_schemas)
+                                            AlarmSerde._to_dict_with_ctx, None, AlarmSerde.named_schemas())
