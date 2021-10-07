@@ -852,4 +852,4 @@ class AlarmSerde:
                         AlarmSerde.references())
 
         return AvroSerializerWithReferences(schema_registry_client, schema,
-                                            AlarmSerde._to_dict_with_ctx, None, AlarmSerde.named_schemas())
+                                            AlarmSerde._to_dict_with_ctx, {'auto.register.schemas': False}, AlarmSerde.named_schemas())
