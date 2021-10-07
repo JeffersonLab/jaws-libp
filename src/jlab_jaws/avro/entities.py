@@ -306,7 +306,7 @@ class ShelvedOverride:
     """Expiration timestamp (Unix timestamp of milliseconds since Epoch of Jan 1. 1970 UTC)"""
     comments: Optional[str]
     """Additional operator comments explaining why the alarm was shelved"""
-    reason: ShelvedAlarmReason
+    reason: ShelvedReason
     """The general motivation for shelving the alarm"""
     oneshot: bool
     """Indicates whether the override expires immediately upon next alarm deactivation (unless timestamp expiration occurs first)"""
