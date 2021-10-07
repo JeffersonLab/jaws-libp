@@ -553,8 +553,8 @@ class AlarmOverrideUnionSerde:
                          "reason": obj.msg.reason.name, "oneshot": obj.msg.oneshot}
         else:
             print("Unknown alarming union type: {}".format(obj.msg))
-            uniontype = "org.jlab.jaws.entity.LatchedOverride"
-            uniondict = {}
+            uniontype = None
+            uniondict = None
 
         if union_encoding is UnionEncoding.TUPLE:
             union = (uniontype, uniondict)
@@ -612,7 +612,7 @@ class AlarmOverrideUnionSerde:
                                _unwrap_enum(alarmingdict['reason'], ShelvedReason), alarmingdict['oneshot'])
         else:
             print("Unknown alarming type: {}".format(the_dict['msg']))
-            obj = LatchedOverride()
+            obj = None
 
         return AlarmOverrideUnion(obj)
 
