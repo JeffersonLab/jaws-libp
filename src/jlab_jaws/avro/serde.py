@@ -623,6 +623,47 @@ class AlarmOverrideUnionSerde:
         return AlarmOverrideUnionSerde.from_dict(the_dict)
 
     @staticmethod
+    def _named_schemas():
+        disabled_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/DisabledOverride.avsc")
+        disabled_schema_str = disabled_bytes.decode('utf-8')
+
+        filtered_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/FilteredOverride.avsc")
+        filtered_schema_str = filtered_bytes.decode('utf-8')
+
+        latched_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/LatchedOverride.avsc")
+        latched_schema_str = latched_bytes.decode('utf-8')
+
+        masked_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/MaskedOverride.avsc")
+        masked_schema_str = masked_bytes.decode('utf-8')
+
+        off_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OffDelayedOverride.avsc")
+        off_delayed_schema_str = off_delayed_bytes.decode('utf-8')
+
+        on_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OnDelayedOverride.avsc")
+        on_delayed_schema_str = on_delayed_bytes.decode('utf-8')
+
+        shelved_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ShelvedOverride.avsc")
+        shelved_schema_str = shelved_bytes.decode('utf-8')
+
+        named_schemas = {}
+        ref_dict = loads(disabled_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(filtered_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(latched_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(masked_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(off_delayed_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(on_delayed_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(shelved_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+
+        return named_schemas
+
+    @staticmethod
     def deserializer(schema_registry_client):
         """
             Return an AlarmOverrideUnion deserializer.
@@ -631,8 +672,11 @@ class AlarmOverrideUnionSerde:
             :return: Deserializer
         """
 
-        return AvroDeserializer(schema_registry_client, None,
-                                AlarmOverrideUnionSerde._from_dict_with_ctx, True)
+        named_schemas = AlarmOverrideUnionSerde._named_schemas()
+
+        return AvroDeserializerWithReferences(schema_registry_client, None,
+                                              AlarmOverrideUnionSerde._from_dict_with_ctx, True,
+                                              named_schemas)
 
     @staticmethod
     def serializer(schema_registry_client):
@@ -646,8 +690,28 @@ class AlarmOverrideUnionSerde:
         subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideUnion.avsc")
         subject_schema_str = subject_bytes.decode('utf-8')
 
-        return AvroSerializer(schema_registry_client, subject_schema_str,
-                              AlarmOverrideUnionSerde._to_dict_with_ctx, None)
+        named_schemas = AlarmOverrideUnionSerde._named_schemas()
+
+        disabled_schema_ref = SchemaReference("org.jlab.jaws.entity.DisabledOverride", "disabled-override", 1)
+        filtered_schema_ref = SchemaReference("org.jlab.jaws.entity.FilteredOverride", "filtered-override", 1)
+        latched_schema_ref = SchemaReference("org.jlab.jaws.entity.LatchedOverride", "latched-override", 1)
+        masked_schema_ref = SchemaReference("org.jlab.jaws.entity.MaskedOverride", "masked-override", 1)
+        off_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OffDelayedOverride", "off-delayed-override", 1)
+        on_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OnDelayedOverride", "on-delayed-override", 1)
+        shelved_schema_ref = SchemaReference("org.jlab.jaws.entity.ShelvedOverride", "shelved-override", 1)
+
+        schema = Schema(subject_schema_str, "AVRO",
+                        [disabled_schema_ref,
+                         filtered_schema_ref,
+                         latched_schema_ref,
+                         masked_schema_ref,
+                         off_delayed_schema_ref,
+                         on_delayed_schema_ref,
+                         shelved_schema_ref])
+
+        return AvroSerializerWithReferences(schema_registry_client, schema,
+                                            AlarmOverrideUnionSerde._to_dict_with_ctx, None,
+                                            named_schemas)
 
 
 class AlarmSerde:
