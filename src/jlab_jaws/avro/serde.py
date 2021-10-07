@@ -761,6 +761,8 @@ class AlarmSerde:
     def references():
         references = AlarmClassSerde.references()
 
+        references += AlarmOverrideUnionSerde.references()
+
         classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
         registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration",
                                                   "alarm-registrations-value", 1)
@@ -796,6 +798,8 @@ class AlarmSerde:
         state_schema_str = state_bytes.decode('utf-8')
 
         named_schemas = AlarmClassSerde.named_schemas()
+
+        named_schemas.update(AlarmOverrideUnionSerde.named_schemas())
 
         ref_dict = loads(classes_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
