@@ -152,7 +152,7 @@ class OverriddenAlarmType(Enum):
     acknowledged"""
 
 
-class ShelvedAlarmReason(Enum):
+class ShelvedReason(Enum):
     Stale_Alarm = 1
     """Nuisance alarm which remains active for an extended period of time"""
     Chattering_Fleeting_Alarm = 2
@@ -247,7 +247,7 @@ class CALCProducer:
 
 
 @dataclass
-class DisabledAlarm:
+class DisabledOverride:
     """
         Disabled override - Suppresses an alarm that is out-of-service (usually for maintenance)
     """
@@ -256,7 +256,7 @@ class DisabledAlarm:
 
 
 @dataclass
-class FilteredAlarm:
+class FilteredOverride:
     """
         Filtered override - Suppresses an alarm via filter rule
     """
@@ -265,14 +265,14 @@ class FilteredAlarm:
 
 
 @dataclass
-class LatchedAlarm:
+class LatchedOverride:
     """
         Latched override - Incites an alarm until an operator acknowledgement
     """
 
 
 @dataclass
-class MaskedAlarm:
+class MaskedOverride:
     """
         Masked override - Suppresses an alarm when a parent alarm is active
         (establishes a hierarchy and minimizes alarm flooding)
@@ -280,7 +280,7 @@ class MaskedAlarm:
 
 
 @dataclass
-class OnDelayedAlarm:
+class OnDelayedOverride:
     """
         On-Delay override - Suppresses an alarm for a short duration upon activation
     """
@@ -289,7 +289,7 @@ class OnDelayedAlarm:
 
 
 @dataclass
-class OffDelayedAlarm:
+class OffDelayedOverride:
     """
         Off-Delay override - Incites an alarm for a short duration upon deactivation
     """
@@ -298,7 +298,7 @@ class OffDelayedAlarm:
 
 
 @dataclass
-class ShelvedAlarm:
+class ShelvedOverride:
     """
         Shelved override - a temporary override (expires)
     """
@@ -313,9 +313,9 @@ class ShelvedAlarm:
 
 
 @dataclass
-class RegisteredClass:
+class AlarmClass:
     """
-        registered-class-value subject
+        alarm-classes-value subject
     """
     location: AlarmLocation
     """The Alarm Location"""
@@ -344,11 +344,11 @@ class RegisteredClass:
 
 
 @dataclass
-class RegisteredAlarm(RegisteredClass):
+class AlarmRegistration(AlarmClass):
     """
-        registered-alarm-value subject
+        alarm-registrations-value subject
 
-        Note: Any attributes inherited from RegisteredClass can be set to None which indicate the class value
+        Note: Any attributes inherited from AlarmClass can be set to None which indicate the class value
         should be used.
     """
     alarm_class: str
@@ -358,18 +358,18 @@ class RegisteredAlarm(RegisteredClass):
 
 
 @dataclass
-class ActiveAlarm:
+class AlarmActivationUnion:
     """
-        active-alarm-value subject
+        alarm-activations-value subject
     """
     msg: Union[SimpleAlarming, NoteAlarming, EPICSAlarming]
     """The message payload is a union of possible alarming types"""
 
 
 @dataclass(frozen=True)
-class OverriddenAlarmKey:
+class AlarmOverrideKey:
     """
-        overridden-alarms-key subject
+        alarm-overrides-key subject
     """
     name: str
     """The alarm name"""
@@ -378,18 +378,21 @@ class OverriddenAlarmKey:
 
 
 @dataclass
-class OverriddenAlarmValue:
+class AlarmOverrideUnion:
     """
-        overridden-alarms-value subject
+        alarm-overrides-value subject
     """
-    msg: Union[DisabledAlarm, FilteredAlarm, LatchedAlarm, MaskedAlarm, OnDelayedAlarm, OffDelayedAlarm, ShelvedAlarm]
+    msg: Union[DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride, OffDelayedOverride, ShelvedOverride]
     """The message payload is a union of possible override types"""
 
 
 @dataclass
-class AlarmStateValue:
+class Alarm:
     """
-        alarm-state-value subject
+        alarm-value subject
     """
-    type: AlarmStateEnum
-    """The Alarm State"""
+    alarm_class: AlarmClass
+    """The Alarm Class"""
+
+    registration: AlarmRegistration
+    """The Alarm Registration"""
