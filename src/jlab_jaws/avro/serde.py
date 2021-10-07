@@ -837,10 +837,11 @@ class AlarmSerde:
                                               AlarmSerde._from_dict_with_ctx, True, AlarmSerde.named_schemas())
 
     @staticmethod
-    def serializer(schema_registry_client):
+    def serializer(schema_registry_client, conf=None):
         """
             Return an Alarm serializer.
 
+            :param conf: Configuration
             :param schema_registry_client: The Confluent Schema Registry client
             :return: Serializer
         """
@@ -852,4 +853,4 @@ class AlarmSerde:
                         AlarmSerde.references())
 
         return AvroSerializerWithReferences(schema_registry_client, schema,
-                                            AlarmSerde._to_dict_with_ctx, {'auto.register.schemas': False}, AlarmSerde.named_schemas())
+                                            AlarmSerde._to_dict_with_ctx, conf, AlarmSerde.named_schemas())
