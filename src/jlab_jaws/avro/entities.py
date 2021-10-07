@@ -374,8 +374,30 @@ class AlarmOverrideUnion:
     """
         alarm-overrides-value subject
     """
-    msg: Union[DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride, OffDelayedOverride, ShelvedOverride]
+    msg: Union[DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride,
+               OffDelayedOverride, ShelvedOverride]
     """The message payload is a union of possible override types"""
+
+
+@dataclass
+class AlarmOverrideSet:
+    """
+        Set of all overrides for an alarm
+    """
+    disabled: DisabledOverride
+    """Disabled Override"""
+    filtered: FilteredOverride
+    """Filtered Override"""
+    latched: LatchedOverride
+    """Latched Override"""
+    masked: MaskedOverride
+    """Masked Override"""
+    on_delayed: OnDelayedOverride
+    """On Delayed Override"""
+    off_delayed: OffDelayedOverride
+    """Off Delayed Override"""
+    shelved: ShelvedOverride
+    """Shelved Override"""
 
 
 @dataclass
@@ -388,6 +410,15 @@ class Alarm:
 
     registration: AlarmRegistration
     """The Alarm Registration"""
+
+    effective_registration: AlarmRegistration
+    """The Effective Alarm Registration consider class defaults"""
+
+    activation: AlarmActivationUnion
+    """The Alarm Activation"""
+
+    overrides: AlarmOverrideSet
+    """The Alarm Overrides"""
 
     state: AlarmState
     """The Alarm State"""

@@ -728,6 +728,9 @@ class AlarmSerde:
         return {
             "alarm_class": obj.alarm_class,
             "registration": obj.registration,
+            "effective_registration": obj.effective_registration,
+            "activation": obj.activation,
+            "overrides": obj.overrides,
             "state": obj.state
         }
 
@@ -743,7 +746,12 @@ class AlarmSerde:
         :param the_dict: The dict
         :return: The Alarm
         """
-        return Alarm(the_dict['alarm_class'], the_dict['registration'], the_dict['state'])
+        return Alarm(the_dict['alarm_class'],
+                     the_dict['registration'],
+                     the_dict['effective_registration'],
+                     the_dict['activation'],
+                     the_dict['overrides'],
+                     the_dict['state'])
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
@@ -754,13 +762,18 @@ class AlarmSerde:
         references = AlarmClassSerde.references()
 
         classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
-        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration", "alarm-registrations-value", 1)
-        activation_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmActivationUnion", "alarm-activations-value", 1)
+        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration",
+                                                  "alarm-registrations-value", 1)
+        activation_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmActivationUnion",
+                                                "alarm-activations-value", 1)
+        overrides_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmOverrideSet",
+                                               "alarm-override-set", 1)
         state_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmState", "alarm-state", 1)
 
         references.append(classes_schema_ref)
         references.append(registration_schema_ref)
         references.append(activation_schema_ref)
+        references.append(overrides_schema_ref)
         references.append(state_schema_ref)
 
         return references
@@ -776,6 +789,9 @@ class AlarmSerde:
         activation_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmActivationUnion.avsc")
         activation_schema_str = activation_bytes.decode('utf-8')
 
+        overrides_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideSet.avsc")
+        overrides_schema_str = overrides_bytes.decode('utf-8')
+
         state_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmState.avsc")
         state_schema_str = state_bytes.decode('utf-8')
 
@@ -786,6 +802,8 @@ class AlarmSerde:
         ref_dict = loads(registrations_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
         ref_dict = loads(activation_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(overrides_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
         ref_dict = loads(state_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
