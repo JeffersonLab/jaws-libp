@@ -34,14 +34,14 @@
       "name": "activation",
       "type": [
         "null",
-        "AlarmActivation"
+        "AlarmActivationUnion"
       ],
       "default": null,
       "doc": "The alarm activation"
     },
     {
       "name": "overrides",
-      "type": "AlarmOverrides",
+      "type": "AlarmOverrideSet",
       "doc": "The alarm overrides"
     },
     {

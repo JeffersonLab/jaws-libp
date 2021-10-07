@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "name": "OverriddenAlarmValue",
+  "name": "AlarmOverrideUnion",
   "namespace": "org.jlab.jaws.entity",
   "doc": "Wraps the union of suppressed alarm values",
   "fields": [

@@ -9,7 +9,7 @@
         "type": "array",
         "items": {
           "name": "override",
-          "type": "OverriddenAlarmValue"
+          "type": "AlarmOverrideUnion"
         }
       },
       "doc": "The alarm overrides"

@@ -9,13 +9,18 @@
   {"file": "avro/schemas/OffDelayedOverride.avsc", "subject": "off-delayed-override", "references": []},
   {"file": "avro/schemas/OnDelayedOverride.avsc", "subject": "on-delayed-override", "references": []},
   {"file": "avro/schemas/ShelvedOverride.avsc", "subject": "shelved-override", "references": []},
-  {"file": "avro/schemas/AlarmActivation.avsc", "subject": "active-alarms-value", "references": []},
-  {"file": "avro/schemas/AlarmRegistration.avsc", "subject": "registered-alarms-value", "references": [
+  {"file": "avro/schemas/AlarmActivationUnion.avsc", "subject": "alarm-activations-value", "references": []},
+  {"file": "avro/schemas/AlarmClass.avsc", "subject": "alarm-classes-value", "references": [
     {"name": "org.jlab.jaws.entity.AlarmLocation", "subject": "alarm-location", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
   ]},
-  {"file": "avro/schemas/OverriddenAlarmValue.avsc", "subject": "overridden-alarms-value", "references": [
+  {"file": "avro/schemas/AlarmRegistration.avsc", "subject": "alarm-registrations-value", "references": [
+    {"name": "org.jlab.jaws.entity.AlarmLocation", "subject": "alarm-location", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
+  ]},
+  {"file": "avro/schemas/AlarmOverrideUnion.avsc", "subject": "alarm-overrides-value", "references": [
     {"name": "org.jlab.jaws.entity.DisabledOverride", "subject": "disabled-override", "version": "1"},
     {"name": "org.jlab.jaws.entity.FilteredOverride", "subject": "filtered-override", "version": "1"},
     {"name": "org.jlab.jaws.entity.LatcheddOverride", "subject": "latched-override", "version": "1"},
@@ -24,14 +29,9 @@
     {"name": "org.jlab.jaws.entity.OnDelayedOverride", "subject": "on-delayed-override", "version": "1"},
     {"name": "org.jlab.jaws.entity.ShelvedOverride", "subject": "shelved-override", "version": "1"}
   ]},
-  {"file": "avro/schemas/OverriddenAlarmKey.avsc", "subject": "overridden-alarms-key", "references": []},
-  {"file": "avro/schemas/AlarmClass.avsc", "subject": "alarm-classes-value", "references": [
-    {"name": "org.jlab.jaws.entity.AlarmLocation", "subject": "alarm-location", "version": "1"},
-    {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
-    {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
-  ]},
+  {"file": "avro/schemas/AlarmOverrideKey.avsc", "subject": "alarm-overrides-key", "references": []},
   {"file": "avro/schemas/AlarmState.avsc", "subject": "alarm-state", "references": []},
-  {"file": "avro/schemas/AlarmOverrides.avsc", "subject": "alarm-overrides", "references": [
+  {"file": "avro/schemas/AlarmOverrideSet.avsc", "subject": "alarm-override-set", "references": [
     {"name": "org.jlab.jaws.entity.DisabledOverride", "subject": "disabled-override", "version": "1"},
     {"name": "org.jlab.jaws.entity.FilteredOverride", "subject": "filtered-override", "version": "1"},
     {"name": "org.jlab.jaws.entity.LatcheddOverride", "subject": "latched-override", "version": "1"},
@@ -42,10 +42,10 @@
   ]},
   {"file": "avro/schemas/ProcessorTransitions.avsc", "subject": "processor-transitions", "references": []},
   {"file": "avro/schemas/Alarm.avsc", "subject": "alarms-value", "references": [
-    {"name": "org.jlab.jaws.entity.AlarmRegistration", "subject": "registered-alarms-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmRegistration", "subject": "alarm-registrations-value", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmClass", "subject": "alarm-classes-value", "version": "1"},
-    {"name": "org.jlab.jaws.entity.AlarmActivation", "subject": "active-alarms-value", "version": "1"},
-    {"name": "org.jlab.jaws.entity.AlarmOverrides", "subject": "alarm-overrides", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmActivationUnion", "subject": "alarm-activations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmOverrideSet", "subject": "alarm-override-set", "version": "1"},
     {"name": "org.jlab.jaws.entity.ProcessorTransitions", "subject": "processor-transitions", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmState", "subject": "alarm-state", "version": "1"}
   ]}

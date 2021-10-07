@@ -1,6 +1,6 @@
 {
   "type"      : "record",
-  "name"      : "AlarmActivation",
+  "name"      : "AlarmActivationUnion",
   "namespace" : "org.jlab.jaws.entity",
   "doc"       : "An alarm activation",
   "fields"    : [
