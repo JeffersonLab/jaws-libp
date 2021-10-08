@@ -737,7 +737,7 @@ class AlarmSerde:
 
     @staticmethod
     def _to_dict_with_ctx(obj, ctx):
-        return Alarm.to_dict(obj)
+        return AlarmSerde.to_dict(obj)
 
     @staticmethod
     def from_dict(the_dict):
