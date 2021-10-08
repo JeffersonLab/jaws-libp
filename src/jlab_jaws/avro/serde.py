@@ -761,9 +761,10 @@ class AlarmSerde:
 
     @staticmethod
     def references():
-        references = AlarmClassSerde.references()
+        references = []
 
-        references += AlarmOverrideUnionSerde.references()
+        #references += AlarmClassSerde.references()
+        #references += AlarmOverrideUnionSerde.references()
 
         classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
         registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration",
