@@ -58,10 +58,6 @@ class AvroSerializerWithReferences(AvroSerializer):
         if not callable(self._subject_name_func):
             raise ValueError("subject.name.strategy must be callable")
 
-        if len(conf_copy) > 0:
-            raise ValueError("Unrecognized properties: {}"
-                             .format(", ".join(conf_copy.keys())))
-
         schema_dict = loads(schema.schema_str)
         parsed_schema = parse_schema(schema_dict, named_schemas=self._named_schemas)
         schema_name = parsed_schema.get('name', schema_dict['type'])
