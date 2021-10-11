@@ -746,22 +746,22 @@ class AlarmOverrideSetSerde:
         :param the_dict: The dict
         :return: The AlarmOverrideSet
         """
-        return AlarmOverrideSet(DisabledOverride(the_dict['disabled'].get('comments'))
+        return AlarmOverrideSet(DisabledOverride(the_dict['disabled'][1]['comments'])
                                 if the_dict.get('disabled') is not None else None,
-                                FilteredOverride(the_dict['filtered'].get('filtername'))
+                                FilteredOverride(the_dict['filtered'][1]['filtername'])
                                 if the_dict.get('filtered') is not None else None,
                                 LatchedOverride()
                                 if the_dict.get('latched') is not None else None,
                                 MaskedOverride()
                                 if the_dict.get('masked') is not None else None,
-                                OnDelayedOverride(the_dict['ondelayed'].get('expiration'))
+                                OnDelayedOverride(the_dict['ondelayed'][1]['expiration'])
                                 if the_dict.get('ondelayed') is not None else None,
-                                OffDelayedOverride(the_dict['offdelayed'].get('expiration'))
+                                OffDelayedOverride(the_dict['offdelayed'][1]['expiration'])
                                 if the_dict.get('offdelayed') is not None else None,
-                                ShelvedOverride(the_dict['shelved']['expiration'],
-                                                the_dict['shelved'].get('comments'),
-                                                ShelvedReason[the_dict['shelved']['reason']],
-                                                the_dict['shelved']['oneshot'])
+                                ShelvedOverride(the_dict['shelved'][1]['expiration'],
+                                                the_dict['shelved'][1]['comments'],
+                                                ShelvedReason[the_dict['shelved'][1]['reason']],
+                                                the_dict['shelved'][1]['oneshot'])
                                 if the_dict.get('shelved') is not None else None)
 
 
