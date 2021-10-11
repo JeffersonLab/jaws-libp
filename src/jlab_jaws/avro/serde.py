@@ -778,7 +778,14 @@ class ProcessorTransitionsSerde:
         :param the_dict: The dict
         :return: The ProcessorTransitions
         """
-        return ProcessorTransitions(False, False, False, False, False, False, False)
+        return ProcessorTransitions(the_dict['transitionToActive'],
+                                    the_dict['transitionToNormal'],
+                                    the_dict['latching'],
+                                    the_dict['unshelving'],
+                                    the_dict['masking'],
+                                    the_dict['unmasking'],
+                                    the_dict['ondelaying'],
+                                    the_dict['offdelaying'])
 
 
 class AlarmSerde:
