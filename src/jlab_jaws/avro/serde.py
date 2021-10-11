@@ -750,11 +750,19 @@ class AlarmOverrideSetSerde:
                                 if the_dict.get('disabled') is not None else None,
                                 FilteredOverride(the_dict['filtered'].get('filtername'))
                                 if the_dict.get('filtered') is not None else None,
-                                None,
-                                None,
-                                None,
-                                None,
-                                None)
+                                LatchedOverride()
+                                if the_dict.get('latched') is not None else None,
+                                MaskedOverride()
+                                if the_dict.get('masked') is not None else None,
+                                OnDelayedOverride(the_dict['ondelayed'].get('expiration'))
+                                if the_dict.get('ondelayed') is not None else None,
+                                OffDelayedOverride(the_dict['offdelayed'].get('expiration'))
+                                if the_dict.get('offdelayed') is not None else None,
+                                ShelvedOverride(the_dict['shelved']['expiration'],
+                                                the_dict['shelved'].get('comments'),
+                                                ShelvedReason[the_dict['shelved']['reason']],
+                                                the_dict['shelved']['oneshot'])
+                                if the_dict.get('shelved') is not None else None)
 
 
 class ProcessorTransitionsSerde:
