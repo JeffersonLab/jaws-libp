@@ -31,13 +31,13 @@
     {
       "type": ["null", "OnDelayedOverride"],
       "default": null,
-      "name": "ondelay",
+      "name": "ondelayed",
       "doc": "An on-delayed override"
     },
     {
       "type": ["null", "OffDelayedOverride"],
       "default": null,
-      "name": "offdelay",
+      "name": "offdelayed",
       "doc": "An off-delayed override"
     },
     {

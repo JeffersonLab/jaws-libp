@@ -392,9 +392,9 @@ class AlarmOverrideSet:
     """Latched Override"""
     masked: MaskedOverride
     """Masked Override"""
-    on_delayed: OnDelayedOverride
+    ondelayed: OnDelayedOverride
     """On Delayed Override"""
-    off_delayed: OffDelayedOverride
+    offdelayed: OffDelayedOverride
     """Off Delayed Override"""
     shelved: ShelvedOverride
     """Shelved Override"""
