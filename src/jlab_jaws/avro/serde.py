@@ -726,13 +726,16 @@ class AlarmOverrideSetSerde:
         :return: A dict
         """
         return {
-            "disabled": None,
-            "filtered": None,
-            "latched": None,
-            "masked": None,
-            "ondelay": None,
-            "offdelay": None,
-            "shelved": None
+            "disabled": {"comments": obj.disabled.comments} if obj.disabled is not None else None,
+            "filtered": {"filtername": obj.filtered.filtername} if obj.filtered is not None else None,
+            "latched": {} if obj.latched is not None else None,
+            "masked": {} if obj.masked is not None else None,
+            "ondelay": {"expiration": obj.ondelayed.expiration} if obj.ondelayed is not None else None,
+            "offdelay": {"expiration": obj.offdelayed.expiration} if obj.offdelayed is not None else None,
+            "shelved": {"expiration": obj.shelved.expiration,
+                        "comments": obj.shelved.comments,
+                        "oneshot": obj.shelved.oneshot,
+                        "reason": obj.shelved.reason.name} if obj.shelved is not None else None
         }
 
     @staticmethod
@@ -743,7 +746,15 @@ class AlarmOverrideSetSerde:
         :param the_dict: The dict
         :return: The AlarmOverrideSet
         """
-        return AlarmOverrideSet(None, None, None, None, None, None, None)
+        return AlarmOverrideSet(DisabledOverride(the_dict['disabled'].get('comments'))
+                                if the_dict.get('disabled') is not None else None,
+                                FilteredOverride(the_dict['filtered'].get('filtername'))
+                                if the_dict.get('filtered') is not None else None,
+                                None,
+                                None,
+                                None,
+                                None,
+                                None)
 
 
 class ProcessorTransitionsSerde:
