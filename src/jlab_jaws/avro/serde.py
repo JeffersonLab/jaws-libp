@@ -862,10 +862,13 @@ class AlarmSerde:
         :param the_dict: The dict
         :return: The Alarm
         """
-        return Alarm(AlarmClassSerde.from_dict(the_dict.get('class')),
-                     AlarmRegistrationSerde.from_dict(the_dict.get('registration')),
-                     AlarmRegistrationSerde.from_dict(the_dict.get('effectiveRegistration')),
-                     AlarmActivationUnionSerde.from_dict(the_dict.get('activation')),
+        return Alarm(AlarmClassSerde.from_dict(the_dict['class'][1]) if the_dict.get('class') is not None else None,
+                     AlarmRegistrationSerde.from_dict(the_dict['registration'][1])
+                     if the_dict.get('registration') is not None else None,
+                     AlarmRegistrationSerde.from_dict(the_dict['effectiveRegistration'][1])
+                     if the_dict.get('effectiveRegistration') is not None else None,
+                     AlarmActivationUnionSerde.from_dict(the_dict['activation'][1])
+                     if the_dict.get('activation') is not None else None,
                      AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
                      ProcessorTransitionsSerde.from_dict(the_dict['transitions']),
                      _unwrap_enum(the_dict['state'], AlarmState))
