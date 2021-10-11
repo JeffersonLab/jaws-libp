@@ -99,6 +99,9 @@ class AlarmClassSerde:
         :return: A dict
         """
 
+        if obj is None:
+            return None
+
         return {
             "location": obj.location.name,
             "category": obj.category.name,
@@ -126,6 +129,9 @@ class AlarmClassSerde:
         :param the_dict: The dict
         :return: The AlarmClass
         """
+        if the_dict is None:
+            return None
+
         return AlarmClass(_unwrap_enum(the_dict.get('location'), AlarmLocation),
                                _unwrap_enum(the_dict.get('category'), AlarmCategory),
                                _unwrap_enum(the_dict.get('priority'), AlarmPriority),
@@ -217,6 +223,9 @@ class AlarmRegistrationSerde:
         :param union_encoding: How the union should be encoded
         :return: A dict
         """
+
+        if obj is None:
+            return None
 
         if isinstance(obj.producer, SimpleProducer):
             uniontype = "org.jlab.jaws.entity.SimpleProducer"
@@ -363,6 +372,10 @@ class AlarmActivationUnionSerde:
         :param union_encoding: How the union should be encoded
         :return: A dict
         """
+
+        if obj is None:
+            return None
+
         if isinstance(obj.msg, SimpleAlarming):
             uniontype = "org.jlab.jaws.entity.SimpleAlarming"
             uniondict = {}
@@ -400,6 +413,10 @@ class AlarmActivationUnionSerde:
         :param the_dict: The dict
         :return: The AlarmActivationUnion
         """
+
+        if the_dict is None:
+            return None
+
         unionobj = the_dict['msg']
 
         if type(unionobj) is tuple:
