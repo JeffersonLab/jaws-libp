@@ -801,7 +801,7 @@ class AlarmSerde:
             "activation": obj.activation,
             "overrides": AlarmOverrideSetSerde.to_dict(obj.overrides),
             "transitions": ProcessorTransitionsSerde.to_dict(obj.transitions),
-            "state": obj.state
+            "state": obj.state.name
         }
 
     @staticmethod
@@ -822,7 +822,8 @@ class AlarmSerde:
                      the_dict['activation'],
                      AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
                      ProcessorTransitionsSerde.from_dict(the_dict['transitions']),
-                     the_dict['state'])
+                     _unwrap_enum(the_dict['state'], AlarmState))
+
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
