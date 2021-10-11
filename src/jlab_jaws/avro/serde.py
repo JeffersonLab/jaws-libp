@@ -269,6 +269,9 @@ class AlarmRegistrationSerde:
         :return: The AlarmRegistration
         """
 
+        if the_dict is None:
+            return None
+
         unionobj = the_dict['producer']
 
         if type(unionobj) is tuple:
@@ -821,10 +824,10 @@ class AlarmSerde:
         :return: A dict
         """
         return {
-            "alarm_class": obj.alarm_class,
-            "registration": obj.registration,
-            "effective_registration": obj.effective_registration,
-            "activation": obj.activation,
+            "class": AlarmClassSerde.to_dict(obj.alarm_class),
+            "registration": AlarmRegistrationSerde.to_dict(obj.registration),
+            "effectiveRegistration": AlarmRegistrationSerde.to_dict(obj.effective_registration),
+            "activation": AlarmActivationUnionSerde.to_dict(obj.activation),
             "overrides": AlarmOverrideSetSerde.to_dict(obj.overrides),
             "transitions": ProcessorTransitionsSerde.to_dict(obj.transitions),
             "state": obj.state.name
@@ -842,10 +845,10 @@ class AlarmSerde:
         :param the_dict: The dict
         :return: The Alarm
         """
-        return Alarm(the_dict.get('alarm_class'),
-                     the_dict.get('registration'),
-                     the_dict.get('effective_registration'),
-                     the_dict.get('activation'),
+        return Alarm(AlarmClassSerde.from_dict(the_dict.get('class')),
+                     AlarmRegistrationSerde.from_dict(the_dict.get('registration')),
+                     AlarmRegistrationSerde.from_dict(the_dict.get('effectiveRegistration')),
+                     AlarmActivationUnionSerde.from_dict(the_dict.get('activation')),
                      AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
                      ProcessorTransitionsSerde.from_dict(the_dict['transitions']),
                      _unwrap_enum(the_dict['state'], AlarmState))
