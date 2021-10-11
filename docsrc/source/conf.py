@@ -21,7 +21,7 @@ copyright = '2021, Jefferson Lab'
 author = 'Ryan Slominski'
 
 # The full version, including alpha/beta/rc tags
-release = '1.3.5'
+release = '2.0.0'
 
 
 # -- General configuration ---------------------------------------------------
