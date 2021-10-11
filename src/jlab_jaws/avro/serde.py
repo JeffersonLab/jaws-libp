@@ -14,7 +14,7 @@ from jlab_jaws.avro.entities import SimpleProducer, AlarmRegistration, AlarmActi
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride, \
     OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, ShelvedReason, \
     EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, AlarmClass, \
-    Alarm, AlarmState
+    Alarm, AlarmState, AlarmOverrideSet, ProcessorTransitions
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -712,6 +712,75 @@ class AlarmOverrideUnionSerde:
                                             AlarmOverrideUnionSerde.named_schemas())
 
 
+class AlarmOverrideSetSerde:
+    """
+        Provides AlarmOverrideSet serde utilities
+    """
+
+    @staticmethod
+    def to_dict(obj):
+        """
+        Converts AlarmOverrideSet to a dict
+
+        :param obj: The AlarmOverrideSet
+        :return: A dict
+        """
+        return {
+            "disabled": None,
+            "filtered": None,
+            "latched": None,
+            "masked": None,
+            "ondelay": None,
+            "offdelay": None,
+            "shelved": None
+        }
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to AlarmOverrideSet.
+
+        :param the_dict: The dict
+        :return: The AlarmOverrideSet
+        """
+        return AlarmOverrideSet(None, None, None, None, None, None, None)
+
+
+class ProcessorTransitionsSerde:
+    """
+        Provides ProcessorTransitions serde utilities
+    """
+
+    @staticmethod
+    def to_dict(obj):
+        """
+        Converts ProcessorTransitions to a dict
+
+        :param obj: The ProcessorTransitions
+        :return: A dict
+        """
+        return {
+            "transitionToActive": False,
+            "transitionToNormal": False,
+            "latching": False,
+            "unshelving": False,
+            "masking": False,
+            "unmasking": False,
+            "ondelaying": False,
+            "offdelaying": False
+        }
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to ProcessorTransitions.
+
+        :param the_dict: The dict
+        :return: The ProcessorTransitions
+        """
+        return ProcessorTransitions(False, False, False, False, False, False, False)
+
+
 class AlarmSerde:
     """
         Provides Alarm serde utilities
@@ -730,8 +799,8 @@ class AlarmSerde:
             "registration": obj.registration,
             "effective_registration": obj.effective_registration,
             "activation": obj.activation,
-            "overrides": obj.overrides,
-            "transitions": obj.transitions,
+            "overrides": AlarmOverrideSetSerde.to_dict(obj.overrides),
+            "transitions": ProcessorTransitionsSerde.to_dict(obj.transitions),
             "state": obj.state
         }
 
@@ -751,8 +820,8 @@ class AlarmSerde:
                      the_dict['registration'],
                      the_dict['effective_registration'],
                      the_dict['activation'],
-                     the_dict['overrides'],
-                     the_dict['transitions'],
+                     AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
+                     ProcessorTransitionsSerde.from_dict(the_dict['transitions']),
                      the_dict['state'])
 
     @staticmethod
