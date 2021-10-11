@@ -816,14 +816,13 @@ class AlarmSerde:
         :param the_dict: The dict
         :return: The Alarm
         """
-        return Alarm(the_dict['alarm_class'],
-                     the_dict['registration'],
-                     the_dict['effective_registration'],
-                     the_dict['activation'],
+        return Alarm(the_dict.get('alarm_class'),
+                     the_dict.get('registration'),
+                     the_dict.get('effective_registration'),
+                     the_dict.get('activation'),
                      AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
                      ProcessorTransitionsSerde.from_dict(the_dict['transitions']),
                      _unwrap_enum(the_dict['state'], AlarmState))
-
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
@@ -832,9 +831,6 @@ class AlarmSerde:
     @staticmethod
     def references():
         references = []
-
-        #references += AlarmClassSerde.references()
-        #references += AlarmOverrideUnionSerde.references()
 
         classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
         registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration",
