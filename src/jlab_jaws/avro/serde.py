@@ -760,14 +760,14 @@ class ProcessorTransitionsSerde:
         :return: A dict
         """
         return {
-            "transitionToActive": False,
-            "transitionToNormal": False,
-            "latching": False,
-            "unshelving": False,
-            "masking": False,
-            "unmasking": False,
-            "ondelaying": False,
-            "offdelaying": False
+            "transitionToActive": obj.transitionToActive,
+            "transitionToNormal": obj.transitionToNormal,
+            "latching": obj.latching,
+            "unshelving": obj.unshelving,
+            "masking": obj.masking,
+            "unmasking": obj.unmasking,
+            "ondelaying": obj.ondelaying,
+            "offdelaying": obj.offdelaying
         }
 
     @staticmethod
