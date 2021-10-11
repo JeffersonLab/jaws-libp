@@ -827,7 +827,7 @@ class AlarmSerde:
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
-        return Alarm.from_dict(the_dict)
+        return AlarmSerde.from_dict(the_dict)
 
     @staticmethod
     def references():
