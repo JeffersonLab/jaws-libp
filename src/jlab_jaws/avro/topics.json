@@ -5,7 +5,7 @@
   "alarm-overrides",
   "intermediate-monolog",
   "intermediate-latch-processed",
-  "intermediate-shelve-processed",
+  "intermediate-oneshot-processed",
   "intermediate-mask-processed",
   "intermediate-on-delay-processed",
   "intermediate-off-delay-processed",
