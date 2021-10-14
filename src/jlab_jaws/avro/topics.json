@@ -9,5 +9,6 @@
   "intermediate-mask-processed",
   "intermediate-on-delay-processed",
   "intermediate-off-delay-processed",
-  "alarms"
+  "effective-registrations",
+  "effective-alarms"
 ]
