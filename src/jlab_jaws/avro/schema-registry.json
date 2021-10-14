@@ -20,6 +20,11 @@
     {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
   ]},
+  {"file": "avro/schemas/AlarmRegistration.avsc", "subject": "effective-registrations-value", "references": [
+    {"name": "org.jlab.jaws.entity.AlarmLocation", "subject": "alarm-location", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
+  ]},  
   {"file": "avro/schemas/AlarmOverrideUnion.avsc", "subject": "alarm-overrides-value", "references": [
     {"name": "org.jlab.jaws.entity.DisabledOverride", "subject": "disabled-override", "version": "1"},
     {"name": "org.jlab.jaws.entity.FilteredOverride", "subject": "filtered-override", "version": "1"},
@@ -41,7 +46,7 @@
     {"name": "org.jlab.jaws.entity.ShelvedOverride", "subject": "shelved-override", "version": "1"}
   ]},
   {"file": "avro/schemas/ProcessorTransitions.avsc", "subject": "processor-transitions", "references": []},
-  {"file": "avro/schemas/Alarm.avsc", "subject": "alarms-value", "references": [
+  {"file": "avro/schemas/Alarm.avsc", "subject": "effective-alarms-value", "references": [
     {"name": "org.jlab.jaws.entity.AlarmRegistration", "subject": "alarm-registrations-value", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmClass", "subject": "alarm-classes-value", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmActivationUnion", "subject": "alarm-activations-value", "version": "1"},
