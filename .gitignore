@@ -1,8 +1,8 @@
 /dist/
-/src/jlab_jaws.egg-info/
 /build/
 /.idea/
 /.venv/
 /docsrc/source/_autosummary/
 /.idea_venv/
 /.venv_dev/
+/src/jaws_libp.egg-info/
