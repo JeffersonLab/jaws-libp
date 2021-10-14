@@ -1,4 +1,4 @@
-# jaws-libp
+# jaws-libp ![PyPI](https://img.shields.io/pypi/v/jlab_jaws)
 Reusable Python Classes for [JAWS](https://github.com/JeffersonLab/jaws).
 
 ## Install
