@@ -348,7 +348,7 @@ class AlarmRegistration(AlarmClass):
     """
     alarm_class: str
     """The Alarm Class"""
-    producer:  Union[SimpleProducer, EPICSProducer, CALCProducer]
+    producer: Union[SimpleProducer, EPICSProducer, CALCProducer]
     """The Alarm Producer"""
 
 
@@ -471,7 +471,7 @@ class EffectiveAlarm:
 @dataclass
 class IntermediateMonolog:
     """
-        intermediate-*-value subject
+        intermediate-\\*-value subject
     """
     registration: EffectiveRegistration
     """The effective AlarmRegistration considering class defaults"""
