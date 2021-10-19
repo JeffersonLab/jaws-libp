@@ -13,8 +13,8 @@ from jlab_jaws.avro.entities import AlarmLocation, AlarmCategory, AlarmPriority
 from jlab_jaws.avro.entities import SimpleProducer, AlarmRegistration, AlarmActivationUnion, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride, \
     OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, ShelvedReason, \
-    EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, AlarmClass, \
-    Alarm, AlarmState, AlarmOverrideSet, ProcessorTransitions
+    EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, AlarmClass, EffectiveRegistration, \
+    EffectiveActivation, EffectiveAlarm, IntermediateMonolog, AlarmState, AlarmOverrideSet, ProcessorTransitions
 from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
@@ -827,6 +827,157 @@ class ProcessorTransitionsSerde:
                                     the_dict['offdelaying'])
 
 
+class EffectiveActivationSerde:
+    """
+        Provides EffectiveActivation serde utilities
+    """
+
+    @staticmethod
+    def to_dict(obj):
+        """
+        Converts EffectiveActivation to a dict.
+
+        :param obj: The EffectiveActivation
+        :return: A dict
+        """
+        return {
+            "class": AlarmClassSerde.to_dict(obj.alarm_class),
+            "registration": AlarmRegistrationSerde.to_dict(obj.registration),
+            "effectiveRegistration": AlarmRegistrationSerde.to_dict(obj.effective_registration),
+            "activation": AlarmActivationUnionSerde.to_dict(obj.activation),
+            "overrides": AlarmOverrideSetSerde.to_dict(obj.overrides),
+            "transitions": ProcessorTransitionsSerde.to_dict(obj.transitions),
+            "state": obj.state.name
+        }
+
+    @staticmethod
+    def _to_dict_with_ctx(obj, ctx):
+        return EffectiveActivationSerde.to_dict(obj)
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to EffectiveActivation.
+
+        :param the_dict: The dict
+        :return: The EffectiveActivation
+        """
+        return EffectiveActivation(AlarmClassSerde.from_dict(the_dict['class'][1]) if the_dict.get('class') is not None else None,
+                     AlarmRegistrationSerde.from_dict(the_dict['registration'][1])
+                     if the_dict.get('registration') is not None else None,
+                     AlarmRegistrationSerde.from_dict(the_dict['effectiveRegistration'][1])
+                     if the_dict.get('effectiveRegistration') is not None else None,
+                     AlarmActivationUnionSerde.from_dict(the_dict['activation'][1])
+                     if the_dict.get('activation') is not None else None,
+                     AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
+                     ProcessorTransitionsSerde.from_dict(the_dict['transitions']),
+                     _unwrap_enum(the_dict['state'], AlarmState))
+
+    @staticmethod
+    def _from_dict_with_ctx(the_dict, ctx):
+        return EffectiveActivationSerde.from_dict(the_dict)
+
+    @staticmethod
+    def references():
+        references = []
+
+        classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
+        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration",
+                                                  "alarm-registrations-value", 1)
+        activation_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmActivationUnion",
+                                                "alarm-activations-value", 1)
+        overrides_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmOverrideSet",
+                                               "alarm-override-set", 1)
+        transitions_schema_ref = SchemaReference("org.jlab.jaws.entity.ProcessorTransitions",
+                                                 "processor-transitions", 1)
+        state_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmState", "alarm-state", 1)
+
+        references.append(classes_schema_ref)
+        references.append(registration_schema_ref)
+        references.append(activation_schema_ref)
+        references.append(overrides_schema_ref)
+        references.append(transitions_schema_ref)
+        references.append(state_schema_ref)
+
+        return references
+
+    @staticmethod
+    def named_schemas():
+        classes_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
+        classes_schema_str = classes_bytes.decode('utf-8')
+
+        registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmRegistration.avsc")
+        registrations_schema_str = registrations_bytes.decode('utf-8')
+
+        activation_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmActivationUnion.avsc")
+        activation_schema_str = activation_bytes.decode('utf-8')
+
+        overrides_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideSet.avsc")
+        overrides_schema_str = overrides_bytes.decode('utf-8')
+
+        transitions_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ProcessorTransitions.avsc")
+        transitions_schema_str = transitions_bytes.decode('utf-8')
+
+        state_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmState.avsc")
+        state_schema_str = state_bytes.decode('utf-8')
+
+        named_schemas = AlarmClassSerde.named_schemas()
+
+        named_schemas.update(AlarmOverrideUnionSerde.named_schemas())
+
+        ref_dict = loads(classes_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(registrations_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(activation_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(overrides_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(transitions_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(state_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+
+        return named_schemas
+
+    @staticmethod
+    def deserializer(schema_registry_client):
+        """
+            Return an EffectiveActivation deserializer.
+
+            :param schema_registry_client: The Confluent Schema Registry Client
+            :return: Deserializer
+        """
+
+        return AvroDeserializerWithReferences(schema_registry_client,
+                                              None,
+                                              EffectiveActivationSerde._from_dict_with_ctx,
+                                              True,
+                                              EffectiveActivationSerde.named_schemas())
+
+    @staticmethod
+    def serializer(schema_registry_client, conf=None):
+        """
+            Return an EffectiveActivation serializer.
+
+            :param conf: Configuration
+            :param schema_registry_client: The Confluent Schema Registry client
+            :return: Serializer
+        """
+
+        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveActivation.avsc")
+        subject_schema_str = subject_bytes.decode('utf-8')
+
+        schema = Schema(subject_schema_str, "AVRO",
+                        EffectiveActivationSerde.references())
+
+        return AvroSerializerWithReferences(schema_registry_client,
+                                            schema,
+                                            EffectiveActivationSerde._to_dict_with_ctx,
+                                            conf,
+                                            EffectiveActivationSerde.named_schemas())
+
+
 class EffectiveAlarmSerde:
     """
         Provides EffectiveAlarm serde utilities
@@ -863,15 +1014,15 @@ class EffectiveAlarmSerde:
         :return: The EffectiveAlarm
         """
         return EffectiveAlarm(AlarmClassSerde.from_dict(the_dict['class'][1]) if the_dict.get('class') is not None else None,
-                     AlarmRegistrationSerde.from_dict(the_dict['registration'][1])
-                     if the_dict.get('registration') is not None else None,
-                     AlarmRegistrationSerde.from_dict(the_dict['effectiveRegistration'][1])
-                     if the_dict.get('effectiveRegistration') is not None else None,
-                     AlarmActivationUnionSerde.from_dict(the_dict['activation'][1])
-                     if the_dict.get('activation') is not None else None,
-                     AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
-                     ProcessorTransitionsSerde.from_dict(the_dict['transitions']),
-                     _unwrap_enum(the_dict['state'], AlarmState))
+                              AlarmRegistrationSerde.from_dict(the_dict['registration'][1])
+                              if the_dict.get('registration') is not None else None,
+                              AlarmRegistrationSerde.from_dict(the_dict['effectiveRegistration'][1])
+                              if the_dict.get('effectiveRegistration') is not None else None,
+                              AlarmActivationUnionSerde.from_dict(the_dict['activation'][1])
+                              if the_dict.get('activation') is not None else None,
+                              AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
+                              ProcessorTransitionsSerde.from_dict(the_dict['transitions']),
+                              _unwrap_enum(the_dict['state'], AlarmState))
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):

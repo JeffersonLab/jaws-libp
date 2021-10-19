@@ -469,7 +469,7 @@ class EffectiveAlarm:
 
 
 @dataclass
-class IntermediateEffectiveAlarm:
+class IntermediateMonolog:
     """
         intermediate-*-value subject
     """

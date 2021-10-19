@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "name": "IntermediateEffectiveAlarm",
+  "name": "IntermediateMonolog",
   "namespace": "org.jlab.jaws.entity",
   "fields": [
     {
