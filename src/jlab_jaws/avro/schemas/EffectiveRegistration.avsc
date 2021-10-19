@@ -1,0 +1,34 @@
+{
+  "type": "record",
+  "name": "EffectiveRegistration",
+  "namespace": "org.jlab.jaws.entity",
+  "fields": [
+    {
+      "name": "actual",
+      "type": [
+        "null",
+        "AlarmRegistration"
+      ],
+      "default": null,
+      "doc": "The alarm registration"
+    },
+    {
+      "name": "class",
+      "type": [
+        "null",
+        "AlarmClass"
+      ],
+      "default": null,
+      "doc": "The alarm class"
+    },
+    {
+      "name": "calculated",
+      "type": [
+        "null",
+        "AlarmRegistration"
+      ],
+      "default": null,
+      "doc": "The calculated AlarmRegistration considering class defaults"
+    }
+  ]
+}

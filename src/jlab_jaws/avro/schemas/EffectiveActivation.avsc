@@ -1,0 +1,26 @@
+{
+  "type": "record",
+  "name": "EffectiveActivation",
+  "namespace": "org.jlab.jaws.entity",
+  "fields": [
+    {
+      "name": "actual",
+      "type": [
+        "null",
+        "AlarmActivationUnion"
+      ],
+      "default": null,
+      "doc": "The alarm activation"
+    },
+    {
+      "name": "overrides",
+      "type": "AlarmOverrideSet",
+      "doc": "The alarm overrides"
+    },
+    {
+      "name": "state",
+      "type": "AlarmState",
+      "doc": "The calculated AlarmState considering activation and overrides"
+    }
+  ]
+}

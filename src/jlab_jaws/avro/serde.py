@@ -827,17 +827,17 @@ class ProcessorTransitionsSerde:
                                     the_dict['offdelaying'])
 
 
-class AlarmSerde:
+class EffectiveAlarmSerde:
     """
-        Provides Alarm serde utilities
+        Provides EffectiveAlarm serde utilities
     """
 
     @staticmethod
     def to_dict(obj):
         """
-        Converts Alarm to a dict.
+        Converts EffectiveAlarm to a dict.
 
-        :param obj: The Alarm
+        :param obj: The EffectiveAlarm
         :return: A dict
         """
         return {
@@ -852,17 +852,17 @@ class AlarmSerde:
 
     @staticmethod
     def _to_dict_with_ctx(obj, ctx):
-        return AlarmSerde.to_dict(obj)
+        return EffectiveAlarmSerde.to_dict(obj)
 
     @staticmethod
     def from_dict(the_dict):
         """
-        Converts a dict to Alarm.
+        Converts a dict to EffectiveAlarm.
 
         :param the_dict: The dict
-        :return: The Alarm
+        :return: The EffectiveAlarm
         """
-        return Alarm(AlarmClassSerde.from_dict(the_dict['class'][1]) if the_dict.get('class') is not None else None,
+        return EffectiveAlarm(AlarmClassSerde.from_dict(the_dict['class'][1]) if the_dict.get('class') is not None else None,
                      AlarmRegistrationSerde.from_dict(the_dict['registration'][1])
                      if the_dict.get('registration') is not None else None,
                      AlarmRegistrationSerde.from_dict(the_dict['effectiveRegistration'][1])
@@ -875,7 +875,7 @@ class AlarmSerde:
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
-        return AlarmSerde.from_dict(the_dict)
+        return EffectiveAlarmSerde.from_dict(the_dict)
 
     @staticmethod
     def references():
@@ -943,30 +943,36 @@ class AlarmSerde:
     @staticmethod
     def deserializer(schema_registry_client):
         """
-            Return an Alarm deserializer.
+            Return an EffectiveAlarm deserializer.
 
             :param schema_registry_client: The Confluent Schema Registry Client
             :return: Deserializer
         """
 
-        return AvroDeserializerWithReferences(schema_registry_client, None,
-                                              AlarmSerde._from_dict_with_ctx, True, AlarmSerde.named_schemas())
+        return AvroDeserializerWithReferences(schema_registry_client,
+                                              None,
+                                              EffectiveAlarmSerde._from_dict_with_ctx,
+                                              True,
+                                              EffectiveAlarmSerde.named_schemas())
 
     @staticmethod
     def serializer(schema_registry_client, conf=None):
         """
-            Return an Alarm serializer.
+            Return an EffectiveAlarm serializer.
 
             :param conf: Configuration
             :param schema_registry_client: The Confluent Schema Registry client
             :return: Serializer
         """
 
-        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/Alarm.avsc")
+        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveAlarm.avsc")
         subject_schema_str = subject_bytes.decode('utf-8')
 
         schema = Schema(subject_schema_str, "AVRO",
-                        AlarmSerde.references())
+                        EffectiveAlarmSerde.references())
 
-        return AvroSerializerWithReferences(schema_registry_client, schema,
-                                            AlarmSerde._to_dict_with_ctx, conf, AlarmSerde.named_schemas())
+        return AvroSerializerWithReferences(schema_registry_client,
+                                            schema,
+                                            EffectiveAlarmSerde._to_dict_with_ctx,
+                                            conf,
+                                            EffectiveAlarmSerde.named_schemas())
