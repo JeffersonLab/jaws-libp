@@ -827,6 +827,117 @@ class ProcessorTransitionsSerde:
                                     the_dict['offdelaying'])
 
 
+class EffectiveRegistrationSerde:
+    """
+        Provides EffectiveRegistration serde utilities
+    """
+
+    @staticmethod
+    def to_dict(obj):
+        """
+        Converts EffectiveRegistration to a dict.
+
+        :param obj: The EffectiveRegistration
+        :return: A dict
+        """
+        return {
+            "class": AlarmClassSerde.to_dict(obj.alarm_class),
+            "actual": AlarmRegistrationSerde.to_dict(obj.actual),
+            "calculated": AlarmRegistrationSerde.to_dict(obj.calculated)
+        }
+
+    @staticmethod
+    def _to_dict_with_ctx(obj, ctx):
+        return EffectiveRegistrationSerde.to_dict(obj)
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to EffectiveRegistration.
+
+        :param the_dict: The dict
+        :return: The EffectiveRegistration
+        """
+        return EffectiveRegistration(AlarmClassSerde.from_dict(the_dict['class'][1]) if the_dict.get('class') is not None else None,
+                              AlarmRegistrationSerde.from_dict(the_dict['actual'][1])
+                              if the_dict.get('actual') is not None else None,
+                              AlarmRegistrationSerde.from_dict(the_dict['calculated'][1])
+                              if the_dict.get('calculated') is not None else None)
+
+    @staticmethod
+    def _from_dict_with_ctx(the_dict, ctx):
+        return EffectiveRegistrationSerde.from_dict(the_dict)
+
+    @staticmethod
+    def references():
+        references = []
+
+        classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
+        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration",
+                                                  "alarm-registrations-value", 1)
+
+        references.append(classes_schema_ref)
+        references.append(registration_schema_ref)
+
+        return references
+
+    @staticmethod
+    def named_schemas():
+        classes_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
+        classes_schema_str = classes_bytes.decode('utf-8')
+
+        registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmRegistration.avsc")
+        registrations_schema_str = registrations_bytes.decode('utf-8')
+
+        named_schemas = AlarmClassSerde.named_schemas()
+
+        named_schemas.update(AlarmOverrideUnionSerde.named_schemas())
+
+        ref_dict = loads(classes_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = loads(registrations_schema_str)
+        parse_schema(ref_dict, named_schemas=named_schemas)
+
+        return named_schemas
+
+    @staticmethod
+    def deserializer(schema_registry_client):
+        """
+            Return an EffectiveRegistration deserializer.
+
+            :param schema_registry_client: The Confluent Schema Registry Client
+            :return: Deserializer
+        """
+
+        return AvroDeserializerWithReferences(schema_registry_client,
+                                              None,
+                                              EffectiveRegistrationSerde._from_dict_with_ctx,
+                                              True,
+                                              EffectiveRegistrationSerde.named_schemas())
+
+    @staticmethod
+    def serializer(schema_registry_client, conf=None):
+        """
+            Return an EffectiveRegistration serializer.
+
+            :param conf: Configuration
+            :param schema_registry_client: The Confluent Schema Registry client
+            :return: Serializer
+        """
+
+        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveRegistration.avsc")
+        subject_schema_str = subject_bytes.decode('utf-8')
+
+        schema = Schema(subject_schema_str, "AVRO",
+                        EffectiveRegistrationSerde.references())
+
+        return AvroSerializerWithReferences(schema_registry_client,
+                                            schema,
+                                            EffectiveRegistrationSerde._to_dict_with_ctx,
+                                            conf,
+                                            EffectiveRegistrationSerde.named_schemas())
+
+
 class EffectiveActivationSerde:
     """
         Provides EffectiveActivation serde utilities
@@ -841,7 +952,7 @@ class EffectiveActivationSerde:
         :return: A dict
         """
         return {
-            "actual": AlarmActivationUnionSerde.to_dict(obj.activation),
+            "actual": AlarmActivationUnionSerde.to_dict(obj.actual),
             "overrides": AlarmOverrideSetSerde.to_dict(obj.overrides),
             "state": obj.state.name
         }
@@ -859,8 +970,8 @@ class EffectiveActivationSerde:
         :return: The EffectiveActivation
         """
         return EffectiveActivation(
-                     AlarmActivationUnionSerde.from_dict(the_dict['activation'][1])
-                     if the_dict.get('activation') is not None else None,
+                     AlarmActivationUnionSerde.from_dict(the_dict['actual'][1])
+                     if the_dict.get('actual') is not None else None,
                      AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
                      _unwrap_enum(the_dict['state'], AlarmState))
 
