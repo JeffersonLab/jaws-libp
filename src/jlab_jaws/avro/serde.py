@@ -1116,9 +1116,9 @@ class EffectiveAlarmSerde:
         activation_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveActivation.avsc")
         activation_schema_str = activation_bytes.decode('utf-8')
 
-        named_schemas = {}
-        # named_schemas = EffectiveRegistrationSerde.named_schemas()
-        # named_schemas.update(EffectiveActivationSerde.named_schemas())
+        # named_schemas = {}
+        named_schemas = EffectiveRegistrationSerde.named_schemas()
+        named_schemas.update(EffectiveActivationSerde.named_schemas())
 
         ref_dict = loads(registrations_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
