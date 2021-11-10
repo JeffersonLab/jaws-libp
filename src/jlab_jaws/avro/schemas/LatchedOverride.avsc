@@ -1,7 +1,7 @@
 {
-  "type": "record",
-  "name": "LatchedOverride",
-  "namespace": "org.jlab.jaws.entity",
-  "doc": "A latched override",
-  "fields": []
+    "type": "record",
+    "name": "LatchedOverride",
+    "namespace": "org.jlab.jaws.entity",
+    "doc": "A latched override",
+    "fields": []
 }
