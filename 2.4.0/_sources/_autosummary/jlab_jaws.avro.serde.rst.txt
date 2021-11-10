@@ -1,0 +1,41 @@
+jlab\_jaws.avro.serde
+=====================
+
+.. automodule:: jlab_jaws.avro.serde
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AlarmActivationUnionSerde
+      AlarmClassSerde
+      AlarmOverrideKeySerde
+      AlarmOverrideSetSerde
+      AlarmOverrideUnionSerde
+      AlarmRegistrationSerde
+      EffectiveActivationSerde
+      EffectiveAlarmSerde
+      EffectiveRegistrationSerde
+      IntermediateMonologSerde
+      ProcessorTransitionsSerde
+   
+   
+
+   
+   
+   
+
+
+
