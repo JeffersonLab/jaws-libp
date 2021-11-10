@@ -1,0 +1,17 @@
+{
+    "type": "record",
+    "name": "EffectiveAlarm",
+    "namespace": "org.jlab.jaws.entity",
+    "fields": [
+        {
+            "name": "registration",
+            "type": "EffectiveRegistration",
+            "doc": "The effective AlarmRegistration considering class defaults"
+        },
+        {
+            "name": "activation",
+            "type": "EffectiveActivation",
+            "doc": "The effective AlarmActivation considering overrides"
+        }
+    ]
+}
