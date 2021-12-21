@@ -10,7 +10,7 @@ from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserialize
 from fastavro import parse_schema
 
 from jlab_jaws.avro.entities import AlarmLocation, AlarmCategory, AlarmPriority
-from jlab_jaws.avro.entities import SimpleProducer, AlarmRegistration, AlarmActivationUnion, SimpleAlarming, \
+from jlab_jaws.avro.entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride, \
     OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, ShelvedReason, \
     EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, AlarmClass, EffectiveRegistration, \
@@ -47,11 +47,11 @@ class AlarmClassSerde:
     """
 
     @staticmethod
-    def setClassDefaults(registration: AlarmRegistration, alarm_class: AlarmClass):
+    def set_class_defaults(registration: AlarmInstance, alarm_class: AlarmClass):
         """
-        Merge an AlarmClass into a AlarmRegistration (apply class default values).
+        Merge an AlarmClass into a AlarmInstance (apply class default values).
 
-        :param registration: The AlarmRegistration
+        :param registration: The AlarmInstance
         :param alarm_class: The AlarmClass
         """
         if registration.priority is None:
@@ -209,17 +209,17 @@ class AlarmClassSerde:
                                             AlarmClassSerde.named_schemas())
 
 
-class AlarmRegistrationSerde:
+class AlarmInstanceSerde:
     """
-        Provides AlarmRegistration serde utilities
+        Provides AlarmInstance serde utilities
     """
 
     @staticmethod
     def to_dict(obj, union_encoding=UnionEncoding.TUPLE):
         """
-        Converts an AlarmRegistration to a dict.
+        Converts an AlarmInstance to a dict.
 
-        :param obj: The AlarmRegistration
+        :param obj: The AlarmInstance
         :param union_encoding: How the union should be encoded
         :return: A dict
         """
@@ -265,17 +265,17 @@ class AlarmRegistrationSerde:
 
     @staticmethod
     def _to_dict_with_ctx(obj, ctx):
-        return AlarmRegistrationSerde.to_dict(obj)
+        return AlarmInstanceSerde.to_dict(obj)
 
     @staticmethod
     def from_dict(the_dict):
         """
-        Converts a dict to an AlarmRegistration.
+        Converts a dict to an AlarmInstance.
 
         Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
 
         :param the_dict: The dict
-        :return: The AlarmRegistration
+        :return: The AlarmInstance
         """
 
         if the_dict is None:
@@ -300,7 +300,7 @@ class AlarmRegistrationSerde:
         else:
             producer = SimpleProducer()
 
-        return AlarmRegistration(_unwrap_enum(the_dict.get('location'), AlarmLocation),
+        return AlarmInstance(_unwrap_enum(the_dict.get('location'), AlarmLocation),
                                  _unwrap_enum(the_dict.get('category'), AlarmCategory),
                                  _unwrap_enum(the_dict.get('priority'), AlarmPriority),
                                  the_dict.get('rationale'),
@@ -317,7 +317,7 @@ class AlarmRegistrationSerde:
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
-        return AlarmRegistrationSerde.from_dict(the_dict)
+        return AlarmInstanceSerde.from_dict(the_dict)
 
     @staticmethod
     def references():
@@ -330,32 +330,32 @@ class AlarmRegistrationSerde:
     @staticmethod
     def deserializer(schema_registry_client):
         """
-            Return an AlarmRegistration deserializer.
+            Return an AlarmInstance deserializer.
 
             :param schema_registry_client: The Confluent Schema Registry Client
             :return: Deserializer
         """
         return AvroDeserializerWithReferences(schema_registry_client, None,
-                                              AlarmRegistrationSerde._from_dict_with_ctx, True,
-                                              AlarmRegistrationSerde.named_schemas())
+                                              AlarmInstanceSerde._from_dict_with_ctx, True,
+                                              AlarmInstanceSerde.named_schemas())
 
     @staticmethod
     def serializer(schema_registry_client):
         """
-            Return an AlarmRegistration serializer.
+            Return an AlarmInstance serializer.
 
             :param schema_registry_client: The Confluent Schema Registry client
             :return: Serializer
         """
-        value_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmRegistration.avsc")
+        value_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmInstance.avsc")
         value_schema_str = value_bytes.decode('utf-8')
 
         schema = Schema(value_schema_str, "AVRO",
-                        AlarmRegistrationSerde.references())
+                        AlarmInstanceSerde.references())
 
         return AvroSerializerWithReferences(schema_registry_client, schema,
-                                            AlarmRegistrationSerde._to_dict_with_ctx, None,
-                                            AlarmRegistrationSerde.named_schemas())
+                                            AlarmInstanceSerde._to_dict_with_ctx, None,
+                                            AlarmInstanceSerde.named_schemas())
 
 
 class AlarmActivationUnionSerde:
@@ -842,8 +842,8 @@ class EffectiveRegistrationSerde:
         """
         return {
             "class": AlarmClassSerde.to_dict(obj.alarm_class),
-            "actual": AlarmRegistrationSerde.to_dict(obj.actual),
-            "calculated": AlarmRegistrationSerde.to_dict(obj.calculated)
+            "actual": AlarmInstanceSerde.to_dict(obj.actual),
+            "calculated": AlarmInstanceSerde.to_dict(obj.calculated)
         }
 
     @staticmethod
@@ -859,9 +859,9 @@ class EffectiveRegistrationSerde:
         :return: The EffectiveRegistration
         """
         return EffectiveRegistration(AlarmClassSerde.from_dict(the_dict['class'][1]) if the_dict.get('class') is not None else None,
-                              AlarmRegistrationSerde.from_dict(the_dict['actual'][1])
+                              AlarmInstanceSerde.from_dict(the_dict['actual'][1])
                               if the_dict.get('actual') is not None else None,
-                              AlarmRegistrationSerde.from_dict(the_dict['calculated'][1])
+                              AlarmInstanceSerde.from_dict(the_dict['calculated'][1])
                               if the_dict.get('calculated') is not None else None)
 
     @staticmethod
@@ -873,8 +873,8 @@ class EffectiveRegistrationSerde:
         references = []
 
         classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
-        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmRegistration",
-                                                  "alarm-registrations-value", 1)
+        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmInstance",
+                                                  "alarm-instances-value", 1)
 
         references.append(classes_schema_ref)
         references.append(registration_schema_ref)
@@ -886,7 +886,7 @@ class EffectiveRegistrationSerde:
         classes_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
         classes_schema_str = classes_bytes.decode('utf-8')
 
-        registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmRegistration.avsc")
+        registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmInstance.avsc")
         registrations_schema_str = registrations_bytes.decode('utf-8')
 
         named_schemas = AlarmClassSerde.named_schemas()

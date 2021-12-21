@@ -1,6 +1,6 @@
 [
   "alarm-classes",
-  "alarm-registrations",
+  "alarm-instances",
   "alarm-activations",
   "alarm-overrides",
   "intermediate-registration",

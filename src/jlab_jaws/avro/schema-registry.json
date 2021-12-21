@@ -15,7 +15,7 @@
     {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
   ]},
-  {"file": "avro/schemas/AlarmRegistration.avsc", "subject": "alarm-registrations-value", "references": [
+  {"file": "avro/schemas/AlarmInstance.avsc", "subject": "alarm-instances-value", "references": [
     {"name": "org.jlab.jaws.entity.AlarmLocation", "subject": "alarm-location", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
@@ -42,7 +42,7 @@
   {"file": "avro/schemas/ProcessorTransitions.avsc", "subject": "processor-transitions", "references": []},
   {"file": "avro/schemas/AlarmState.avsc", "subject": "alarm-state", "references": []},
   {"file": "avro/schemas/EffectiveRegistration.avsc", "subject": "effective-registrations-value", "references": [
-    {"name": "org.jlab.jaws.entity.AlarmRegistration", "subject": "alarm-registrations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmInstance", "subject": "alarm-instances-value", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmClass", "subject": "alarm-classes-value", "version": "1"}
   ]},
   {"file": "avro/schemas/EffectiveActivation.avsc", "subject": "effective-activations-value", "references": [

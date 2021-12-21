@@ -1,8 +1,8 @@
 {
     "type": "record",
-    "name": "AlarmRegistration",
+    "name": "AlarmInstance",
     "namespace": "org.jlab.jaws.entity",
-    "doc": "Master alarm database record",
+    "doc": "Instance of an alarm class",
     "fields": [
         {
             "name": "class",

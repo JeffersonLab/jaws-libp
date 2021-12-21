@@ -7,7 +7,7 @@
             "name": "actual",
             "type": [
                 "null",
-                "AlarmRegistration"
+                "AlarmInstance"
             ],
             "doc": "The alarm registration",
             "default": null
@@ -25,9 +25,9 @@
             "name": "calculated",
             "type": [
                 "null",
-                "AlarmRegistration"
+                "AlarmInstance"
             ],
-            "doc": "The calculated AlarmRegistration considering class defaults",
+            "doc": "The calculated AlarmInstance considering class defaults",
             "default": null
         }
     ]

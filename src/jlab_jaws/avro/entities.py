@@ -339,9 +339,9 @@ class AlarmClass:
 
 
 @dataclass
-class AlarmRegistration(AlarmClass):
+class AlarmInstance(AlarmClass):
     """
-        alarm-registrations-value subject
+        alarm-instances-value subject
 
         Note: Any attributes inherited from AlarmClass can be set to None which indicate the class value
         should be used.
@@ -434,11 +434,11 @@ class EffectiveRegistration:
     alarm_class: AlarmClass
     """The Alarm Class"""
 
-    actual: AlarmRegistration
-    """The Alarm Registration"""
+    actual: AlarmInstance
+    """The actual alarm registration instance"""
 
-    calculated: AlarmRegistration
-    """The calculated AlarmRegistration considering class defaults"""
+    calculated: AlarmInstance
+    """The calculated alarm registration instance considering class defaults"""
 
 
 @dataclass
