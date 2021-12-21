@@ -1,0 +1,18 @@
+{
+    "type": "enum",
+    "name": "AlarmState",
+    "namespace": "org.jlab.jaws.entity",
+    "doc": "Enumeration of effective state an alarm can be in considering active, overrides, processing transitions, and override precedence",
+    "symbols": [
+        "NormalDisabled",
+        "NormalFiltered",
+        "NormalMasked",
+        "NormalOnDelayed",
+        "NormalOneShotShelved",
+        "NormalContinuousShelved",
+        "ActiveOffDelayed",
+        "ActiveLatched",
+        "Active",
+        "Normal"
+    ]
+}
