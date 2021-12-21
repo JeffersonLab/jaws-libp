@@ -3,11 +3,14 @@
   "alarm-registrations",
   "alarm-activations",
   "alarm-overrides",
-  "intermediate-monolog",
-  "intermediate-latch-processed",
-  "intermediate-shelve-processed",
-  "intermediate-mask-processed",
-  "intermediate-on-delay-processed",
-  "intermediate-off-delay-processed",
-  "alarms"
+  "intermediate-registration",
+  "intermediate-activation",
+  "intermediate-latch",
+  "intermediate-oneshot",
+  "intermediate-mask",
+  "intermediate-ondelay",
+  "intermediate-offdelay",
+  "effective-registrations",
+  "effective-activations",
+  "effective-alarms"
 ]

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Union, Optional
 
+
 class AlarmLocation(Enum):
     S1D = 1
     S2D = 2
@@ -83,6 +84,7 @@ class AlarmPriority(Enum):
     P2_MAJOR = 2
     P3_MINOR = 3
     P4_INCIDENTAL = 4
+
 
 class UnionEncoding(Enum):
     """
@@ -301,7 +303,8 @@ class ShelvedOverride:
     reason: ShelvedReason
     """The general motivation for shelving the alarm"""
     oneshot: bool
-    """Indicates whether the override expires immediately upon next alarm deactivation (unless timestamp expiration occurs first)"""
+    """Indicates whether the override expires immediately upon next alarm deactivation 
+    (unless timestamp expiration occurs first)"""
 
 
 @dataclass
@@ -345,7 +348,7 @@ class AlarmRegistration(AlarmClass):
     """
     alarm_class: str
     """The Alarm Class"""
-    producer:  Union[SimpleProducer, EPICSProducer, CALCProducer]
+    producer: Union[SimpleProducer, EPICSProducer, CALCProducer]
     """The Alarm Producer"""
 
 
@@ -424,27 +427,57 @@ class ProcessorTransitions:
 
 
 @dataclass
-class Alarm:
+class EffectiveRegistration:
     """
-        alarm-value subject
+        effective-registrations-value subject
     """
     alarm_class: AlarmClass
     """The Alarm Class"""
 
-    registration: AlarmRegistration
+    actual: AlarmRegistration
     """The Alarm Registration"""
 
-    effective_registration: AlarmRegistration
-    """The Effective Alarm Registration consider class defaults"""
+    calculated: AlarmRegistration
+    """The calculated AlarmRegistration considering class defaults"""
 
-    activation: AlarmActivationUnion
+
+@dataclass
+class EffectiveActivation:
+    """
+        effective-activations-value subject
+    """
+    actual: AlarmActivationUnion
     """The Alarm Activation"""
 
     overrides: AlarmOverrideSet
     """The Alarm Overrides"""
 
-    transitions: ProcessorTransitions
-    """The Processor Transitions"""
-
     state: AlarmState
-    """The Alarm State"""
+    """The calculated AlarmState considering activation and overrides"""
+
+
+@dataclass
+class EffectiveAlarm:
+    """
+        effective-alarms-value subject
+    """
+    registration: EffectiveRegistration
+    """The effective AlarmRegistration considering class defaults"""
+
+    activation: EffectiveActivation
+    """The effective AlarmActivation considering overrides"""
+
+
+@dataclass
+class IntermediateMonolog:
+    """
+        intermediate-\\*-value subject
+    """
+    registration: EffectiveRegistration
+    """The effective AlarmRegistration considering class defaults"""
+
+    activation: EffectiveActivation
+    """The effective AlarmActivation considering overrides"""
+
+    transitions: ProcessorTransitions
+    """Transition states used by the alarm processor"""

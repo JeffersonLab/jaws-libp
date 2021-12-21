@@ -1,56 +1,56 @@
 {
-  "type": "record",
-  "name": "ProcessorTransitions",
-  "namespace": "org.jlab.jaws.entity",
-  "doc": "Set of alarm transitions",
-  "fields": [
-    {
-      "name": "transitionToActive",
-      "type": "boolean",
-      "default": false,
-      "doc": "true when record is first one to indicate Active after being Normal"
-    },
-    {
-      "name": "transitionToNormal",
-      "type": "boolean",
-      "default": false,
-      "doc": "true when record is first one to indicate Normal after being Active"
-    },
-    {
-      "name": "latching",
-      "type": "boolean",
-      "default": false,
-      "doc": "true when record is in-process of latching, LatchOverride forthcoming"
-    },
-    {
-      "name": "unshelving",
-      "type": "boolean",
-      "default": false,
-      "doc": "true when record is in-process of being unshelved after one-shot, ShelvedOverride clearing"
-    },
-    {
-      "name": "masking",
-      "type": "boolean",
-      "default": false,
-      "doc": "true when record is in-process of being masked, MaskedOverride forthcoming"
-    },
-    {
-      "name": "unmasking",
-      "type": "boolean",
-      "default": false,
-      "doc": "true when record is in-process of being unmasked, MaskedOverride clearing"
-    },
-    {
-      "name": "ondelaying",
-      "type": "boolean",
-      "default": false,
-      "doc": "true when record is in-process of being on-delayed, OnDelayedOverride forthcoming"
-    },
-    {
-      "name": "offdelaying",
-      "type": "boolean",
-      "default": false,
-      "doc": "true when record is in-process of being off-delayed, OffDelayedOverride forthcoming"
-    }
-  ]
+    "type": "record",
+    "name": "ProcessorTransitions",
+    "namespace": "org.jlab.jaws.entity",
+    "doc": "Set of alarm transitions",
+    "fields": [
+        {
+            "name": "transitionToActive",
+            "type": "boolean",
+            "doc": "true when record is first one to indicate Active after being Normal",
+            "default": false
+        },
+        {
+            "name": "transitionToNormal",
+            "type": "boolean",
+            "doc": "true when record is first one to indicate Normal after being Active",
+            "default": false
+        },
+        {
+            "name": "latching",
+            "type": "boolean",
+            "doc": "true when record is in-process of latching, LatchOverride forthcoming",
+            "default": false
+        },
+        {
+            "name": "unshelving",
+            "type": "boolean",
+            "doc": "true when record is in-process of being unshelved after one-shot, ShelvedOverride clearing",
+            "default": false
+        },
+        {
+            "name": "masking",
+            "type": "boolean",
+            "doc": "true when record is in-process of being masked, MaskedOverride forthcoming",
+            "default": false
+        },
+        {
+            "name": "unmasking",
+            "type": "boolean",
+            "doc": "true when record is in-process of being unmasked, MaskedOverride clearing",
+            "default": false
+        },
+        {
+            "name": "ondelaying",
+            "type": "boolean",
+            "doc": "true when record is in-process of being on-delayed, OnDelayedOverride forthcoming",
+            "default": false
+        },
+        {
+            "name": "offdelaying",
+            "type": "boolean",
+            "doc": "true when record is in-process of being off-delayed, OffDelayedOverride forthcoming",
+            "default": false
+        }
+    ]
 }
