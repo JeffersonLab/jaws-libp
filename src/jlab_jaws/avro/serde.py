@@ -47,50 +47,6 @@ class AlarmClassSerde:
     """
 
     @staticmethod
-    def set_class_defaults(registration: AlarmInstance, alarm_class: AlarmClass):
-        """
-        Merge an AlarmClass into a AlarmInstance (apply class default values).
-
-        :param registration: The AlarmInstance
-        :param alarm_class: The AlarmClass
-        """
-        if registration.priority is None:
-            registration.priority = alarm_class.priority
-
-        if registration.category is None:
-            registration.category = alarm_class.category
-
-        if registration.location is None:
-            registration.location = alarm_class.location
-
-        if registration.corrective_action is None:
-            registration.corrective_action = alarm_class.corrective_action
-
-        if registration.filterable is None:
-            registration.filterable = alarm_class.filterable
-
-        if registration.latching is None:
-            registration.latching = alarm_class.latching
-
-        if registration.masked_by is None:
-            registration.masked_by = alarm_class.masked_by
-
-        if registration.off_delay_seconds is None:
-            registration.off_delay_seconds = alarm_class.off_delay_seconds
-
-        if registration.on_delay_seconds is None:
-            registration.on_delay_seconds = alarm_class.on_delay_seconds
-
-        if registration.point_of_contact_username is None:
-            registration.point_of_contact_username = alarm_class.point_of_contact_username
-
-        if registration.rationale is None:
-            registration.rationale = alarm_class.rationale
-
-        if registration.screen_path is None:
-            registration.screen_path = alarm_class.screen_path
-
-    @staticmethod
     def to_dict(obj):
         """
         Converts an AlarmClass to a dict.
@@ -103,7 +59,6 @@ class AlarmClassSerde:
             return None
 
         return {
-            "location": obj.location.name,
             "category": obj.category.name,
             "priority": obj.priority.name,
             "rationale": obj.rationale,
@@ -234,7 +189,7 @@ class AlarmInstanceSerde:
             union = uniondict
 
         return {
-            "location": obj.location.name if obj.location is not None else None,
+            "location": obj.location,
             "category": obj.category.name if obj.category is not None else None,
             "priority": obj.priority.name if obj.priority is not None else None,
             "rationale": obj.rationale,
