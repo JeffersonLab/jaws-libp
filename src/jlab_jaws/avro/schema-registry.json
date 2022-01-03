@@ -1,6 +1,5 @@
 [
   {"file": "avro/schemas/AlarmLocation.avsc", "subject": "alarm-location", "references": []},
-  {"file": "avro/schemas/AlarmCategory.avsc", "subject": "alarm-category", "references": []},
   {"file": "avro/schemas/AlarmPriority.avsc", "subject": "alarm-priority", "references": []},
   {"file": "avro/schemas/DisabledOverride.avsc", "subject": "disabled-override", "references": []},
   {"file": "avro/schemas/FilteredOverride.avsc", "subject": "filtered-override", "references": []},
@@ -12,12 +11,10 @@
   {"file": "avro/schemas/AlarmActivationUnion.avsc", "subject": "alarm-activations-value", "references": []},
   {"file": "avro/schemas/AlarmClass.avsc", "subject": "alarm-classes-value", "references": [
     {"name": "org.jlab.jaws.entity.AlarmLocation", "subject": "alarm-location", "version": "1"},
-    {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
   ]},
   {"file": "avro/schemas/AlarmInstance.avsc", "subject": "alarm-instances-value", "references": [
     {"name": "org.jlab.jaws.entity.AlarmLocation", "subject": "alarm-location", "version": "1"},
-    {"name": "org.jlab.jaws.entity.AlarmCategory", "subject": "alarm-category", "version": "1"},
     {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
   ]},
   {"file": "avro/schemas/AlarmOverrideUnion.avsc", "subject": "alarm-overrides-value", "references": [

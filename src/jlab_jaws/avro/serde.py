@@ -9,7 +9,7 @@ from confluent_kafka.schema_registry import SchemaReference, Schema
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
 from fastavro import parse_schema
 
-from jlab_jaws.avro.entities import AlarmLocation, AlarmCategory, AlarmPriority
+from jlab_jaws.avro.entities import AlarmLocation, AlarmPriority
 from jlab_jaws.avro.entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride, \
     OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, ShelvedReason, \
@@ -133,7 +133,7 @@ class AlarmClassSerde:
             return None
 
         return AlarmClass(_unwrap_enum(the_dict.get('location'), AlarmLocation),
-                               _unwrap_enum(the_dict.get('category'), AlarmCategory),
+                               the_dict.get('category'),
                                _unwrap_enum(the_dict.get('priority'), AlarmPriority),
                                the_dict.get('rationale'),
                                the_dict.get('correctiveaction'),
@@ -152,26 +152,20 @@ class AlarmClassSerde:
     @staticmethod
     def references():
         location_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmLocation", "alarm-location", 1)
-        category_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmCategory", "alarm-category", 1)
         priority_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmPriority", "alarm-priority", 1)
 
-        return [location_schema_ref, category_schema_ref, priority_schema_ref]
+        return [location_schema_ref, priority_schema_ref]
 
     @staticmethod
     def named_schemas():
         location_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmLocation.avsc")
         location_schema_str = location_bytes.decode('utf-8')
 
-        category_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmCategory.avsc")
-        category_schema_str = category_bytes.decode('utf-8')
-
         priority_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmPriority.avsc")
         priority_schema_str = priority_bytes.decode('utf-8')
 
         named_schemas = {}
         ref_dict = loads(location_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(category_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
         ref_dict = loads(priority_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
@@ -301,7 +295,7 @@ class AlarmInstanceSerde:
             producer = SimpleProducer()
 
         return AlarmInstance(_unwrap_enum(the_dict.get('location'), AlarmLocation),
-                                 _unwrap_enum(the_dict.get('category'), AlarmCategory),
+                                 the_dict.get('category'),
                                  _unwrap_enum(the_dict.get('priority'), AlarmPriority),
                                  the_dict.get('rationale'),
                                  the_dict.get('correctiveaction'),

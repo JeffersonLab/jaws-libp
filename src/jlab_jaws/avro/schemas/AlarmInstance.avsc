@@ -67,7 +67,10 @@
             "name": "category",
             "type": [
                 "null",
-                "AlarmCategory"
+                {
+                    "type": "string",
+                    "avro.java.string": "String"
+                }
             ],
             "doc": "The alarm category"
         },

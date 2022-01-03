@@ -314,7 +314,7 @@ class AlarmClass:
     """
     location: AlarmLocation
     """The Alarm Location"""
-    category: AlarmCategory
+    category: str
     """The Alarm Category"""
     priority: AlarmPriority
     """The Alarm Priority"""
