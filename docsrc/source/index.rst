@@ -25,7 +25,7 @@ Schemas:
 * :download:`AlarmOverrideSet.avsc <../../src/jlab_jaws/avro/schemas/AlarmOverrideSet.avsc>`
 * :download:`AlarmOverrideUnion.avsc <../../src/jlab_jaws/avro/schemas/AlarmOverrideUnion.avsc>`
 * :download:`AlarmPriority.avsc <../../src/jlab_jaws/avro/schemas/AlarmPriority.avsc>`
-* :download:`AlarmRegistration.avsc <../../src/jlab_jaws/avro/schemas/AlarmRegistration.avsc>`
+* :download:`AlarmInstance.avsc <../../src/jlab_jaws/avro/schemas/AlarmInstance.avsc>`
 * :download:`AlarmState.avsc <../../src/jlab_jaws/avro/schemas/AlarmState.avsc>`
 * :download:`DisabledOverride.avsc <../../src/jlab_jaws/avro/schemas/DisabledOverride.avsc>`
 * :download:`EffectiveActivation.avsc <../../src/jlab_jaws/avro/schemas/EffectiveActivation.avsc>`
