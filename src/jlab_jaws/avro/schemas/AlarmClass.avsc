@@ -70,17 +70,6 @@
             "doc": "The number of seconds of off-delay"
         },
         {
-            "name": "maskedby",
-            "type": [
-                "null",
-                 {
-                    "type": "string",
-                    "avro.java.string": "String"
-                }
-            ],
-            "doc": "The name of the parent alarm, which if active, masks this alarm (flood suppression via logical hierarchy)"
-        },
-        {
             "name": "screenpath",
             "type": {
                 "type": "string",

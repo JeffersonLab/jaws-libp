@@ -12,9 +12,7 @@
   {"file": "avro/schemas/AlarmClass.avsc", "subject": "alarm-classes-value", "references": [
     {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
   ]},
-  {"file": "avro/schemas/AlarmInstance.avsc", "subject": "alarm-instances-value", "references": [
-    {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
-  ]},
+  {"file": "avro/schemas/AlarmInstance.avsc", "subject": "alarm-instances-value", "references": []},
   {"file": "avro/schemas/AlarmOverrideUnion.avsc", "subject": "alarm-overrides-value", "references": [
     {"name": "org.jlab.jaws.entity.DisabledOverride", "subject": "disabled-override", "version": "1"},
     {"name": "org.jlab.jaws.entity.FilteredOverride", "subject": "filtered-override", "version": "1"},

@@ -68,7 +68,6 @@ class AlarmClassSerde:
             "filterable": obj.filterable,
             "ondelayseconds": obj.on_delay_seconds,
             "offdelayseconds": obj.off_delay_seconds,
-            "maskedby": obj.masked_by,
             "screenpath": obj.screen_path,
         }
 
@@ -96,7 +95,6 @@ class AlarmClassSerde:
                           the_dict.get('filterable'),
                           the_dict.get('ondelayseconds'),
                           the_dict.get('offdelayseconds'),
-                          the_dict.get('maskedby'),
                           the_dict.get('screenpath'))
 
     @staticmethod
@@ -189,20 +187,11 @@ class AlarmInstanceSerde:
             union = uniondict
 
         return {
-            "location": obj.location,
-            "category": obj.category.name if obj.category is not None else None,
-            "priority": obj.priority.name if obj.priority is not None else None,
-            "rationale": obj.rationale,
-            "correctiveaction": obj.corrective_action,
-            "pointofcontactusername": obj.point_of_contact_username,
-            "latching": obj.latching,
-            "filterable": obj.filterable,
-            "ondelayseconds": obj.on_delay_seconds,
-            "offdelayseconds": obj.off_delay_seconds,
-            "maskedby": obj.masked_by,
-            "screenpath": obj.screen_path,
             "class": obj.alarm_class,
-            "producer": union
+            "producer": union,
+            "location": obj.location,
+            "maskedby": obj.masked_by,
+            "screenpath": obj.screen_path
         }
 
     @staticmethod
@@ -242,32 +231,16 @@ class AlarmInstanceSerde:
         else:
             producer = SimpleProducer()
 
-        return AlarmInstance(the_dict.get('category'),
-                             _unwrap_enum(the_dict.get('priority'), AlarmPriority),
-                             the_dict.get('rationale'),
-                             the_dict.get('correctiveaction'),
-                             the_dict.get('pointofcontactusername'),
-                             the_dict.get('latching'),
-                             the_dict.get('filterable'),
-                             the_dict.get('ondelayseconds'),
-                             the_dict.get('offdelayseconds'),
+        return AlarmInstance(the_dict.get('class'),
+                             producer,
+                             the_dict.get('location'),
                              the_dict.get('maskedby'),
-                             the_dict.get('screenpath'),
-                             the_dict.get('class'),
-                             producer,  # Also not optional
-                             the_dict.get('location'))
+                             the_dict.get('screenpath'))
+
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
         return AlarmInstanceSerde.from_dict(the_dict)
-
-    @staticmethod
-    def references():
-        return AlarmClassSerde.references()
-
-    @staticmethod
-    def named_schemas():
-        return AlarmClassSerde.named_schemas()
 
     @staticmethod
     def deserializer(schema_registry_client):
@@ -277,9 +250,8 @@ class AlarmInstanceSerde:
             :param schema_registry_client: The Confluent Schema Registry Client
             :return: Deserializer
         """
-        return AvroDeserializerWithReferences(schema_registry_client, None,
-                                              AlarmInstanceSerde._from_dict_with_ctx, True,
-                                              AlarmInstanceSerde.named_schemas())
+        return AvroDeserializer(schema_registry_client, None,
+                                AlarmInstanceSerde._from_dict_with_ctx, True)
 
     @staticmethod
     def serializer(schema_registry_client):
@@ -292,12 +264,8 @@ class AlarmInstanceSerde:
         value_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmInstance.avsc")
         value_schema_str = value_bytes.decode('utf-8')
 
-        schema = Schema(value_schema_str, "AVRO",
-                        AlarmInstanceSerde.references())
-
-        return AvroSerializerWithReferences(schema_registry_client, schema,
-                                            AlarmInstanceSerde._to_dict_with_ctx, None,
-                                            AlarmInstanceSerde.named_schemas())
+        return AvroSerializer(schema_registry_client, value_schema_str,
+                              AlarmInstanceSerde._to_dict_with_ctx, None)
 
 
 class AlarmActivationUnionSerde:

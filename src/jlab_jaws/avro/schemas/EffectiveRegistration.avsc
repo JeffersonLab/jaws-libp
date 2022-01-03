@@ -4,12 +4,12 @@
     "namespace": "org.jlab.jaws.entity",
     "fields": [
         {
-            "name": "actual",
+            "name": "instance",
             "type": [
                 "null",
                 "AlarmInstance"
             ],
-            "doc": "The alarm registration",
+            "doc": "The alarm instance",
             "default": null
         },
         {
@@ -19,15 +19,6 @@
                 "AlarmClass"
             ],
             "doc": "The alarm class",
-            "default": null
-        },
-        {
-            "name": "calculated",
-            "type": [
-                "null",
-                "AlarmInstance"
-            ],
-            "doc": "The calculated AlarmInstance considering class defaults",
             "default": null
         }
     ]
