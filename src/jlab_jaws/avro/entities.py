@@ -4,7 +4,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Union, Optional
+from typing import Union, Optional, List
 
 
 class AlarmPriority(Enum):
@@ -283,7 +283,7 @@ class AlarmInstance:
     """The Alarm Class"""
     producer: Union[SimpleProducer, EPICSProducer, CALCProducer]
     """The Alarm Producer"""
-    location: list[str]
+    location: List[str]
     """The Alarm Location"""
     masked_by: Optional[str]
     """(optional) The parent alarm which masks this one"""
