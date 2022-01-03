@@ -57,11 +57,12 @@
         },
         {
             "name": "location",
-            "type": [
-                "null",
-                "AlarmLocation"
-            ],
-            "doc": "The alarm location"
+            "type": {
+                "type": "array",
+                "items" : "string",
+                "default": []
+            },
+            "doc": "The locations associated with the alarm"
         },
         {
             "name": "category",

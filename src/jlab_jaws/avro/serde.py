@@ -287,8 +287,7 @@ class AlarmInstanceSerde:
         else:
             producer = SimpleProducer()
 
-        return AlarmInstance(_unwrap_enum(the_dict.get('location'), AlarmLocation),
-                                 the_dict.get('category'),
+        return AlarmInstance(the_dict.get('category'),
                                  _unwrap_enum(the_dict.get('priority'), AlarmPriority),
                                  the_dict.get('rationale'),
                                  the_dict.get('correctiveaction'),
@@ -300,7 +299,8 @@ class AlarmInstanceSerde:
                                  the_dict.get('maskedby'),
                                  the_dict.get('screenpath'),
                                  the_dict.get('class'),
-                                 producer)  # Also not optional
+                                 producer,  # Also not optional
+                                 the_dict.get('location'))
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):

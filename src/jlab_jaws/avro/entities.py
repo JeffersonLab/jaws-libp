@@ -348,6 +348,8 @@ class AlarmInstance(AlarmClass):
     """The Alarm Class"""
     producer: Union[SimpleProducer, EPICSProducer, CALCProducer]
     """The Alarm Producer"""
+    location: list[str]
+    """The Alarm Location"""
 
 
 @dataclass
