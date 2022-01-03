@@ -88,16 +88,16 @@ class AlarmClassSerde:
             return None
 
         return AlarmClass(the_dict.get('category'),
-                               _unwrap_enum(the_dict.get('priority'), AlarmPriority),
-                               the_dict.get('rationale'),
-                               the_dict.get('correctiveaction'),
-                               the_dict.get('pointofcontactusername'),
-                               the_dict.get('latching'),
-                               the_dict.get('filterable'),
-                               the_dict.get('ondelayseconds'),
-                               the_dict.get('offdelayseconds'),
-                               the_dict.get('maskedby'),
-                               the_dict.get('screenpath'))
+                          _unwrap_enum(the_dict.get('priority'), AlarmPriority),
+                          the_dict.get('rationale'),
+                          the_dict.get('correctiveaction'),
+                          the_dict.get('pointofcontactusername'),
+                          the_dict.get('latching'),
+                          the_dict.get('filterable'),
+                          the_dict.get('ondelayseconds'),
+                          the_dict.get('offdelayseconds'),
+                          the_dict.get('maskedby'),
+                          the_dict.get('screenpath'))
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
@@ -243,19 +243,19 @@ class AlarmInstanceSerde:
             producer = SimpleProducer()
 
         return AlarmInstance(the_dict.get('category'),
-                                 _unwrap_enum(the_dict.get('priority'), AlarmPriority),
-                                 the_dict.get('rationale'),
-                                 the_dict.get('correctiveaction'),
-                                 the_dict.get('pointofcontactusername'),
-                                 the_dict.get('latching'),
-                                 the_dict.get('filterable'),
-                                 the_dict.get('ondelayseconds'),
-                                 the_dict.get('offdelayseconds'),
-                                 the_dict.get('maskedby'),
-                                 the_dict.get('screenpath'),
-                                 the_dict.get('class'),
-                                 producer,  # Also not optional
-                                 the_dict.get('location'))
+                             _unwrap_enum(the_dict.get('priority'), AlarmPriority),
+                             the_dict.get('rationale'),
+                             the_dict.get('correctiveaction'),
+                             the_dict.get('pointofcontactusername'),
+                             the_dict.get('latching'),
+                             the_dict.get('filterable'),
+                             the_dict.get('ondelayseconds'),
+                             the_dict.get('offdelayseconds'),
+                             the_dict.get('maskedby'),
+                             the_dict.get('screenpath'),
+                             the_dict.get('class'),
+                             producer,  # Also not optional
+                             the_dict.get('location'))
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
@@ -571,7 +571,7 @@ class AlarmOverrideUnionSerde:
             obj = OffDelayedOverride(alarmingdict['expiration'])
         elif alarmingtype == "org.jlab.jaws.entity.ShelvedOverride":
             obj = ShelvedOverride(alarmingdict['expiration'], alarmingdict['comments'],
-                               _unwrap_enum(alarmingdict['reason'], ShelvedReason), alarmingdict['oneshot'])
+                                  _unwrap_enum(alarmingdict['reason'], ShelvedReason), alarmingdict['oneshot'])
         else:
             print("Unknown alarming type: {}".format(the_dict['msg']))
             obj = None
@@ -800,11 +800,12 @@ class EffectiveRegistrationSerde:
         :param the_dict: The dict
         :return: The EffectiveRegistration
         """
-        return EffectiveRegistration(AlarmClassSerde.from_dict(the_dict['class'][1]) if the_dict.get('class') is not None else None,
-                              AlarmInstanceSerde.from_dict(the_dict['actual'][1])
-                              if the_dict.get('actual') is not None else None,
-                              AlarmInstanceSerde.from_dict(the_dict['calculated'][1])
-                              if the_dict.get('calculated') is not None else None)
+        return EffectiveRegistration(
+            AlarmClassSerde.from_dict(the_dict['class'][1]) if the_dict.get('class') is not None else None,
+            AlarmInstanceSerde.from_dict(the_dict['actual'][1])
+            if the_dict.get('actual') is not None else None,
+            AlarmInstanceSerde.from_dict(the_dict['calculated'][1])
+            if the_dict.get('calculated') is not None else None)
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
@@ -912,10 +913,10 @@ class EffectiveActivationSerde:
         :return: The EffectiveActivation
         """
         return EffectiveActivation(
-                     AlarmActivationUnionSerde.from_dict(the_dict['actual'][1])
-                     if the_dict.get('actual') is not None else None,
-                     AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
-                     _unwrap_enum(the_dict['state'], AlarmState))
+            AlarmActivationUnionSerde.from_dict(the_dict['actual'][1])
+            if the_dict.get('actual') is not None else None,
+            AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
+            _unwrap_enum(the_dict['state'], AlarmState))
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
@@ -1225,3 +1226,83 @@ class IntermediateMonologSerde:
                                             IntermediateMonologSerde._to_dict_with_ctx,
                                             conf,
                                             IntermediateMonologSerde.named_schemas())
+
+
+class AlarmLocationSerde:
+    """
+        Provides AlarmLocation serde utilities
+    """
+
+    @staticmethod
+    def to_dict(obj):
+        """
+        Converts AlarmLocation to a dict.
+
+        :param obj: The AlarmLocation
+        :return: A dict
+        """
+        return {
+            "parent": obj.parent
+        }
+
+    @staticmethod
+    def _to_dict_with_ctx(obj, ctx):
+        return AlarmLocationSerde.to_dict(obj)
+
+    @staticmethod
+    def from_dict(the_dict):
+        """
+        Converts a dict to AlarmLocation.
+
+        :param the_dict: The dict
+        :return: The AlarmLocation
+        """
+        return AlarmLocation(the_dict['parent'])
+
+    @staticmethod
+    def _from_dict_with_ctx(the_dict, ctx):
+        return AlarmLocationSerde.from_dict(the_dict)
+
+    @staticmethod
+    def references():
+        references = []
+
+        return references
+
+    @staticmethod
+    def named_schemas():
+        named_schemas = {}
+
+        return named_schemas
+
+    @staticmethod
+    def deserializer(schema_registry_client):
+        """
+            Return an AlarmLocation deserializer.
+
+            :param schema_registry_client: The Confluent Schema Registry Client
+            :return: Deserializer
+        """
+
+        return AvroDeserializer(schema_registry_client,
+                                None,
+                                AlarmLocationSerde._from_dict_with_ctx,
+                                True)
+
+    @staticmethod
+    def serializer(schema_registry_client, conf=None):
+        """
+            Return an AlarmLocation serializer.
+
+            :param conf: Configuration
+            :param schema_registry_client: The Confluent Schema Registry client
+            :return: Serializer
+        """
+
+        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmLocation.avsc")
+        subject_schema_str = subject_bytes.decode('utf-8')
+
+        return AvroSerializer(schema_registry_client,
+                              subject_schema_str,
+                              AlarmLocationSerde._to_dict_with_ctx,
+                              conf)
