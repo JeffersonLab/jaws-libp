@@ -5,11 +5,6 @@
     "doc": "An alarm class",
     "fields": [
         {
-            "name": "location",
-            "type": "AlarmLocation",
-            "doc": "The alarm location"
-        },
-        {
             "name": "category",
             "type": {
                 "type": "string",

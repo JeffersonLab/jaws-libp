@@ -312,8 +312,6 @@ class AlarmClass:
     """
         alarm-classes-value subject
     """
-    location: AlarmLocation
-    """The Alarm Location"""
     category: str
     """The Alarm Category"""
     priority: AlarmPriority

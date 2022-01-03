@@ -132,8 +132,7 @@ class AlarmClassSerde:
         if the_dict is None:
             return None
 
-        return AlarmClass(_unwrap_enum(the_dict.get('location'), AlarmLocation),
-                               the_dict.get('category'),
+        return AlarmClass(the_dict.get('category'),
                                _unwrap_enum(the_dict.get('priority'), AlarmPriority),
                                the_dict.get('rationale'),
                                the_dict.get('correctiveaction'),
@@ -151,22 +150,16 @@ class AlarmClassSerde:
 
     @staticmethod
     def references():
-        location_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmLocation", "alarm-location", 1)
         priority_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmPriority", "alarm-priority", 1)
 
-        return [location_schema_ref, priority_schema_ref]
+        return [priority_schema_ref]
 
     @staticmethod
     def named_schemas():
-        location_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmLocation.avsc")
-        location_schema_str = location_bytes.decode('utf-8')
-
         priority_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmPriority.avsc")
         priority_schema_str = priority_bytes.decode('utf-8')
 
         named_schemas = {}
-        ref_dict = loads(location_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
         ref_dict = loads(priority_schema_str)
         parse_schema(ref_dict, named_schemas=named_schemas)
 
