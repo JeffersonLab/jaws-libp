@@ -19,8 +19,6 @@ class EventSourceTable:
     __slots__ = ['_hash', '_config', '_listeners', '_state', '_consumer', '_executor',
                  '_end_reached', '_high', '_low', '_run', 'is_highwater_timeout']
 
-    _listeners: List[EventSourceListener] = []
-
     def __init__(self, config):
         """Create an EventSourceTable instance.
 
@@ -70,6 +68,7 @@ class EventSourceTable:
         self._consumer = None
         self._executor = None
         self._highwater_signal = Event()
+        self._listeners: List[EventSourceListener] = []
 
     def add_listener(self, listener: EventSourceListener):
         self._listeners.append(listener)
