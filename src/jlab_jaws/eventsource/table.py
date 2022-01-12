@@ -107,10 +107,15 @@ class EventSourceTable:
         self._state.clear()
 
     def __monitor(self):
-        self.__monitor_initial()
-        self.__monitor_continue()
-        self._consumer.close()
-        self._executor.shutdown()
+        try:
+            self.__monitor_initial()
+            self.__monitor_continue()
+        except Exception as e:
+            print(type(e))
+            print(e)
+        finally:
+            self._consumer.close()
+            self._executor.shutdown()
 
     def __monitor_initial(self):
         consumer_conf = {'bootstrap.servers': self._config['bootstrap.servers'],
