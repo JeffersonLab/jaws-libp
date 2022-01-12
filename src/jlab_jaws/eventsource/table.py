@@ -125,7 +125,9 @@ class EventSourceTable:
         t.start()
 
         while not (self._end_reached or self._is_highwater_timeout):
-            msgs = self._consumer.consume(500, timeout=1)
+            msg = self._consumer.poll(1)
+
+            msgs = [msg] if msg is not None else None
 
             if msgs is not None:
                 for msg in msgs:
@@ -147,7 +149,9 @@ class EventSourceTable:
 
     def __monitor_continue(self):
         while self._run:
-            msgs = self._consumer.consume(500, timeout=1)
+            msg = self._consumer.poll(1)
+
+            msgs = [msg] if msg is not None else None
 
             if msgs is not None:
                 for msg in msgs:
