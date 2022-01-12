@@ -1,17 +1,19 @@
 """A module for Event Sourcing
 """
+from concurrent.futures import ThreadPoolExecutor
 from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING
 from confluent_kafka.serialization import SerializationError
+from threading import Timer
 
 
 class EventSourceTable:
     """This class provides an Event Source Table abstraction.
     """
 
-    __slots__ = ['_hash', '_config', '_on_initial_state', '_on_state_update', '_state', '_default_conf',
+    __slots__ = ['_hash', '_config', '_on_batch', '_on_highwater', '_on_highwater_timeout', '_state', '_default_conf',
                  '_empty', '_high', '_low', '_run']
 
-    def __init__(self, config, on_initial_state, on_state_update):
+    def __init__(self, config, on_batch, on_highwater, on_highwater_timeout):
         """Create an EventSourceTable instance.
 
          Args:
@@ -53,78 +55,90 @@ class EventSourceTable:
 
          """
         self._config = config
-        self._on_initial_state = on_initial_state
-        self._on_state_update = on_state_update
+        self._on_batch = on_batch
+        self._on_highwater = on_highwater
+        self._on_highwater_timeout = on_highwater_timeout
 
         self._run = True
         self._low = None
         self._high = None
-        self._empty = False
         self._default_conf = {}
         self._state = {}
+
+        self._is_highwater_timeout = False
+        self._end_reached = False
+        self._consumer = None
+        self._executor = None
 
     def start(self):
         """
             Start monitoring for state updates.
         """
+
+        self._executor = ThreadPoolExecutor(max_workers=1)
+
+        self._executor.submit(self.__monitor)
+
+    def __do_highwater_timeout(self):
+        self._is_highwater_timeout = True
+
+    def __update_state(self, msg):
+        if msg.value() is None:
+            if msg.key() in self._state:
+                del self._state[msg.key()]
+        else:
+            self._state[msg.key()] = msg
+
+    def __notify_changes(self):
+        self._on_batch(self._state.copy())
+        self._state.clear()
+
+    def __monitor(self):
+        self.__monitor_initial()
+        self.__monitor_continue()
+        self._consumer.close()
+        self._executor.shutdown()
+
+    def __monitor_initial(self):
         consumer_conf = {'bootstrap.servers': self._config['bootstrap.servers'],
                          'key.deserializer': self._config['key.deserializer'],
                          'value.deserializer': self._config['value.deserializer'],
                          'group.id': self._config['group.id']}
 
-        c = DeserializingConsumer(consumer_conf)
-        c.subscribe([self._config['topic']], on_assign=self._my_on_assign)
+        self._consumer = DeserializingConsumer(consumer_conf)
+        self._consumer.subscribe([self._config['topic']], on_assign=self._my_on_assign)
 
-        while True:
-            try:
-                msg = c.poll(1.0)
+        t = Timer(30, self.__do_highwater_timeout())
+        t.start()
 
-            except SerializationError as e:
-                print("Message deserialization failed for {}: {}".format(msg, e))
-                break
+        while not end_reached and not self._is_highwater_timeout:
+            msgs = self._consumer.consume(500, timeout=1)
 
-            if self._empty:
-                break
+            if msgs is not None:
+                for msg in msgs:
+                    self.__update_state(msg)
 
-            if msg is None:
-                continue
+                    if msg.offset() + 1 == self._high:
+                        end_reached = True
 
-            if msg.error():
-                print("Consumer error: {}".format(msg.error()))
-                continue
+                self.__notify_changes()
 
-            if msg.value() is None:
-                if msg.key() in self._state:
-                    del self._state[msg.key()]
-            else:
-                self._state[msg.key()] = msg
+        t.cancel()
 
-            if msg.offset() + 1 == self._high:
-                break
+        if self._is_highwater_timeout:
+            self._on_highwater_timeout()
+        else:
+            self._on_highwater()
 
-        self._on_initial_state(self._state)
-
-        if not self._config['monitor']:
-            self._run = False
-
+    def __monitor_continue(self):
         while self._run:
-            try:
-                msg = c.poll(1.0)
+            msgs = self._consumer.consume(500, timeout=1)
 
-            except SerializationError as e:
-                print("Message deserialization failed for {}: {}".format(msg, e))
-                break
+            if msgs is not None:
+                for msg in msgs:
+                    self.__update_state(msg)
 
-            if msg is None:
-                continue
-
-            if msg.error():
-                print("Consumer error: {}".format(msg.error()))
-                continue
-
-            self._on_state_update(msg)
-
-        c.close()
+                self.__notify_changes()
 
     def stop(self):
         """
@@ -140,6 +154,6 @@ class EventSourceTable:
             self._low, self._high = consumer.get_watermark_offsets(p)
 
             if self._high == 0:
-                self._empty = True
+                self._end_reached = True
 
         consumer.assign(partitions)
