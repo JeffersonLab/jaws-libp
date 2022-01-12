@@ -5,8 +5,7 @@ from typing import List
 
 from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING, Message
 from threading import Timer, Event
-
-from src.jlab_jaws.eventsource.listener import EventSourceListener
+from jlab_jaws.eventsource.listener import EventSourceListener
 
 
 class TimeoutException(Exception):
