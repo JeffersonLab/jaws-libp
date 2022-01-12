@@ -32,7 +32,7 @@ class CachedTable(EventSourceTable):
 
         self._listener = CacheListener(self)
 
-        self.addListener(self._listener)
+        EventSourceTable.addListener(self._listener)
 
     def __update_cache(self, msgs: List[Message]) -> None:
         for msg in msgs:
