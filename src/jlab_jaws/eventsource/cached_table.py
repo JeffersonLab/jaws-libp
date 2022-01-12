@@ -32,7 +32,7 @@ class CachedTable(EventSourceTable):
 
         self._listener = CacheListener(self)
 
-        EventSourceTable.add_listener(self._listener)
+        super().add_listener(self._listener)
 
     def __update_cache(self, msgs: List[Message]) -> None:
         for msg in msgs:
@@ -50,7 +50,7 @@ class CachedTable(EventSourceTable):
         :return: List of Message
         :raises TimeoutException: If highwater is not reached before timeout
         """
-        EventSourceTable.await_highwater(timeout_seconds)
+        super().await_highwater(timeout_seconds)
         return self._cache
 
 
