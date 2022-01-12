@@ -1,19 +1,28 @@
 """A module for Event Sourcing
 """
 from concurrent.futures import ThreadPoolExecutor
-from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING
-from confluent_kafka.serialization import SerializationError
-from threading import Timer
+from typing import List
+
+from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING, Message
+from threading import Timer, Event
+
+from src.jlab_jaws.eventsource.listener import EventSourceListener
+
+
+class TimeoutException(Exception):
+    pass
 
 
 class EventSourceTable:
     """This class provides an Event Source Table abstraction.
     """
 
-    __slots__ = ['_hash', '_config', '_on_batch', '_on_highwater', '_on_highwater_timeout', '_state', '_default_conf',
-                 '_empty', '_high', '_low', '_run']
+    __slots__ = ['_hash', '_config', '_listeners', '_state', '_consumer', '_executor',
+                 '_end_reached', '_high', '_low', '_run', 'is_highwater_timeout']
 
-    def __init__(self, config, on_batch, on_highwater, on_highwater_timeout):
+    _listeners: List[EventSourceListener] = []
+
+    def __init__(self, config):
         """Create an EventSourceTable instance.
 
          Args:
@@ -45,30 +54,34 @@ class EventSourceTable:
             | ``topic``               | str                 |                                                     |
             |                         |                     |                                                     |
             +-------------------------+---------------------+-----------------------------------------------------+
-            |                         |                     | True to monitor continuously, False to stop after   |
-            | ``monitor``             | bool                | determining initial state.  Defaults to False.      |
-            |                         |                     |                                                     |
-            +-------------------------+---------------------+-----------------------------------------------------+
 
             Note:
                 Keys must be hashable so your key deserializer generally must generate immutable types.
 
          """
         self._config = config
-        self._on_batch = on_batch
-        self._on_highwater = on_highwater
-        self._on_highwater_timeout = on_highwater_timeout
 
         self._run = True
         self._low = None
         self._high = None
-        self._default_conf = {}
         self._state = {}
 
         self._is_highwater_timeout = False
         self._end_reached = False
         self._consumer = None
         self._executor = None
+        self._highwater_signal = Event()
+
+    def add_listener(self, listener: EventSourceListener):
+        self._listeners.append(listener)
+
+    def remove_listener(self, listener: EventSourceListener):
+        self._listeners.remove(listener)
+
+    def await_highwater(self, timeout_seconds: float) -> None:
+        flag = self._highwater_signal.wait(timeout_seconds)
+        if not flag:
+            raise TimeoutException
 
     def start(self):
         """
@@ -82,7 +95,7 @@ class EventSourceTable:
     def __do_highwater_timeout(self):
         self._is_highwater_timeout = True
 
-    def __update_state(self, msg):
+    def __update_state(self, msg: Message):
         if msg.value() is None:
             if msg.key() in self._state:
                 del self._state[msg.key()]
@@ -90,7 +103,9 @@ class EventSourceTable:
             self._state[msg.key()] = msg
 
     def __notify_changes(self):
-        self._on_batch(self._state.copy())
+        for listener in self._listeners:
+            listener.on_batch(self._state.copy())
+
         self._state.clear()
 
     def __monitor(self):
@@ -126,9 +141,11 @@ class EventSourceTable:
         t.cancel()
 
         if self._is_highwater_timeout:
-            self._on_highwater_timeout()
+            for listener in self._listeners:
+                listener.on_highwater_timeout()
         else:
-            self._on_highwater()
+            for listener in self._listeners:
+                listener.on_highwater()
 
     def __monitor_continue(self):
         while self._run:
@@ -140,14 +157,14 @@ class EventSourceTable:
 
                 self.__notify_changes()
 
-    def stop(self):
+    def stop(self) -> None:
         """
             Stop monitoring for state updates.
         """
 
         self._run = False
 
-    def _my_on_assign(self, consumer, partitions):
+    def _my_on_assign(self, consumer, partitions) -> None:
 
         for p in partitions:
             p.offset = OFFSET_BEGINNING
