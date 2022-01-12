@@ -121,10 +121,10 @@ class EventSourceTable:
         self._consumer = DeserializingConsumer(consumer_conf)
         self._consumer.subscribe([self._config['topic']], on_assign=self._my_on_assign)
 
-        t = Timer(30, self.__do_highwater_timeout())
+        t = Timer(30, self.__do_highwater_timeout)
         t.start()
 
-        while not end_reached and not self._is_highwater_timeout:
+        while not (self._end_reached or self._is_highwater_timeout):
             msgs = self._consumer.consume(500, timeout=1)
 
             if msgs is not None:
