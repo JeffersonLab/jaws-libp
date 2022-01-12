@@ -2,6 +2,7 @@ import time
 
 from confluent_kafka import Message
 from confluent_kafka.serialization import StringDeserializer
+from jlab_jaws.avro.serde import AlarmInstanceSerde
 from jlab_jaws.eventsource.table import EventSourceTable
 from jlab_jaws.eventsource.listener import EventSourceListener
 from typing import List
@@ -65,6 +66,24 @@ class CategoryCachedTable(CachedTable):
                   'key.deserializer': key_deserializer,
                   'value.deserializer': value_deserializer,
                   'group.id': 'category-cached-table' + str(ts)}
+
+        super().__init__(config)
+
+        self.start()
+
+
+class InstanceCachedTable(CachedTable):
+    def __init__(self, bootstrap_servers, schema_registry_client):
+        key_deserializer = StringDeserializer('utf_8')
+        value_deserializer = AlarmInstanceSerde.deserializer(schema_registry_client)
+
+        ts = time.time()
+
+        config = {'topic': 'alarm-instances',
+                  'bootstrap.servers': bootstrap_servers,
+                  'key.deserializer': key_deserializer,
+                  'value.deserializer': value_deserializer,
+                  'group.id': 'instance-cached-table' + str(ts)}
 
         super().__init__(config)
 
