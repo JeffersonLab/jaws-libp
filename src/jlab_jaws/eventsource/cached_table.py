@@ -3,7 +3,8 @@ import logging
 
 from confluent_kafka import Message
 from confluent_kafka.serialization import StringDeserializer
-from jlab_jaws.avro.serde import AlarmInstanceSerde, AlarmClassSerde
+from jlab_jaws.avro.serde import AlarmInstanceSerde, AlarmClassSerde, AlarmActivationUnionSerde, \
+    AlarmOverrideUnionSerde, AlarmOverrideKeySerde
 from jlab_jaws.eventsource.table import EventSourceTable
 from jlab_jaws.eventsource.listener import EventSourceListener
 from typing import List, Dict, Any
@@ -105,5 +106,37 @@ class ClassCachedTable(CachedTable):
                   'key.deserializer': key_deserializer,
                   'value.deserializer': value_deserializer,
                   'group.id': 'class-cached-table' + str(ts)}
+
+        super().__init__(config)
+
+
+class ActivationCachedTable(CachedTable):
+    def __init__(self, bootstrap_servers, schema_registry_client):
+        key_deserializer = StringDeserializer('utf_8')
+        value_deserializer = AlarmActivationUnionSerde.deserializer(schema_registry_client)
+
+        ts = time.time()
+
+        config = {'topic': 'alarm-activations',
+                  'bootstrap.servers': bootstrap_servers,
+                  'key.deserializer': key_deserializer,
+                  'value.deserializer': value_deserializer,
+                  'group.id': 'activation-cached-table' + str(ts)}
+
+        super().__init__(config)
+
+
+class OverrideCachedTable(CachedTable):
+    def __init__(self, bootstrap_servers, schema_registry_client):
+        key_deserializer = AlarmOverrideKeySerde.deserializer(schema_registry_client)
+        value_deserializer = AlarmOverrideUnionSerde.deserializer(schema_registry_client)
+
+        ts = time.time()
+
+        config = {'topic': 'alarm-overrides',
+                  'bootstrap.servers': bootstrap_servers,
+                  'key.deserializer': key_deserializer,
+                  'value.deserializer': value_deserializer,
+                  'group.id': 'override-cached-table' + str(ts)}
 
         super().__init__(config)
