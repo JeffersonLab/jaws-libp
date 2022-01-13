@@ -125,6 +125,7 @@ class EventSourceTable:
             self._executor.shutdown()
 
     def __monitor_initial(self):
+        logger.debug("__monitor_initial")
         consumer_conf = {'bootstrap.servers': self._config['bootstrap.servers'],
                          'key.deserializer': self._config['key.deserializer'],
                          'value.deserializer': self._config['value.deserializer'],
@@ -138,6 +139,8 @@ class EventSourceTable:
 
         while not (self._end_reached or self._is_highwater_timeout):
             msg = self._consumer.poll(1)
+
+            logger.debug("__monitor_initial poll result: {}".format(msg))
 
             msgs = [msg] if msg is not None else None
 
@@ -160,8 +163,11 @@ class EventSourceTable:
                 listener.on_highwater()
 
     def __monitor_continue(self):
+        logger.debug("__monitor_continue")
         while self._run:
             msg = self._consumer.poll(1)
+
+            logger.debug("__monitor_continue poll result: {}".format(msg))
 
             msgs = [msg] if msg is not None else None
 
@@ -175,7 +181,7 @@ class EventSourceTable:
         """
             Stop monitoring for state updates.
         """
-
+        logger.debug("stop")
         self._run = False
 
     def _my_on_assign(self, consumer, partitions) -> None:
