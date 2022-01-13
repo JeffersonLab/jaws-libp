@@ -23,11 +23,11 @@ class CachedTable(EventSourceTable):
 
         super().__init__(config)
 
-        self._listener = CacheListener(parent=self)
+        self._listener = CacheListener(self)
 
-        super().add_listener(self._listener)
+        self.add_listener(self._listener)
 
-    def __update_cache(self, msgs: List[Message]) -> None:
+    def update_cache(self, msgs: List[Message]) -> None:
         for msg in msgs:
             if msg.value() is None:
                 if msg.key() in self._state:
@@ -43,7 +43,7 @@ class CachedTable(EventSourceTable):
         :return: List of Message
         :raises TimeoutException: If highwater is not reached before timeout
         """
-        super().await_highwater(timeout_seconds)
+        self.await_highwater(timeout_seconds)
         return self._cache
 
 
@@ -59,7 +59,7 @@ class CacheListener(EventSourceListener):
         pass
 
     def on_batch(self, msgs):
-        self._parent.__update_cache(msgs)
+        self._parent.update_cache(msgs)
 
 
 class CategoryCachedTable(CachedTable):
