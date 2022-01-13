@@ -8,19 +8,10 @@ from jlab_jaws.eventsource.listener import EventSourceListener
 from typing import List
 
 
-class CacheListener(EventSourceListener):
-
-    def __init__(self, parent: EventSourceTable):
-        self._parent = parent
-
-    def on_highwater(self):
-        self._parent._highwater_signal.set()
-
-    def on_highwater_timeout(self):
-        pass
-
-    def on_batch(self, msgs):
-        self._parent.__update_cache(msgs)
+def log_exception(e):
+    print("Exception in EventSourceTable")
+    print(type(e))
+    print(e)
 
 
 class CachedTable(EventSourceTable):
@@ -54,6 +45,21 @@ class CachedTable(EventSourceTable):
         return self._cache
 
 
+class CacheListener(EventSourceListener):
+
+    def __init__(self, parent: CachedTable):
+        self._parent = parent
+
+    def on_highwater(self):
+        self._parent._highwater_signal.set()
+
+    def on_highwater_timeout(self):
+        pass
+
+    def on_batch(self, msgs):
+        self._parent.__update_cache(msgs)
+
+
 class CategoryCachedTable(CachedTable):
     def __init__(self, bootstrap_servers):
         key_deserializer = StringDeserializer('utf_8')
@@ -69,7 +75,7 @@ class CategoryCachedTable(CachedTable):
 
         super().__init__(config)
 
-        self.start()
+        self.start(log_exception)
 
 
 class InstanceCachedTable(CachedTable):
@@ -87,4 +93,4 @@ class InstanceCachedTable(CachedTable):
 
         super().__init__(config)
 
-        self.start()
+        self.start(log_exception)
