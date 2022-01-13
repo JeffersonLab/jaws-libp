@@ -76,8 +76,6 @@ class CategoryCachedTable(CachedTable):
 
         super().__init__(config)
 
-        self.start(log_exception)
-
 
 class InstanceCachedTable(CachedTable):
     def __init__(self, bootstrap_servers, schema_registry_client):
@@ -93,5 +91,3 @@ class InstanceCachedTable(CachedTable):
                   'group.id': 'instance-cached-table' + str(ts)}
 
         super().__init__(config)
-
-        self.start(log_exception)
