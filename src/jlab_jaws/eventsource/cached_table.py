@@ -1,4 +1,5 @@
 import time
+import logging
 
 from confluent_kafka import Message
 from confluent_kafka.serialization import StringDeserializer
@@ -7,11 +8,12 @@ from jlab_jaws.eventsource.table import EventSourceTable
 from jlab_jaws.eventsource.listener import EventSourceListener
 from typing import List
 
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 
 def log_exception(e):
-    print("Exception in EventSourceTable")
-    print(type(e))
-    print(e)
+    logger.exception(e)
 
 
 class CachedTable(EventSourceTable):
