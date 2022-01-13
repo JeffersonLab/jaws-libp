@@ -43,7 +43,7 @@ class CachedTable(EventSourceTable):
         :raises TimeoutException: If highwater is not reached before timeout
         """
         self.await_highwater(timeout_seconds)
-        return self._cache.values()
+        return self._cache
 
 
 class CacheListener(EventSourceListener):
