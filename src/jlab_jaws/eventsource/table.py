@@ -2,7 +2,7 @@
 """
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from typing import List, Dict
+from typing import List, Dict, Any
 
 from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING, Message
 from threading import Timer, Event
@@ -64,7 +64,7 @@ class EventSourceTable:
         self._run = True
         self._low = None
         self._high = None
-        self._state: Dict[str, Message] = {}
+        self._state: Dict[Any, Message] = {}
 
         self._is_highwater_timeout = False
         self._end_reached = False

@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod
+from typing import Dict, Any
+
+from confluent_kafka import Message
 
 
 class EventSourceListener(ABC):
@@ -11,5 +14,5 @@ class EventSourceListener(ABC):
         pass
 
     @abstractmethod
-    def on_batch(self, msgs) -> None:
+    def on_batch(self, msgs: Dict[Any, Message]) -> None:
         pass
