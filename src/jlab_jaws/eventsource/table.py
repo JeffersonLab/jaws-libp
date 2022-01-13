@@ -93,7 +93,11 @@ class EventSourceTable:
 
         self._executor = ThreadPoolExecutor(max_workers=1)
 
+        logger.debug("created executor")
+
         self._executor.submit(self.__monitor(on_exception))
+
+        logger.debug("done with start")
 
     def __do_highwater_timeout(self):
         logger.debug("__do_highwater_timeout")
