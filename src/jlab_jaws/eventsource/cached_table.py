@@ -8,7 +8,7 @@ from jlab_jaws.eventsource.table import EventSourceTable
 from jlab_jaws.eventsource.listener import EventSourceListener
 from typing import List
 
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 
