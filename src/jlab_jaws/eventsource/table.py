@@ -81,14 +81,14 @@ class EventSourceTable:
         if not flag:
             raise TimeoutException
 
-    def start(self):
+    def start(self, on_exception):
         """
             Start monitoring for state updates.
         """
 
         self._executor = ThreadPoolExecutor(max_workers=1)
 
-        self._executor.submit(self.__monitor)
+        self._executor.submit(self.__monitor(on_exception))
 
     def __do_highwater_timeout(self):
         self._is_highwater_timeout = True
@@ -106,13 +106,12 @@ class EventSourceTable:
 
         self._state.clear()
 
-    def __monitor(self):
+    def __monitor(self, on_exception):
         try:
             self.__monitor_initial()
             self.__monitor_continue()
         except Exception as e:
-            print(type(e))
-            print(e)
+            on_exception(e)
         finally:
             self._consumer.close()
             self._executor.shutdown()
