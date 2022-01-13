@@ -28,9 +28,7 @@ class CachedTable(EventSourceTable):
         self.add_listener(self._listener)
 
     def update_cache(self, msgs: List[Message]) -> None:
-        print("Messages: {}".format(msgs))
-
-        for msg in msgs:
+        for msg in msgs.values():
             if msg.value() is None:
                 if msg.key() in self._cache:
                     del self._cache[msg.key()]
