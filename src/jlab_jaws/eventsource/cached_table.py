@@ -23,7 +23,7 @@ class CachedTable(EventSourceTable):
 
         super().__init__(config)
 
-        self._listener = CacheListener(self)
+        self._listener = CacheListener(parent=self)
 
         super().add_listener(self._listener)
 
