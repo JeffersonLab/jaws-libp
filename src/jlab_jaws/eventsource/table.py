@@ -1,7 +1,7 @@
 """A module for Event Sourcing
 """
 from concurrent.futures import ThreadPoolExecutor
-from typing import List
+from typing import List, Dict
 
 from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING, Message
 from threading import Timer, Event
@@ -61,7 +61,7 @@ class EventSourceTable:
         self._run = True
         self._low = None
         self._high = None
-        self._state = {}
+        self._state: Dict[str, Message] = {}
 
         self._is_highwater_timeout = False
         self._end_reached = False

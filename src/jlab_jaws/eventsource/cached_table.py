@@ -6,7 +6,7 @@ from confluent_kafka.serialization import StringDeserializer
 from jlab_jaws.avro.serde import AlarmInstanceSerde
 from jlab_jaws.eventsource.table import EventSourceTable
 from jlab_jaws.eventsource.listener import EventSourceListener
-from typing import List
+from typing import List, Dict
 
 # logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ def log_exception(e):
 class CachedTable(EventSourceTable):
 
     def __init__(self, config):
-        self._cache = None
+        self._cache: Dict[str, Message] = {}
 
         super().__init__(config)
 
@@ -30,10 +30,10 @@ class CachedTable(EventSourceTable):
     def update_cache(self, msgs: List[Message]) -> None:
         for msg in msgs:
             if msg.value() is None:
-                if msg.key() in self._state:
-                    del self._state[msg.key()]
+                if msg.key() in self._cache:
+                    del self._cache[msg.key()]
             else:
-                self._state[msg.key()] = msg
+                self._cache[msg.key()] = msg
 
     def await_get(self, timeout_seconds) -> List[Message]:
         """
@@ -58,7 +58,7 @@ class CacheListener(EventSourceListener):
     def on_highwater_timeout(self):
         pass
 
-    def on_batch(self, msgs):
+    def on_batch(self, msgs: List[Message]):
         self._parent.update_cache(msgs)
 
 
