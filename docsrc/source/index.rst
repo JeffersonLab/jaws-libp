@@ -18,7 +18,6 @@ API:
 Schemas:
 
 * :download:`AlarmActivationUnion.avsc <../../src/jlab_jaws/avro/schemas/AlarmActivationUnion.avsc>`
-* :download:`AlarmCategory.avsc <../../src/jlab_jaws/avro/schemas/AlarmCategory.avsc>`
 * :download:`AlarmClass.avsc <../../src/jlab_jaws/avro/schemas/AlarmClass.avsc>`
 * :download:`AlarmLocation.avsc <../../src/jlab_jaws/avro/schemas/AlarmLocation.avsc>`
 * :download:`AlarmOverrideKey.avsc <../../src/jlab_jaws/avro/schemas/AlarmOverrideKey.avsc>`
