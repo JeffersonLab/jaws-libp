@@ -95,9 +95,9 @@ class EventSourceTable:
 
         logger.debug("created executor")
 
-        self._executor.submit(self.__monitor(on_exception))
+        future = self._executor.submit(self.__monitor, on_exception)
 
-        logger.debug("done with start")
+        logger.debug("done with start: {}".format(future))
 
     def __do_highwater_timeout(self):
         logger.debug("__do_highwater_timeout")
