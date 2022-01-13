@@ -80,6 +80,7 @@ class EventSourceTable:
         self._listeners.remove(listener)
 
     def await_highwater(self, timeout_seconds: float) -> None:
+        logger.debug("await_highwater")
         flag = self._highwater_signal.wait(timeout_seconds)
         if not flag:
             raise TimeoutException
@@ -88,20 +89,18 @@ class EventSourceTable:
         """
             Start monitoring for state updates.
         """
-
-        print("start")
-        logger.info("start")
+        logger.debug("start")
 
         self._executor = ThreadPoolExecutor(max_workers=1)
 
         self._executor.submit(self.__monitor(on_exception))
 
     def __do_highwater_timeout(self):
-        print("do timeout")
-        logger.info("do timeout")
+        logger.debug("__do_highwater_timeout")
         self._is_highwater_timeout = True
 
     def __update_state(self, msg: Message):
+        logger.debug("__update_state")
         if msg.value() is None:
             if msg.key() in self._state:
                 del self._state[msg.key()]
@@ -115,6 +114,7 @@ class EventSourceTable:
         self._state.clear()
 
     def __monitor(self, on_exception):
+        logger.debug("__monitor")
         try:
             self.__monitor_initial()
             self.__monitor_continue()
