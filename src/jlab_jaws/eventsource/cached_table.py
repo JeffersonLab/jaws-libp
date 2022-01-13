@@ -4,7 +4,8 @@ import logging
 from confluent_kafka import Message
 from confluent_kafka.serialization import StringDeserializer
 from jlab_jaws.avro.serde import AlarmInstanceSerde, AlarmClassSerde, AlarmActivationUnionSerde, \
-    AlarmOverrideUnionSerde, AlarmOverrideKeySerde
+    AlarmOverrideUnionSerde, AlarmOverrideKeySerde, EffectiveActivationSerde, EffectiveAlarmSerde, \
+    EffectiveRegistrationSerde
 from jlab_jaws.eventsource.table import EventSourceTable
 from jlab_jaws.eventsource.listener import EventSourceListener
 from typing import List, Dict, Any
@@ -138,5 +139,53 @@ class OverrideCachedTable(CachedTable):
                   'key.deserializer': key_deserializer,
                   'value.deserializer': value_deserializer,
                   'group.id': 'override-cached-table' + str(ts)}
+
+        super().__init__(config)
+
+
+class EffectiveRegistrationCachedTable(CachedTable):
+    def __init__(self, bootstrap_servers, schema_registry_client):
+        key_deserializer = StringDeserializer('utf_8')
+        value_deserializer = EffectiveRegistrationSerde.deserializer(schema_registry_client)
+
+        ts = time.time()
+
+        config = {'topic': 'effective-registrations',
+                  'bootstrap.servers': bootstrap_servers,
+                  'key.deserializer': key_deserializer,
+                  'value.deserializer': value_deserializer,
+                  'group.id': 'effective-registration-cached-table' + str(ts)}
+
+        super().__init__(config)
+
+
+class EffectiveActivationCachedTable(CachedTable):
+    def __init__(self, bootstrap_servers, schema_registry_client):
+        key_deserializer = StringDeserializer('utf_8')
+        value_deserializer = EffectiveActivationSerde.deserializer(schema_registry_client)
+
+        ts = time.time()
+
+        config = {'topic': 'effective-activations',
+                  'bootstrap.servers': bootstrap_servers,
+                  'key.deserializer': key_deserializer,
+                  'value.deserializer': value_deserializer,
+                  'group.id': 'effective-activation-cached-table' + str(ts)}
+
+        super().__init__(config)
+
+
+class EffectiveAlarmCachedTable(CachedTable):
+    def __init__(self, bootstrap_servers, schema_registry_client):
+        key_deserializer = StringDeserializer('utf_8')
+        value_deserializer = EffectiveAlarmSerde.deserializer(schema_registry_client)
+
+        ts = time.time()
+
+        config = {'topic': 'effective-alarms',
+                  'bootstrap.servers': bootstrap_servers,
+                  'key.deserializer': key_deserializer,
+                  'value.deserializer': value_deserializer,
+                  'group.id': 'effective-alarm-cached-table' + str(ts)}
 
         super().__init__(config)
