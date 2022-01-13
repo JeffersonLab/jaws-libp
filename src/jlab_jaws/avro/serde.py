@@ -59,7 +59,7 @@ class AlarmClassSerde:
             return None
 
         return {
-            "category": obj.category.name,
+            "category": obj.category,
             "priority": obj.priority.name,
             "rationale": obj.rationale,
             "correctiveaction": obj.corrective_action,
