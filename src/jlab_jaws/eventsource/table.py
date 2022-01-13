@@ -1,11 +1,14 @@
 """A module for Event Sourcing
 """
+import logging
 from concurrent.futures import ThreadPoolExecutor
 from typing import List, Dict
 
 from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING, Message
 from threading import Timer, Event
 from jlab_jaws.eventsource.listener import EventSourceListener
+
+logger = logging.getLogger(__name__)
 
 
 class TimeoutException(Exception):
@@ -86,11 +89,16 @@ class EventSourceTable:
             Start monitoring for state updates.
         """
 
+        print("start")
+        logger.info("start")
+
         self._executor = ThreadPoolExecutor(max_workers=1)
 
         self._executor.submit(self.__monitor(on_exception))
 
     def __do_highwater_timeout(self):
+        print("do timeout")
+        logger.info("do timeout")
         self._is_highwater_timeout = True
 
     def __update_state(self, msg: Message):
@@ -138,7 +146,7 @@ class EventSourceTable:
                     self.__update_state(msg)
 
                     if msg.offset() + 1 == self._high:
-                        end_reached = True
+                        self._end_reached = True
 
                 self.__notify_changes()
 
