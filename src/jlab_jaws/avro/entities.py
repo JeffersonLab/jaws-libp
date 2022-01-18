@@ -267,8 +267,6 @@ class AlarmClass:
     """(optional) The on-delay in seconds - non-positive is treated as None"""
     off_delay_seconds: Optional[int]
     """(optional) The off-delay in seconds - non-positive is treated as None"""
-    screen_path: str
-    """The control screen path which provides additional alarm information"""
 
 
 @dataclass
@@ -287,8 +285,8 @@ class AlarmInstance:
     """The Alarm Location"""
     masked_by: Optional[str]
     """(optional) The parent alarm which masks this one"""
-    screen_path: str
-    """The control screen path which provides additional alarm information"""
+    screen_command: str
+    """The command to open the related control system screen"""
 
 
 @dataclass

@@ -68,14 +68,6 @@
                 "long"
             ],
             "doc": "The number of seconds of off-delay"
-        },
-        {
-            "name": "screenpath",
-            "type": {
-                "type": "string",
-                "avro.java.string": "String"
-            },
-            "doc": "The path the alarm screen display"
         }
     ]
 }

@@ -67,8 +67,7 @@ class AlarmClassSerde:
             "latching": obj.latching,
             "filterable": obj.filterable,
             "ondelayseconds": obj.on_delay_seconds,
-            "offdelayseconds": obj.off_delay_seconds,
-            "screenpath": obj.screen_path,
+            "offdelayseconds": obj.off_delay_seconds
         }
 
     @staticmethod
@@ -94,8 +93,7 @@ class AlarmClassSerde:
                           the_dict.get('latching'),
                           the_dict.get('filterable'),
                           the_dict.get('ondelayseconds'),
-                          the_dict.get('offdelayseconds'),
-                          the_dict.get('screenpath'))
+                          the_dict.get('offdelayseconds'))
 
     @staticmethod
     def _from_dict_with_ctx(the_dict, ctx):
@@ -191,7 +189,7 @@ class AlarmInstanceSerde:
             "producer": union,
             "location": obj.location,
             "maskedby": obj.masked_by,
-            "screenpath": obj.screen_path
+            "screencommand": obj.screen_command
         }
 
     @staticmethod
@@ -235,7 +233,7 @@ class AlarmInstanceSerde:
                              producer,
                              the_dict.get('location'),
                              the_dict.get('maskedby'),
-                             the_dict.get('screenpath'))
+                             the_dict.get('screencommand'))
 
 
     @staticmethod

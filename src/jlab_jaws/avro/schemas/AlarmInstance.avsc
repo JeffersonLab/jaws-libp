@@ -76,7 +76,7 @@
             "doc": "The name of the parent alarm, which if active, masks this alarm (flood suppression via logical hierarchy)"
         },
         {
-            "name": "screenpath",
+            "name": "screencommand",
             "type": [
                 "null",
                 {
@@ -84,7 +84,7 @@
                     "avro.java.string": "String"
                 }
             ],
-            "doc": "The path the alarm screen display"
+            "doc": "The command to open the related control system screen"
         }
     ]
 }
