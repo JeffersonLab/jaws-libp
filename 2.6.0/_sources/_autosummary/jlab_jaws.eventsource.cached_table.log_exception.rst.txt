@@ -1,0 +1,6 @@
+jlab\_jaws.eventsource.cached\_table.log\_exception
+===================================================
+
+.. currentmodule:: jlab_jaws.eventsource.cached_table
+
+.. autofunction:: log_exception

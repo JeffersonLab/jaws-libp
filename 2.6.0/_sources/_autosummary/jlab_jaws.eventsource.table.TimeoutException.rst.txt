@@ -1,0 +1,6 @@
+jlab\_jaws.eventsource.table.TimeoutException
+=============================================
+
+.. currentmodule:: jlab_jaws.eventsource.table
+
+.. autoexception:: TimeoutException

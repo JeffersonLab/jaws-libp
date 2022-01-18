@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>jlab_jaws.avro.serde &mdash; jlab-jaws 2.6.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jlab_jaws.avro.serde.AlarmActivationUnionSerde" href="jlab_jaws.avro.serde.AlarmActivationUnionSerde.html" />
+    <link rel="prev" title="jlab_jaws.avro.schemas" href="jlab_jaws.avro.schemas.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> jlab-jaws
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jlab_jaws.html">jlab_jaws</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="jlab_jaws.avro.html">jlab_jaws.avro</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.avro.entities.html">jlab_jaws.avro.entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.avro.schemas.html">jlab_jaws.avro.schemas</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jlab_jaws.avro.serde</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.AlarmActivationUnionSerde.html">jlab_jaws.avro.serde.AlarmActivationUnionSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.AlarmClassSerde.html">jlab_jaws.avro.serde.AlarmClassSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.AlarmInstanceSerde.html">jlab_jaws.avro.serde.AlarmInstanceSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.AlarmLocationSerde.html">jlab_jaws.avro.serde.AlarmLocationSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.AlarmOverrideKeySerde.html">jlab_jaws.avro.serde.AlarmOverrideKeySerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.AlarmOverrideSetSerde.html">jlab_jaws.avro.serde.AlarmOverrideSetSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.AlarmOverrideUnionSerde.html">jlab_jaws.avro.serde.AlarmOverrideUnionSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.EffectiveActivationSerde.html">jlab_jaws.avro.serde.EffectiveActivationSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.EffectiveAlarmSerde.html">jlab_jaws.avro.serde.EffectiveAlarmSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.EffectiveRegistrationSerde.html">jlab_jaws.avro.serde.EffectiveRegistrationSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.IntermediateMonologSerde.html">jlab_jaws.avro.serde.IntermediateMonologSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jlab_jaws.avro.serde.ProcessorTransitionsSerde.html">jlab_jaws.avro.serde.ProcessorTransitionsSerde</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jlab_jaws.eventsource.html">jlab_jaws.eventsource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jlab_jaws.serde.html">jlab_jaws.serde</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jlab-jaws</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="jlab_jaws.html">jlab_jaws</a> &raquo;</li>
+        
+          <li><a href="jlab_jaws.avro.html">jlab_jaws.avro</a> &raquo;</li>
+        
+      <li>jlab_jaws.avro.serde</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/_autosummary/jlab_jaws.avro.serde.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jlab_jaws.avro.serde">
+<span id="jlab-jaws-avro-serde"></span><h1>jlab_jaws.avro.serde<a class="headerlink" href="#module-jlab_jaws.avro.serde" title="Permalink to this headline">¶</a></h1>
+<p>Serialization and Deserialization utilities</p>
+<p class="rubric">Classes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.AlarmActivationUnionSerde.html#jlab_jaws.avro.serde.AlarmActivationUnionSerde" title="jlab_jaws.avro.serde.AlarmActivationUnionSerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmActivationUnionSerde</span></code></a>()</p></td>
+<td><p>Provides AlarmActivationUnion serde utilities</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.AlarmClassSerde.html#jlab_jaws.avro.serde.AlarmClassSerde" title="jlab_jaws.avro.serde.AlarmClassSerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmClassSerde</span></code></a>()</p></td>
+<td><p>Provides AlarmClass serde utilities</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.AlarmInstanceSerde.html#jlab_jaws.avro.serde.AlarmInstanceSerde" title="jlab_jaws.avro.serde.AlarmInstanceSerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmInstanceSerde</span></code></a>()</p></td>
+<td><p>Provides AlarmInstance serde utilities</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.AlarmLocationSerde.html#jlab_jaws.avro.serde.AlarmLocationSerde" title="jlab_jaws.avro.serde.AlarmLocationSerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmLocationSerde</span></code></a>()</p></td>
+<td><p>Provides AlarmLocation serde utilities</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.AlarmOverrideKeySerde.html#jlab_jaws.avro.serde.AlarmOverrideKeySerde" title="jlab_jaws.avro.serde.AlarmOverrideKeySerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmOverrideKeySerde</span></code></a>()</p></td>
+<td><p>Provides AlarmOverrideKey serde utilities</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.AlarmOverrideSetSerde.html#jlab_jaws.avro.serde.AlarmOverrideSetSerde" title="jlab_jaws.avro.serde.AlarmOverrideSetSerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmOverrideSetSerde</span></code></a>()</p></td>
+<td><p>Provides AlarmOverrideSet serde utilities</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.AlarmOverrideUnionSerde.html#jlab_jaws.avro.serde.AlarmOverrideUnionSerde" title="jlab_jaws.avro.serde.AlarmOverrideUnionSerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmOverrideUnionSerde</span></code></a>()</p></td>
+<td><p>Provides AlarmOverrideUnion serde utilities</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.EffectiveActivationSerde.html#jlab_jaws.avro.serde.EffectiveActivationSerde" title="jlab_jaws.avro.serde.EffectiveActivationSerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffectiveActivationSerde</span></code></a>()</p></td>
+<td><p>Provides EffectiveActivation serde utilities</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.EffectiveAlarmSerde.html#jlab_jaws.avro.serde.EffectiveAlarmSerde" title="jlab_jaws.avro.serde.EffectiveAlarmSerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffectiveAlarmSerde</span></code></a>()</p></td>
+<td><p>Provides EffectiveAlarm serde utilities</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.EffectiveRegistrationSerde.html#jlab_jaws.avro.serde.EffectiveRegistrationSerde" title="jlab_jaws.avro.serde.EffectiveRegistrationSerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffectiveRegistrationSerde</span></code></a>()</p></td>
+<td><p>Provides EffectiveRegistration serde utilities</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.IntermediateMonologSerde.html#jlab_jaws.avro.serde.IntermediateMonologSerde" title="jlab_jaws.avro.serde.IntermediateMonologSerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntermediateMonologSerde</span></code></a>()</p></td>
+<td><p>Provides IntermediateMonolog serde utilities</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jlab_jaws.avro.serde.ProcessorTransitionsSerde.html#jlab_jaws.avro.serde.ProcessorTransitionsSerde" title="jlab_jaws.avro.serde.ProcessorTransitionsSerde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProcessorTransitionsSerde</span></code></a>()</p></td>
+<td><p>Provides ProcessorTransitions serde utilities</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="jlab_jaws.avro.serde.AlarmActivationUnionSerde.html" class="btn btn-neutral float-right" title="jlab_jaws.avro.serde.AlarmActivationUnionSerde" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="jlab_jaws.avro.schemas.html" class="btn btn-neutral float-left" title="jlab_jaws.avro.schemas" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jefferson Lab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

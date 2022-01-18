@@ -1,0 +1,38 @@
+jlab\_jaws.eventsource.cached\_table.EffectiveRegistrationCachedTable
+=====================================================================
+
+.. currentmodule:: jlab_jaws.eventsource.cached_table
+
+.. autoclass:: EffectiveRegistrationCachedTable
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EffectiveRegistrationCachedTable.__init__
+      ~EffectiveRegistrationCachedTable.add_listener
+      ~EffectiveRegistrationCachedTable.await_get
+      ~EffectiveRegistrationCachedTable.await_highwater
+      ~EffectiveRegistrationCachedTable.remove_listener
+      ~EffectiveRegistrationCachedTable.start
+      ~EffectiveRegistrationCachedTable.stop
+      ~EffectiveRegistrationCachedTable.update_cache
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EffectiveRegistrationCachedTable.is_highwater_timeout
+   
+   
