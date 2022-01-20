@@ -91,13 +91,9 @@ class EventSourceTable:
         """
         logger.debug("start")
 
-        self._executor = ThreadPoolExecutor(max_workers=1)
-
-        logger.debug("created executor")
+        self._executor = ThreadPoolExecutor(max_workers=1,thread_name_prefix='TableThread')
 
         future = self._executor.submit(self.__monitor, on_exception)
-
-        logger.debug("done with start: {}".format(future))
 
     def __do_highwater_timeout(self):
         logger.debug("__do_highwater_timeout")
@@ -118,7 +114,6 @@ class EventSourceTable:
         self._state.clear()
 
     def __monitor(self, on_exception):
-        logger.debug("__monitor")
         try:
             self.__monitor_initial()
             self.__monitor_continue()
@@ -144,7 +139,7 @@ class EventSourceTable:
         while not (self._end_reached or self._is_highwater_timeout):
             msg = self._consumer.poll(1)
 
-            logger.debug("__monitor_initial poll result: {}".format(msg))
+            logger.debug("__monitor_initial poll None: {}".format(msg is None))
 
             msgs = [msg] if msg is not None else None
 
@@ -171,7 +166,7 @@ class EventSourceTable:
         while self._run:
             msg = self._consumer.poll(1)
 
-            logger.debug("__monitor_continue poll result: {}".format(msg))
+            logger.debug("__monitor_continue poll None: {}".format(msg is None))
 
             msgs = [msg] if msg is not None else None
 
