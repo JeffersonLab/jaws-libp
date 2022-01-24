@@ -73,7 +73,7 @@ class JAWSConsumer(CachedTable):
         self.add_listener(MonitorListener())
         self.start()
 
-    def print_table(self, msg_to_list, head=[], nometa=False, filter_if=lambda key, value: True):
+    def print_table(self, head=[], msg_to_list=lambda msg: list(), nometa=False, filter_if=lambda key, value: True):
         records = self.get_records()
 
         table = []
@@ -111,6 +111,15 @@ class JAWSConsumer(CachedTable):
         records = self.await_get(5)
         self.stop()
         return records
+
+    def consume(self, monitor=False, nometa=False, export=False, head=[],
+                msg_to_list=lambda msg: list(), filter_if=lambda key, value: True):
+        if monitor:
+            self.print_records_continuous()
+        elif export:
+            self.export_records(filter_if)
+        else:
+            self.print_table(head, msg_to_list, nometa, filter_if)
 
     def __get_row(self, msg: Message, msg_to_list, filter_if, nometa):
         timestamp = msg.timestamp()
