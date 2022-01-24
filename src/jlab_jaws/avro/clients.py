@@ -3,7 +3,6 @@
 """
 import logging
 import os
-import pwd
 import signal
 import time
 from typing import Dict, Any
@@ -211,7 +210,7 @@ class JAWSProducer:
         self._producer.flush()
 
     def __get_headers(self):
-        return [('user', pwd.getpwuid(os.getuid()).pw_name),
+        return [('user', os.getlogin()),
                 ('producer', self._client_name),
                 ('host', os.uname().nodename)]
 
