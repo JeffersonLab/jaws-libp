@@ -7,10 +7,17 @@ from typing import List, Dict, Any
 from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING, Message
 from threading import Timer, Event
 
-from jlab_jaws.eventsource import TimeoutException
 from jlab_jaws.eventsource.listener import EventSourceListener
 
 logger = logging.getLogger(__name__)
+
+
+def log_exception(e):
+    logger.exception(e)
+
+
+class TimeoutException(Exception):
+    pass
 
 
 class EventSourceTable:
@@ -83,7 +90,7 @@ class EventSourceTable:
         if not flag:
             raise TimeoutException
 
-    def start(self, on_exception):
+    def start(self, on_exception=log_exception):
         """
             Start monitoring for state updates.
         """
