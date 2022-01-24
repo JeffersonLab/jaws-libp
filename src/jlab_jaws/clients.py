@@ -7,7 +7,7 @@ import signal
 import time
 
 from psutil import Process
-from typing import Dict, Any
+from typing import Dict, Any, List, Callable
 from confluent_kafka import Message, SerializingProducer
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from tabulate import tabulate
@@ -19,7 +19,11 @@ from jlab_jaws.eventsource import EventSourceListener, CachedTable
 logger = logging.getLogger(__name__)
 
 
-def set_log_level_from_env():
+def set_log_level_from_env() -> None:
+    """
+        Simple utility for setting the loglevel via the environment variable LOGLEVEL, and also
+        setting a sensible logging format.
+    """
     level = os.environ.get('LOGLEVEL', 'WARNING').upper()
     logging.basicConfig(
         format='%(asctime)s %(levelname)-8s %(threadName)-16s %(name)s %(message)s',
@@ -27,12 +31,21 @@ def set_log_level_from_env():
         datefmt='%Y-%m-%d %H:%M:%S')
 
 
-def get_registry_client():
+def get_registry_client() -> SchemaRegistryClient:
+    """
+        Simple utility function for creating a SchemaRegistryClient using the environment
+        variable SCHEMA_REGISTRY to determine URL.
+
+        :return: A new SchemaRegistryClient
+    """
     sr_conf = {'url': os.environ.get('SCHEMA_REGISTRY', 'http://localhost:8081')}
     return SchemaRegistryClient(sr_conf)
 
 
-class MonitorListener(EventSourceListener):
+class _MonitorListener(EventSourceListener):
+    """
+        Internal listener implementation for the JAWSConsumer.
+    """
 
     def on_highwater_timeout(self) -> None:
         pass
@@ -46,8 +59,24 @@ class MonitorListener(EventSourceListener):
 
 
 class JAWSConsumer(CachedTable):
+    """
+        This class consumes messages from JAWS.
 
-    def __init__(self, topic, client_name, key_serde, value_serde):
+        Sensible defaults are used to determine BOOTSTRAP_SERVERS (look in env)
+        and to handle errors (log them).
+
+        This consumer also knows how to export records into a file using the JAWS expected file format.
+    """
+
+    def __init__(self, topic: str, client_name: str, key_serde: Serde, value_serde: Serde):
+        """
+            Create a new JAWSConsumer with the provided attributes.
+
+        :param topic: The Kafka topic name
+        :param client_name: The name of the client application
+        :param key_serde: The appropriate Kafka message key Serde for the given topic
+        :param value_serde: The appropriate Kafka message value Serde for the given topic
+        """
         self._topic = topic
         self._client_name = client_name
         self._key_serde = key_serde
@@ -68,14 +97,30 @@ class JAWSConsumer(CachedTable):
 
         super().__init__(config)
 
-    def print_records_continuous(self):
-        self.add_listener(MonitorListener())
+    def print_records_continuous(self) -> None:
+        """
+            Logs messages as they come in to standard output until stop() is called.
+        """
+        self.add_listener(_MonitorListener())
         self.start()
 
-    def print_table(self, head=None, msg_to_list=lambda msg: list(), nometa=False, filter_if=lambda key, value: True):
+    def print_table(self, head: List[str] = None, msg_to_list: Callable[[Message], List[str]] = lambda msg: list(),
+                    nometa: bool = False, filter_if: Callable[[Any, Any], bool] = lambda key, value: True,
+                    timeout_seconds: float = 5) -> None:
+        """
+            Queries Kafka for the initial set of records (up to the topic highwater mark) and prints a table using the
+            supplied display hints to standard output.  If the query timeout is exceeded a TimeoutException is raised.
+
+            :param head: List of table header names
+            :param msg_to_list: Callback to convert Message to list of strings needed to create a table row
+            :param nometa: If True, exclude timestamp, producer app name, host, and username from table
+            :param filter_if: Callback applied to each Message to indicate if Message should be included
+            :param timeout_seconds The number of seconds to wait before giving up
+            :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
+        """
         if head is None:
             head = []
-        records = self.get_records()
+        records = self.get_records(timeout_seconds)
 
         table = []
 
@@ -92,8 +137,16 @@ class JAWSConsumer(CachedTable):
 
         print(tabulate(table, head))
 
-    def export_records(self, filter_if=lambda key, value: True):
-        records = self.get_records()
+    def export_records(self, filter_if=lambda key, value: True, timeout_seconds: float = 5) -> None:
+        """
+            Queries Kafka for the initial set of records (up to the topic highwater mark) and prints the
+            records in the JAWS file format to standard output.
+
+            :param filter_if: Callback applied to each Message to indicate if Message should be included
+            :param timeout_seconds The number of seconds to wait before giving up
+            :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
+        """
+        records = self.get_records(timeout_seconds)
 
         sortedtuples = sorted(records.items())
 
@@ -107,14 +160,35 @@ class JAWSConsumer(CachedTable):
 
                 print(key_json + '=' + value_json)
 
-    def get_records(self) -> Dict[Any, Message]:
+    def get_records(self, timeout_seconds: float = 5) -> Dict[Any, Message]:
+        """
+            Queries Kafka for the initial set of records (up to the topic highwater mark) and returns them
+            in a Dict keyed Message keys.
+
+            :param timeout_seconds:
+            :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
+            :return: The initial set of messages
+        """
         self.start()
-        records = self.await_get(5)
+        records = self.await_get(timeout_seconds)
         self.stop()
         return records
 
-    def consume(self, monitor=False, nometa=False, export=False, head=None,
-                msg_to_list=lambda msg: list(), filter_if=lambda key, value: True):
+    def consume(self, monitor: bool = False, nometa: bool = False, export: bool = False, head: List[str] = None,
+                msg_to_list: Callable[[Message], List[str]] = lambda msg: list(),
+                filter_if: Callable[[Any, Any], bool] = lambda key, value: True) -> None:
+        """
+            Convenience function for taking exactly one action given a set of hints.  If more than one action is
+            indicated the first one in parameter order wins.  If Neither monitor nor export is indicated then
+            print_table is called.
+
+            :param monitor: If True call print_records_continuous()
+            :param nometa: If True do not include timestamp, producer app, host, and username in output
+            :param export: If True call export_records()
+            :param head: The list of table headers
+            :param msg_to_list: The Callable function to convert a Message to a List of strings representing the row
+            :param filter_if: Callback applied to each Message to indicate if Message should be included
+        """
         if monitor:
             self.print_records_continuous()
         elif export:
@@ -163,7 +237,9 @@ class JAWSConsumer(CachedTable):
 
 class JAWSProducer:
     """
-        This class produces messages with the JAWS expected header.
+        This class produces messages to JAWS.
+
+        The JAWS expected header is included in all messages.
 
         Sensible defaults are used to determine BOOTSTRAP_SERVERS (look in env)
         and to handle errors (log them).

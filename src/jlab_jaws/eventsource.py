@@ -110,7 +110,7 @@ class EventSourceTable:
             |                         |                     |                                                     |
             +-------------------------+---------------------+-----------------------------------------------------+
 
-            Note:
+        Warning:
                 Keys must be hashable so your key deserializer generally must generate immutable types.
 
          """
