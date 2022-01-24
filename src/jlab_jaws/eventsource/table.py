@@ -1,4 +1,5 @@
-"""A module for Event Sourcing
+"""
+    A module for Event Sourcing in Kafka
 """
 import logging
 from concurrent.futures import ThreadPoolExecutor
@@ -116,7 +117,8 @@ class EventSourceTable:
         """
             Block the calling thread and wait for topic highwater to be reached.
 
-            :param timeout_seconds: Number of seconds to wait before giving up waiting with a TimeoutException
+            :param timeout_seconds: Number of seconds to wait before giving up
+            :raises TimeoutException: If highwater is not reached before timeout
         """
         logger.debug("await_highwater")
         flag = self._highwater_signal.wait(timeout_seconds)
