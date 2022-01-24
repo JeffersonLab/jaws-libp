@@ -17,6 +17,7 @@ keyring==23.0.1
 MarkupSafe==1.1.1
 packaging==20.9
 pep517==0.10.0
+psutil==5.9.0
 pkginfo==1.7.0
 Pygments==2.8.1
 pyparsing==2.4.7

@@ -5,12 +5,12 @@ import logging
 import os
 import signal
 import time
-from typing import Dict, Any
 
+from psutil import Process
+from typing import Dict, Any
 from confluent_kafka import Message, SerializingProducer
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from tabulate import tabulate
-
 from jlab_jaws.avro.entities import UnionEncoding
 from jlab_jaws.avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
     StringSerde, Serde, EffectiveAlarmSerde, EffectiveActivationSerde, ClassSerde, ActivationSerde, InstanceSerde
@@ -210,7 +210,7 @@ class JAWSProducer:
         self._producer.flush()
 
     def __get_headers(self):
-        return [('user', os.getlogin()),
+        return [('user', Process().username()),
                 ('producer', self._client_name),
                 ('host', os.uname().nodename)]
 
