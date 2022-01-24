@@ -10,10 +10,11 @@ from typing import Dict, Any
 
 from confluent_kafka import Message, SerializingProducer
 from confluent_kafka.schema_registry import SchemaRegistryClient
-from confluent_kafka.serialization import StringSerializer
+from confluent_kafka.serialization import StringSerializer, StringDeserializer
 from tabulate import tabulate
 
-from jlab_jaws.avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde
+from jlab_jaws.avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
+    StringSerde, Serde
 from jlab_jaws.eventsource import CachedTable, EventSourceListener, log_exception
 
 logger = logging.getLogger(__name__)
@@ -47,9 +48,9 @@ class MonitorListener(EventSourceListener):
 
 class JAWSConsumer(CachedTable):
 
-    def __init__(self, topic, consumer_name, key_serde, value_serde):
+    def __init__(self, topic, client_name, key_serde, value_serde):
         self._topic = topic
-        self._consumer_name = consumer_name
+        self._client_name = client_name
         self._key_serde = key_serde
         self._value_serde = value_serde
 
@@ -64,7 +65,7 @@ class JAWSConsumer(CachedTable):
                   'bootstrap.servers': bootstrap_servers,
                   'key.deserializer': key_serde.deserializer(),
                   'value.deserializer': value_serde.deserializer(),
-                  'group.id': consumer_name + str(ts)}
+                  'group.id': client_name + str(ts)}
 
         super().__init__(config)
 
@@ -162,11 +163,14 @@ class JAWSProducer:
         This producer also knows how to import records from a file using the JAWS expected file format.
     """
 
-    def __init__(self, topic, producer_name, key_serializer, value_serializer):
+    def __init__(self, topic: str, client_name: str, key_serde: Serde, value_serde: Serde):
         set_log_level_from_env()
 
         self._topic = topic
-        self._producer_name = producer_name
+        self._client_name = client_name
+
+        key_serializer = key_serde.serializer()
+        value_serializer = value_serde.serializer()
 
         bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', 'localhost:9092')
         producer_conf = {'bootstrap.servers': bootstrap_servers,
@@ -198,7 +202,7 @@ class JAWSProducer:
 
     def __get_headers(self):
         return [('user', pwd.getpwuid(os.getuid()).pw_name),
-                ('producer', self._producer_name),
+                ('producer', self._client_name),
                 ('host', os.uname().nodename)]
 
     @staticmethod
@@ -209,37 +213,47 @@ class JAWSProducer:
             logger.debug('Delivered')
 
 
+class CategoryConsumer(JAWSConsumer):
+    def __init__(self, client_name: str):
+        key_serde = StringSerde()
+        value_serde = StringSerde()
+
+        super().__init__('alarm-categories', client_name, key_serde, value_serde)
+
+
+class CategoryProducer(JAWSProducer):
+    def __init__(self, client_name: str):
+        key_serde = StringSerde()
+        value_serde = StringSerde()
+
+        super().__init__('alarm-categories', client_name, key_serde, value_serde)
+
+
 class EffectiveRegistrationProducer(JAWSProducer):
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
         value_serde = EffectiveRegistrationSerde(schema_registry_client)
 
-        key_serializer = StringSerializer()
-        value_serializer = value_serde.serializer()
-
-        super().__init__('effective-registrations', client_name, key_serializer, value_serializer)
+        super().__init__('effective-registrations', client_name, key_serde, value_serde)
 
 
 class InstanceProducer(JAWSProducer):
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
         value_serde = LocationSerde(schema_registry_client)
 
-        key_serializer = StringSerializer()
-        value_serializer = value_serde.serializer()
-
-        super().__init__('alarm-instances', client_name, key_serializer, value_serializer)
+        super().__init__('alarm-instances', client_name, key_serde, value_serde)
 
 
 class LocationProducer(JAWSProducer):
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
         value_serde = LocationSerde(schema_registry_client)
 
-        key_serializer = StringSerializer()
-        value_serializer = value_serde.serializer()
-
-        super().__init__('alarm-locations', client_name, key_serializer, value_serializer)
+        super().__init__('alarm-locations', client_name, key_serde, value_serde)
 
 
 class OverrideProducer(JAWSProducer):
@@ -248,7 +262,4 @@ class OverrideProducer(JAWSProducer):
         key_serde = OverrideKeySerde(schema_registry_client)
         value_serde = OverrideSerde(schema_registry_client)
 
-        key_serializer = key_serde.serializer()
-        value_serializer = value_serde.serializer()
-
-        super().__init__('alarm-overrides', client_name, key_serializer, value_serializer)
+        super().__init__('alarm-overrides', client_name, key_serde, value_serde)
