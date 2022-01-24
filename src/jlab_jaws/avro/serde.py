@@ -703,6 +703,67 @@ class EffectiveActivationSerde(RegistryAvroWithReferencesSerde):
             _unwrap_enum(data['state'], AlarmState))
 
 
+class EffectiveAlarmSerde(RegistryAvroWithReferencesSerde):
+    """
+        Provides EffectiveAlarm serde utilities
+    """
+
+    def __init__(self, schema_registry_client):
+        self._effective_registration_serde = EffectiveRegistrationSerde(schema_registry_client)
+        self._effective_activation_serde = EffectiveActivationSerde(schema_registry_client)
+
+        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveRegistration",
+                                                  "effective-registrations-value", 1)
+        activation_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveActivation",
+                                                "effective-activations-value", 1)
+
+        references = [registration_schema_ref, activation_schema_ref]
+
+        registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveRegistration.avsc")
+        registrations_schema_str = registrations_bytes.decode('utf-8')
+
+        activation_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveActivation.avsc")
+        activation_schema_str = activation_bytes.decode('utf-8')
+
+        named_schemas = self._effective_registration_serde.named_schemas()
+        named_schemas.update(self._effective_activation_serde.named_schemas())
+
+        ref_dict = json.loads(registrations_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+
+        ref_dict = json.loads(activation_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveAlarm.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", references)
+
+        super().__init__(schema_registry_client, schema, references, named_schemas)
+
+    def to_dict(self, data):
+        """
+        Converts EffectiveAlarm to a dict.
+
+        :param data: The EffectiveAlarm
+        :return: A dict
+        """
+        return {
+            "registration": self._effective_registration_serde.to_dict(data.registration),
+            "activation": self._effective_activation_serde.to_dict(data.activation)
+        }
+
+    def from_dict(self, data):
+        """
+        Converts a dict to EffectiveAlarm.
+
+        :param data: The dict
+        :return: The EffectiveAlarm
+        """
+        return EffectiveAlarm(self._effective_registration_serde.from_dict(data['registration']),
+                              self._effective_activation_serde.from_dict(data['activation']))
+
+
 class OverrideKeySerde(RegistryAvroSerde):
     def __init__(self, schema_registry_client):
         schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideKey.avsc")
@@ -1008,40 +1069,3 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
         return IntermediateMonolog(self._effective_registration_serde.from_dict(data['registration']),
                                    self._effective_activation_serde.from_dict(data['activation']),
                                    self._processor_transition_serde.from_dict(data['transitions']))
-
-    @staticmethod
-    def deserializer(schema_registry_client):
-        """
-            Return an IntermediateMonolog deserializer.
-
-            :param schema_registry_client: The Confluent Schema Registry Client
-            :return: Deserializer
-        """
-
-        return AvroDeserializerWithReferences(schema_registry_client,
-                                              None,
-                                              IntermediateMonologSerde._from_dict_with_ctx,
-                                              True,
-                                              IntermediateMonologSerde.named_schemas())
-
-    @staticmethod
-    def serializer(schema_registry_client, conf=None):
-        """
-            Return an IntermediateMonolog serializer.
-
-            :param conf: Configuration
-            :param schema_registry_client: The Confluent Schema Registry client
-            :return: Serializer
-        """
-
-        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/IntermediateMonolog.avsc")
-        subject_schema_str = subject_bytes.decode('utf-8')
-
-        schema = Schema(subject_schema_str, "AVRO",
-                        IntermediateMonologSerde.references())
-
-        return AvroSerializerWithReferences(schema_registry_client,
-                                            schema,
-                                            IntermediateMonologSerde._to_dict_with_ctx,
-                                            conf,
-                                            IntermediateMonologSerde.named_schemas())

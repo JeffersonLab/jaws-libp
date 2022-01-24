@@ -13,7 +13,7 @@ from confluent_kafka.schema_registry import SchemaRegistryClient
 from tabulate import tabulate
 
 from jlab_jaws.avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
-    StringSerde, Serde
+    StringSerde, Serde, EffectiveAlarmSerde
 from jlab_jaws.eventsource.listener import EventSourceListener
 from jlab_jaws.eventsource.cached_table import CachedTable
 
@@ -233,6 +233,15 @@ class CategoryProducer(JAWSProducer):
         value_serde = StringSerde()
 
         super().__init__('alarm-categories', client_name, key_serde, value_serde)
+
+
+class EffectiveAlarmProducer(JAWSProducer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = EffectiveAlarmSerde(schema_registry_client)
+
+        super().__init__('effective-alarms', client_name, key_serde, value_serde)
 
 
 class EffectiveRegistrationProducer(JAWSProducer):
