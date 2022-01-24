@@ -2,7 +2,7 @@
 """
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Callable
 
 from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING, Message
 from threading import Timer, Event
@@ -12,28 +12,47 @@ from jlab_jaws.eventsource.listener import EventSourceListener
 logger = logging.getLogger(__name__)
 
 
-def log_exception(e):
+def log_exception(e: Exception) -> None:
+    """
+        Simple default action of logging an exception.
+
+        :param e: The Exception
+    """
     logger.exception(e)
 
 
 class TimeoutException(Exception):
+    """
+        Thrown on asynchronous task timeout
+    """
     pass
 
 
 class EventSourceTable:
-    """This class provides an Event Source Table abstraction.
+    """
+        This class provides an Event Source Table abstraction.
     """
 
-    __slots__ = ['_hash', '_config', '_listeners', '_state', '_consumer', '_executor',
-                 '_end_reached', '_high', '_low', '_run', 'is_highwater_timeout']
+    __slots__ = [
+                 '_config',
+                 '_consumer',
+                 '_listeners',
+                 '_end_reached',
+                 '_executor',
+                 '_high',
+                 '_highwater_signal',
+                 'is_highwater_timeout',
+                 '_low',
+                 '_run',
+                 '_state'
+                ]
 
-    def __init__(self, config):
-        """Create an EventSourceTable instance.
+    def __init__(self, config: Dict[str, Any]) -> None:
+        """
+            Create an EventSourceTable instance.
 
          Args:
              config (dict): Configuration
-             on_initial_state (callable(dict): Callback providing initial state of EventSourceTable
-             on_state_update (callable(dict)): Callback providing updated state
 
          Note:
              The configuration options include:
@@ -64,47 +83,63 @@ class EventSourceTable:
                 Keys must be hashable so your key deserializer generally must generate immutable types.
 
          """
-        self._config = config
-
-        self._run = True
-        self._low = None
-        self._high = None
+        self._config: Dict[str, Any] = config
+        self._consumer: DeserializingConsumer = None
+        self._listeners: List[EventSourceListener] = []
+        self._end_reached: bool = False
+        self._executor: ThreadPoolExecutor = None
+        self._high: int = None
+        self._highwater_signal: Event = Event()
+        self._is_highwater_timeout: bool = False
+        self._low: int = None
+        self._run: bool = True
         self._state: Dict[Any, Message] = {}
 
-        self._is_highwater_timeout = False
-        self._end_reached = False
-        self._consumer = None
-        self._executor = None
-        self._highwater_signal = Event()
-        self._listeners: List[EventSourceListener] = []
+    def add_listener(self, listener: EventSourceListener) -> None:
+        """
+            Add a listener.
 
-    def add_listener(self, listener: EventSourceListener):
+            :param listener: The EventSourceListener to register
+        """
+
         self._listeners.append(listener)
 
-    def remove_listener(self, listener: EventSourceListener):
+    def remove_listener(self, listener: EventSourceListener) -> None:
+        """
+            Remove a listener.
+
+            :param listener: The EventSourceListener to unregister
+        """
         self._listeners.remove(listener)
 
     def await_highwater(self, timeout_seconds: float) -> None:
+        """
+            Block the calling thread and wait for topic highwater to be reached.
+
+            :param timeout_seconds: Number of seconds to wait before giving up waiting with a TimeoutException
+        """
         logger.debug("await_highwater")
         flag = self._highwater_signal.wait(timeout_seconds)
         if not flag:
             raise TimeoutException
 
-    def start(self, on_exception=log_exception):
+    def start(self, on_exception: Callable[[Exception], None] = log_exception):
         """
             Start monitoring for state updates.
+
+            :param on_exception: function to call if an Exception occurs, defaults to log_exception function
         """
         logger.debug("start")
 
-        self._executor = ThreadPoolExecutor(max_workers=1,thread_name_prefix='TableThread')
+        self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='TableThread')
 
         future = self._executor.submit(self.__monitor, on_exception)
 
-    def __do_highwater_timeout(self):
+    def __do_highwater_timeout(self) -> None:
         logger.debug("__do_highwater_timeout")
         self._is_highwater_timeout = True
 
-    def __update_state(self, msg: Message):
+    def __update_state(self, msg: Message) -> None:
         logger.debug("__update_state")
         if msg.value() is None:
             if msg.key() in self._state:
@@ -112,13 +147,13 @@ class EventSourceTable:
         else:
             self._state[msg.key()] = msg
 
-    def __notify_changes(self):
+    def __notify_changes(self) -> None:
         for listener in self._listeners:
             listener.on_batch(self._state.copy())
 
         self._state.clear()
 
-    def __monitor(self, on_exception):
+    def __monitor(self, on_exception: Callable[[Exception], None]) -> None:
         try:
             self.__monitor_initial()
             self.__monitor_continue()
@@ -128,7 +163,7 @@ class EventSourceTable:
             self._consumer.close()
             self._executor.shutdown()
 
-    def __monitor_initial(self):
+    def __monitor_initial(self) -> None:
         logger.debug("__monitor_initial")
         consumer_conf = {'bootstrap.servers': self._config['bootstrap.servers'],
                          'key.deserializer': self._config['key.deserializer'],
@@ -136,7 +171,7 @@ class EventSourceTable:
                          'group.id': self._config['group.id']}
 
         self._consumer = DeserializingConsumer(consumer_conf)
-        self._consumer.subscribe([self._config['topic']], on_assign=self._my_on_assign)
+        self._consumer.subscribe([self._config['topic']], on_assign=self.__on_assign)
 
         t = Timer(30, self.__do_highwater_timeout)
         t.start()
@@ -166,7 +201,7 @@ class EventSourceTable:
             for listener in self._listeners:
                 listener.on_highwater()
 
-    def __monitor_continue(self):
+    def __monitor_continue(self) -> None:
         logger.debug("__monitor_continue")
         while self._run:
             msg = self._consumer.poll(1)
@@ -188,7 +223,7 @@ class EventSourceTable:
         logger.debug("stop")
         self._run = False
 
-    def _my_on_assign(self, consumer, partitions) -> None:
+    def __on_assign(self, consumer, partitions) -> None:
 
         for p in partitions:
             p.offset = OFFSET_BEGINNING
@@ -200,5 +235,10 @@ class EventSourceTable:
         consumer.assign(partitions)
 
     @property
-    def highwater_signal(self):
+    def highwater_signal(self) -> Event:
+        """
+            An Event object for threads to wait on for highwater notification.
+
+            :return: The Event
+        """
         return self._highwater_signal
