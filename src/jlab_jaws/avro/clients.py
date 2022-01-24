@@ -127,12 +127,9 @@ class JAWSConsumer(CachedTable):
 
         row = msg_to_list(msg)
 
-        if not nometa:
-            row_header = self.__get_row_header(headers, timestamp)
-            row = row_header + row
-
         if filter_if(msg.key(), msg.value()):
             if not nometa:
+                row_header = self.__get_row_header(headers, timestamp)
                 row = row_header + row
         else:
             row = None
