@@ -12,6 +12,7 @@ from confluent_kafka import Message, SerializingProducer
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from tabulate import tabulate
 
+from jlab_jaws.avro.entities import UnionEncoding
 from jlab_jaws.avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
     StringSerde, Serde, EffectiveAlarmSerde, EffectiveActivationSerde, ClassSerde, ActivationSerde, InstanceSerde
 from jlab_jaws.eventsource.listener import EventSourceListener
@@ -73,7 +74,9 @@ class JAWSConsumer(CachedTable):
         self.add_listener(MonitorListener())
         self.start()
 
-    def print_table(self, head=[], msg_to_list=lambda msg: list(), nometa=False, filter_if=lambda key, value: True):
+    def print_table(self, head=None, msg_to_list=lambda msg: list(), nometa=False, filter_if=lambda key, value: True):
+        if head is None:
+            head = []
         records = self.get_records()
 
         table = []
@@ -112,7 +115,7 @@ class JAWSConsumer(CachedTable):
         self.stop()
         return records
 
-    def consume(self, monitor=False, nometa=False, export=False, head=[],
+    def consume(self, monitor=False, nometa=False, export=False, head=None,
                 msg_to_list=lambda msg: list(), filter_if=lambda key, value: True):
         if monitor:
             self.print_records_continuous()
@@ -121,7 +124,7 @@ class JAWSConsumer(CachedTable):
         else:
             self.print_table(head, msg_to_list, nometa, filter_if)
 
-    def __get_row(self, msg: Message, msg_to_list, filter_if, nometa):
+    def __get_row(self, msg: Message, msg_to_list, filter_if, nometa: bool):
         timestamp = msg.timestamp()
         headers = msg.headers()
 
@@ -136,7 +139,8 @@ class JAWSConsumer(CachedTable):
 
         return row
 
-    def __get_row_header(self, headers, timestamp):
+    @staticmethod
+    def __get_row_header(headers, timestamp):
         ts = time.ctime(timestamp[1] / 1000)
 
         user = ''
@@ -276,7 +280,7 @@ class InstanceConsumer(JAWSConsumer):
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = InstanceSerde(schema_registry_client)
+        value_serde = InstanceSerde(schema_registry_client, UnionEncoding.DICT_WITH_TYPE)
 
         super().__init__('alarm-instances', client_name, key_serde, value_serde)
 

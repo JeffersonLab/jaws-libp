@@ -3,7 +3,7 @@ import logging
 from confluent_kafka import Message
 from jlab_jaws.eventsource.table import EventSourceTable
 from jlab_jaws.eventsource.listener import EventSourceListener
-from typing import List, Dict, Any
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ class CachedTable(EventSourceTable):
             else:
                 self._cache[msg.key()] = msg
 
-    def await_get(self, timeout_seconds) -> List[Message]:
+    def await_get(self, timeout_seconds) -> Dict[Any, Message]:
         """
         Synchronously get messages up to highwater mark.  Blocks with a timeout.
 
