@@ -1,13 +1,15 @@
 """
     Serialization and Deserialization utilities
 """
-
+import json
 import pkgutil
-from json import loads
+from abc import abstractmethod, ABC
+
+import fastavro
 
 from confluent_kafka.schema_registry import SchemaReference, Schema
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
-from fastavro import parse_schema
+from confluent_kafka.serialization import StringSerializer, StringDeserializer
 
 from jlab_jaws.avro.entities import AlarmLocation, AlarmPriority
 from jlab_jaws.avro.entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
@@ -41,264 +43,287 @@ def _unwrap_enum(value, enum_class):
     return result
 
 
-class AlarmClassSerde:
+class Serde(ABC):
+    @abstractmethod
+    def from_json(self, data):
+        pass
+
+    @abstractmethod
+    def to_json(self, data):
+        pass
+
+    @abstractmethod
+    def serializer(self):
+        pass
+
+    @abstractmethod
+    def deserializer(self):
+        pass
+
+
+class StringSerde(Serde):
+    def from_json(self, data):
+        return data
+
+    def to_json(self, data):
+        return data
+
+    def serializer(self):
+        return StringSerializer('utf_8')
+
+    def deserializer(self):
+        return StringDeserializer('utf_8')
+
+
+class RegistryAvroSerde(Serde):
+    def __init__(self, schema_registry_client, schema):
+        self._schema_registry_client = schema_registry_client
+        self._schema = schema
+
+    @abstractmethod
+    def from_dict(self, data):
+        pass
+
+    def _from_dict_with_ctx(self, data, ctx):
+        return self.from_dict(data)
+
+    @abstractmethod
+    def to_dict(self, data):
+        pass
+
+    def _to_dict_with_ctx(self, data, ctx):
+        return self.to_dict(data)
+
+    def from_json(self, data):
+        pass
+
+    def to_json(self, data):
+        sorteddata = dict(sorted(self.to_dict(data).items()))
+        jsondata = json.dumps(sorteddata)
+        return jsondata
+
+    def get_schema(self) -> Schema:
+        return self._schema
+
+    def get_schema_str(self) -> str:
+        return self._schema_str
+
+    def serializer(self):
+        """
+            Return a serializer.
+
+            :return: Serializer
+        """
+
+        return AvroSerializer(self._schema_registry_client,
+                              self._schema.schema_str,
+                              self._to_dict_with_ctx,
+                              None)
+
+    def deserializer(self):
+        """
+            Return an AlarmActivationUnion deserializer.
+
+            :return: Deserializer
+        """
+
+        return AvroDeserializer(self._schema_registry_client,
+                                None,
+                                self._from_dict_with_ctx,
+                                True)
+
+
+class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
+    def __init__(self, schema_registry_client, schema, references, named_schemas):
+        self._references = references
+        self._named_schemas = named_schemas
+
+        super().__init__(schema_registry_client, schema)
+
+    @abstractmethod
+    def from_dict(self, data):
+        pass
+
+    @abstractmethod
+    def to_dict(self, data):
+        pass
+
+    def references(self):
+        return self._references
+
+    def named_schemas(self):
+        return self._named_schemas
+
+    def serializer(self):
+        """
+                Return a serializer.
+
+                :return: Serializer
+            """
+        return AvroSerializerWithReferences(self._schema_registry_client,
+                                            self.get_schema(),
+                                            self._to_dict_with_ctx,
+                                            None,
+                                            self.named_schemas())
+
+    def deserializer(self):
+        """
+                Return a deserializer.
+
+                :return: Deserializer
+            """
+        return AvroDeserializerWithReferences(self._schema_registry_client,
+                                              None,
+                                              self._from_dict_with_ctx,
+                                              True,
+                                              self.named_schemas())
+
+
+class ClassSerde(RegistryAvroWithReferencesSerde):
     """
         Provides AlarmClass serde utilities
     """
 
-    @staticmethod
-    def to_dict(obj):
-        """
-        Converts an AlarmClass to a dict.
+    def __init__(self, schema_registry_client):
 
-        :param obj: The AlarmClass
-        :return: A dict
-        """
-
-        if obj is None:
-            return None
-
-        return {
-            "category": obj.category,
-            "priority": obj.priority.name,
-            "rationale": obj.rationale,
-            "correctiveaction": obj.corrective_action,
-            "pointofcontactusername": obj.point_of_contact_username,
-            "latching": obj.latching,
-            "filterable": obj.filterable,
-            "ondelayseconds": obj.on_delay_seconds,
-            "offdelayseconds": obj.off_delay_seconds
-        }
-
-    @staticmethod
-    def _to_dict_with_ctx(obj, ctx):
-        return AlarmClassSerde.to_dict(obj)
-
-    @staticmethod
-    def from_dict(the_dict):
-        """
-        Converts a dict to an AlarmClass.
-
-        :param the_dict: The dict
-        :return: The AlarmClass
-        """
-        if the_dict is None:
-            return None
-
-        return AlarmClass(the_dict.get('category'),
-                          _unwrap_enum(the_dict.get('priority'), AlarmPriority),
-                          the_dict.get('rationale'),
-                          the_dict.get('correctiveaction'),
-                          the_dict.get('pointofcontactusername'),
-                          the_dict.get('latching'),
-                          the_dict.get('filterable'),
-                          the_dict.get('ondelayseconds'),
-                          the_dict.get('offdelayseconds'))
-
-    @staticmethod
-    def _from_dict_with_ctx(the_dict, ctx):
-        return AlarmClassSerde.from_dict(the_dict)
-
-    @staticmethod
-    def references():
-        priority_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmPriority", "alarm-priority", 1)
-
-        return [priority_schema_ref]
-
-    @staticmethod
-    def named_schemas():
         priority_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmPriority.avsc")
         priority_schema_str = priority_bytes.decode('utf-8')
 
         named_schemas = {}
-        ref_dict = loads(priority_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
 
-        return named_schemas
+        ref_dict = json.loads(priority_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
-    @staticmethod
-    def deserializer(schema_registry_client):
+        priority_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmPriority", "alarm-priority", 1)
+        references = [priority_schema_ref]
+
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", references)
+
+        super().__init__(schema_registry_client, schema, references, named_schemas)
+
+    def to_dict(self, data):
         """
-            Return an AlarmClass deserializer.
+            Converts an AlarmClass to a dict.
 
-            :param schema_registry_client: The Confluent Schema Registry Client
-            :return: Deserializer
-        """
-        return AvroDeserializerWithReferences(schema_registry_client, None,
-                                              AlarmClassSerde._from_dict_with_ctx, True,
-                                              AlarmClassSerde.named_schemas())
-
-    @staticmethod
-    def serializer(schema_registry_client):
-        """
-            Return an AlarmClass serializer.
-
-            :param schema_registry_client: The Confluent Schema Registry client
-            :return: Serializer
-        """
-        value_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
-        value_schema_str = value_bytes.decode('utf-8')
-
-        schema = Schema(value_schema_str, "AVRO",
-                        AlarmClassSerde.references())
-
-        return AvroSerializerWithReferences(schema_registry_client, schema,
-                                            AlarmClassSerde._to_dict_with_ctx, None,
-                                            AlarmClassSerde.named_schemas())
-
-
-class AlarmInstanceSerde:
-    """
-        Provides AlarmInstance serde utilities
-    """
-
-    @staticmethod
-    def to_dict(obj, union_encoding=UnionEncoding.TUPLE):
-        """
-        Converts an AlarmInstance to a dict.
-
-        :param obj: The AlarmInstance
-        :param union_encoding: How the union should be encoded
-        :return: A dict
+            :param data: The AlarmClass
+            :return: A dict
         """
 
-        if obj is None:
+        if data is None:
             return None
-
-        if isinstance(obj.producer, SimpleProducer):
-            uniontype = "org.jlab.jaws.entity.SimpleProducer"
-            uniondict = {}
-        elif isinstance(obj.producer, EPICSProducer):
-            uniontype = "org.jlab.jaws.entity.EPICSProducer"
-            uniondict = {"pv": obj.producer.pv}
-        elif isinstance(obj.producer, CALCProducer):
-            uniontype = "org.jlab.jaws.entity.CALCProducer"
-            uniondict = {"expression": obj.producer.expression}
-        else:
-            raise Exception("Unknown alarming union type: {}".format(obj.producer))
-
-        if union_encoding is UnionEncoding.TUPLE:
-            union = (uniontype, uniondict)
-        elif union_encoding is UnionEncoding.DICT_WITH_TYPE:
-            union = {uniontype: uniondict}
-        else:
-            union = uniondict
 
         return {
-            "class": obj.alarm_class,
-            "producer": union,
-            "location": obj.location,
-            "maskedby": obj.masked_by,
-            "screencommand": obj.screen_command
+            "category": data.category,
+            "priority": data.priority.name,
+            "rationale": data.rationale,
+            "correctiveaction": data.corrective_action,
+            "pointofcontactusername": data.point_of_contact_username,
+            "latching": data.latching,
+            "filterable": data.filterable,
+            "ondelayseconds": data.on_delay_seconds,
+            "offdelayseconds": data.off_delay_seconds
         }
 
-    @staticmethod
-    def _to_dict_with_ctx(obj, ctx):
-        return AlarmInstanceSerde.to_dict(obj)
-
-    @staticmethod
-    def from_dict(the_dict):
+    def from_dict(self, data):
         """
-        Converts a dict to an AlarmInstance.
+            Converts a dict to an AlarmClass.
 
-        Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
-
-        :param the_dict: The dict
-        :return: The AlarmInstance
-        """
-
-        if the_dict is None:
+            :param data: The dict
+            :return: The AlarmClass
+            """
+        if data is None:
             return None
 
-        unionobj = the_dict['producer']
-
-        if type(unionobj) is tuple:
-            uniontype = unionobj[0]
-            uniondict = unionobj[1]
-        elif type(unionobj is dict):
-            value = next(iter(unionobj.items()))
-            uniontype = value[0]
-            uniondict = value[1]
-        else:
-            raise Exception("Unsupported union encoding")
-
-        if uniontype == "org.jlab.jaws.entity.CalcProducer":
-            producer = CALCProducer(uniondict['expression'])
-        elif uniontype == "org.jlab.jaws.entity.EPICSProducer":
-            producer = EPICSProducer(uniondict['pv'])
-        else:
-            producer = SimpleProducer()
-
-        return AlarmInstance(the_dict.get('class'),
-                             producer,
-                             the_dict.get('location'),
-                             the_dict.get('maskedby'),
-                             the_dict.get('screencommand'))
+        return AlarmClass(data.get('category'),
+                          _unwrap_enum(data.get('priority'), AlarmPriority),
+                          data.get('rationale'),
+                          data.get('correctiveaction'),
+                          data.get('pointofcontactusername'),
+                          data.get('latching'),
+                          data.get('filterable'),
+                          data.get('ondelayseconds'),
+                          data.get('offdelayseconds'))
 
 
-    @staticmethod
-    def _from_dict_with_ctx(the_dict, ctx):
-        return AlarmInstanceSerde.from_dict(the_dict)
+class LocationSerde(RegistryAvroSerde):
+    """
+        Provides AlarmLocation serde utilities
+    """
 
-    @staticmethod
-    def deserializer(schema_registry_client):
+    def __init__(self, schema_registry_client):
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmLocation.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", [])
+
+        super().__init__(schema_registry_client, schema)
+
+    def to_dict(self, data):
         """
-            Return an AlarmInstance deserializer.
+        Converts AlarmLocation to a dict.
 
-            :param schema_registry_client: The Confluent Schema Registry Client
-            :return: Deserializer
+        :param data: The AlarmLocation
+        :return: A dict
         """
-        return AvroDeserializer(schema_registry_client, None,
-                                AlarmInstanceSerde._from_dict_with_ctx, True)
+        return {
+            "parent": data.parent
+        }
 
-    @staticmethod
-    def serializer(schema_registry_client):
+    def from_dict(self, data):
         """
-            Return an AlarmInstance serializer.
+        Converts a dict to AlarmLocation.
 
-            :param schema_registry_client: The Confluent Schema Registry client
-            :return: Serializer
+        :param data: The dict
+        :return: The AlarmLocation
         """
-        value_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmInstance.avsc")
-        value_schema_str = value_bytes.decode('utf-8')
-
-        return AvroSerializer(schema_registry_client, value_schema_str,
-                              AlarmInstanceSerde._to_dict_with_ctx, None)
+        return AlarmLocation(data['parent'])
 
 
-class AlarmActivationUnionSerde:
+class ActivationSerde(RegistryAvroSerde):
     """
         Provides AlarmActivationUnion serde utilities
     """
 
-    @staticmethod
-    def to_dict(obj, union_encoding=UnionEncoding.TUPLE):
+    def __init__(self, schema_registry_client, union_encoding=UnionEncoding.TUPLE):
+
+        self._union_encoding = union_encoding
+
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmActivationUnion.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", [])
+
+        super().__init__(schema_registry_client, schema)
+
+    def to_dict(self, data):
         """
         Converts an AlarmActivationUnion to a dict.
 
-        :param obj: The AlarmActivationUnion
-        :param union_encoding: How the union should be encoded
+        :param data: The AlarmActivationUnion
         :return: A dict
         """
 
-        if obj is None:
+        if data is None:
             return None
 
-        if isinstance(obj.msg, SimpleAlarming):
+        if isinstance(data.msg, SimpleAlarming):
             uniontype = "org.jlab.jaws.entity.SimpleAlarming"
             uniondict = {}
-        elif isinstance(obj.msg, EPICSAlarming):
+        elif isinstance(data.msg, EPICSAlarming):
             uniontype = "org.jlab.jaws.entity.EPICSAlarming"
-            uniondict = {"sevr": obj.msg.sevr.name, "stat": obj.msg.stat.name}
-        elif isinstance(obj.msg, NoteAlarming):
+            uniondict = {"sevr": data.msg.sevr.name, "stat": data.msg.stat.name}
+        elif isinstance(data.msg, NoteAlarming):
             uniontype = "org.jlab.jaws.entity.NoteAlarming"
-            uniondict = {"note": obj.msg.note}
+            uniondict = {"note": data.msg.note}
         else:
-            raise Exception("Unknown alarming union type: {}".format(obj.msg))
+            raise Exception("Unknown alarming union type: {}".format(data.msg))
 
-        if union_encoding is UnionEncoding.TUPLE:
+        if self._union_encoding is UnionEncoding.TUPLE:
             union = (uniontype, uniondict)
-        elif union_encoding is UnionEncoding.DICT_WITH_TYPE:
+        elif self._union_encoding is UnionEncoding.DICT_WITH_TYPE:
             union = {uniontype: uniondict}
         else:
             union = uniondict
@@ -307,25 +332,20 @@ class AlarmActivationUnionSerde:
             "msg": union
         }
 
-    @staticmethod
-    def _to_dict_with_ctx(obj, ctx):
-        return AlarmActivationUnionSerde.to_dict(obj)
-
-    @staticmethod
-    def from_dict(the_dict):
+    def from_dict(self, data):
         """
         Converts a dict to an AlarmActivationUnion.
 
         Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
 
-        :param the_dict: The dict
+        :param data: The dict
         :return: The AlarmActivationUnion
         """
 
-        if the_dict is None:
+        if data is None:
             return None
 
-        unionobj = the_dict['msg']
+        unionobj = data['msg']
 
         if type(unionobj) is tuple:
             uniontype = unionobj[0]
@@ -347,146 +367,476 @@ class AlarmActivationUnionSerde:
 
         return AlarmActivationUnion(obj)
 
-    @staticmethod
-    def _from_dict_with_ctx(the_dict, ctx):
-        return AlarmActivationUnionSerde.from_dict(the_dict)
 
-    @staticmethod
-    def deserializer(schema_registry_client):
-        """
-            Return an AlarmActivationUnion deserializer.
-
-            :param schema_registry_client: The Confluent Schema Registry Client
-            :return: Deserializer
-        """
-
-        return AvroDeserializer(schema_registry_client, None,
-                                AlarmActivationUnionSerde._from_dict_with_ctx, True)
-
-    @staticmethod
-    def serializer(schema_registry_client):
-        """
-            Return an AlarmActivationUnion serializer.
-
-            :param schema_registry_client: The Confluent Schema Registry client
-            :return: Serializer
-        """
-
-        value_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmActivationUnion.avsc")
-        value_schema_str = value_bytes.decode('utf-8')
-
-        return AvroSerializer(schema_registry_client, value_schema_str,
-                              AlarmActivationUnionSerde._to_dict_with_ctx, None)
-
-
-class AlarmOverrideKeySerde:
+class InstanceSerde(RegistryAvroSerde):
     """
-        Provides AlarmOverrideKey serde utilities
+        Provides AlarmInstance serde utilities
     """
 
-    @staticmethod
-    def to_dict(obj):
-        """
-        Converts an AlarmOverrideKey to a dict.
+    def __init__(self, schema_registry_client, union_encoding=UnionEncoding.TUPLE):
 
-        :param obj: The AlarmOverrideKey
+        self._union_encoding = union_encoding
+
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmInstance.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", [])
+
+        super().__init__(schema_registry_client, schema)
+
+    def to_dict(self, data):
+        """
+        Converts an AlarmInstance to a dict.
+
+        :param data: The AlarmInstance
+        :return: A dict
+        """
+
+        if data is None:
+            return None
+
+        if isinstance(data.producer, SimpleProducer):
+            uniontype = "org.jlab.jaws.entity.SimpleProducer"
+            uniondict = {}
+        elif isinstance(data.producer, EPICSProducer):
+            uniontype = "org.jlab.jaws.entity.EPICSProducer"
+            uniondict = {"pv": data.producer.pv}
+        elif isinstance(data.producer, CALCProducer):
+            uniontype = "org.jlab.jaws.entity.CALCProducer"
+            uniondict = {"expression": data.producer.expression}
+        else:
+            raise Exception("Unknown instance producer union type: {}".format(data.producer))
+
+        if self._union_encoding is UnionEncoding.TUPLE:
+            union = (uniontype, uniondict)
+        elif self._union_encoding is UnionEncoding.DICT_WITH_TYPE:
+            union = {uniontype: uniondict}
+        else:
+            union = uniondict
+
+        return {
+            "class": data.alarm_class,
+            "producer": union,
+            "location": data.location,
+            "maskedby": data.masked_by,
+            "screencommand": data.screen_command
+        }
+
+    def from_dict(self, data):
+        """
+        Converts a dict to an AlarmInstance.
+
+        Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
+
+        :param data: The dict
+        :return: The AlarmInstance
+        """
+
+        if data is None:
+            return None
+
+        unionobj = data['producer']
+
+        if type(unionobj) is tuple:
+            uniontype = unionobj[0]
+            uniondict = unionobj[1]
+        elif type(unionobj is dict):
+            value = next(iter(unionobj.items()))
+            uniontype = value[0]
+            uniondict = value[1]
+        else:
+            raise Exception("Unsupported union encoding")
+
+        if uniontype == "org.jlab.jaws.entity.CalcProducer":
+            producer = CALCProducer(uniondict['expression'])
+        elif uniontype == "org.jlab.jaws.entity.EPICSProducer":
+            producer = EPICSProducer(uniondict['pv'])
+        else:
+            producer = SimpleProducer()
+
+        return AlarmInstance(data.get('class'),
+                             producer,
+                             data.get('location'),
+                             data.get('maskedby'),
+                             data.get('screencommand'))
+
+
+class OverrideSetSerde(RegistryAvroWithReferencesSerde):
+    """
+        Provides OverrideSet serde utilities
+    """
+
+    def __init__(self, schema_registry_client):
+        disabled_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/DisabledOverride.avsc")
+        disabled_schema_str = disabled_bytes.decode('utf-8')
+
+        filtered_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/FilteredOverride.avsc")
+        filtered_schema_str = filtered_bytes.decode('utf-8')
+
+        latched_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/LatchedOverride.avsc")
+        latched_schema_str = latched_bytes.decode('utf-8')
+
+        masked_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/MaskedOverride.avsc")
+        masked_schema_str = masked_bytes.decode('utf-8')
+
+        off_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OffDelayedOverride.avsc")
+        off_delayed_schema_str = off_delayed_bytes.decode('utf-8')
+
+        on_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OnDelayedOverride.avsc")
+        on_delayed_schema_str = on_delayed_bytes.decode('utf-8')
+
+        shelved_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ShelvedOverride.avsc")
+        shelved_schema_str = shelved_bytes.decode('utf-8')
+
+        named_schemas = {}
+
+        ref_dict = json.loads(disabled_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(filtered_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(latched_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(masked_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(off_delayed_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(on_delayed_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(shelved_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+
+        disabled_schema_ref = SchemaReference("org.jlab.jaws.entity.DisabledOverride", "disabled-override", 1)
+        filtered_schema_ref = SchemaReference("org.jlab.jaws.entity.FilteredOverride", "filtered-override", 1)
+        latched_schema_ref = SchemaReference("org.jlab.jaws.entity.LatchedOverride", "latched-override", 1)
+        masked_schema_ref = SchemaReference("org.jlab.jaws.entity.MaskedOverride", "masked-override", 1)
+        off_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OffDelayedOverride", "off-delayed-override", 1)
+        on_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OnDelayedOverride", "on-delayed-override", 1)
+        shelved_schema_ref = SchemaReference("org.jlab.jaws.entity.ShelvedOverride", "shelved-override", 1)
+
+        references = [disabled_schema_ref,
+                      filtered_schema_ref,
+                      latched_schema_ref,
+                      masked_schema_ref,
+                      off_delayed_schema_ref,
+                      on_delayed_schema_ref,
+                      shelved_schema_ref]
+
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideSet.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", references)
+
+        super().__init__(schema_registry_client, schema, references, named_schemas)
+
+    def to_dict(self, data):
+        """
+        Converts AlarmOverrideSet to a dict
+
+        :param data: The AlarmOverrideSet
         :return: A dict
         """
         return {
-            "name": obj.name,
-            "type": obj.type.name
+            "disabled": {"comments": data.disabled.comments} if data.disabled is not None else None,
+            "filtered": {"filtername": data.filtered.filtername} if data.filtered is not None else None,
+            "latched": {} if data.latched is not None else None,
+            "masked": {} if data.masked is not None else None,
+            "ondelayed": {"expiration": data.ondelayed.expiration} if data.ondelayed is not None else None,
+            "offdelayed": {"expiration": data.offdelayed.expiration} if data.offdelayed is not None else None,
+            "shelved": {"expiration": data.shelved.expiration,
+                        "comments": data.shelved.comments,
+                        "oneshot": data.shelved.oneshot,
+                        "reason": data.shelved.reason.name} if data.shelved is not None else None
         }
 
-    @staticmethod
-    def _to_dict_with_ctx(obj, ctx):
-        return AlarmOverrideKeySerde.to_dict(obj)
+    def from_dict(self, data):
+        """
+        Converts a dict to AlarmOverrideSet.
 
-    @staticmethod
-    def from_dict(the_dict):
+        :param data: The dict
+        :return: The AlarmOverrideSet
+        """
+        return AlarmOverrideSet(DisabledOverride(data['disabled'][1]['comments'])
+                                if data.get('disabled') is not None else None,
+                                FilteredOverride(data['filtered'][1]['filtername'])
+                                if data.get('filtered') is not None else None,
+                                LatchedOverride()
+                                if data.get('latched') is not None else None,
+                                MaskedOverride()
+                                if data.get('masked') is not None else None,
+                                OnDelayedOverride(data['ondelayed'][1]['expiration'])
+                                if data.get('ondelayed') is not None else None,
+                                OffDelayedOverride(data['offdelayed'][1]['expiration'])
+                                if data.get('offdelayed') is not None else None,
+                                ShelvedOverride(data['shelved'][1]['expiration'],
+                                                data['shelved'][1]['comments'],
+                                                ShelvedReason[data['shelved'][1]['reason']],
+                                                data['shelved'][1]['oneshot'])
+                                if data.get('shelved') is not None else None)
+
+
+class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
+    """
+        Provides EffectiveRegistration serde utilities
+    """
+
+    def __init__(self, schema_registry_client):
+        self._class_serde = ClassSerde(schema_registry_client)
+        self._instance_serde = InstanceSerde(schema_registry_client)
+
+        classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
+        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmInstance",
+                                                  "alarm-instances-value", 1)
+
+        references = [classes_schema_ref, registration_schema_ref]
+
+        classes_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
+        classes_schema_str = classes_bytes.decode('utf-8')
+
+        instance_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmInstance.avsc")
+        instance_schema_str = instance_bytes.decode('utf-8')
+
+        named_schemas = self._class_serde.named_schemas()
+
+        ref_dict = json.loads(classes_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(instance_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveRegistration.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", references)
+
+        super().__init__(schema_registry_client, schema, references, named_schemas)
+
+    def to_dict(self, data):
+        """
+        Converts EffectiveRegistration to a dict.
+
+        :param data: The EffectiveRegistration
+        :return: A dict
+        """
+        return {
+            "class": self._class_serde.to_dict(data.alarm_class),
+            "instance": self._instance_serde.to_dict(data.instance)
+        }
+
+    def from_dict(self, data):
+        """
+        Converts a dict to EffectiveRegistration.
+
+        :param data: The dict
+        :return: The EffectiveRegistration
+        """
+        return EffectiveRegistration(
+            self._class_serde.from_dict(data['class'][1]) if data.get('class') is not None else None,
+            self._instance_serde.from_dict(data['instance'][1])
+            if data.get('instance') is not None else None)
+
+
+class EffectiveActivationSerde(RegistryAvroWithReferencesSerde):
+    """
+        Provides EffectiveActivation serde utilities
+    """
+
+    def __init__(self, schema_registry_client):
+        self._activation_serde = ActivationSerde(schema_registry_client)
+        self._override_serde = OverrideSetSerde(schema_registry_client)
+
+        activation_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmActivationUnion",
+                                                "alarm-activations-value", 1)
+        overrides_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmOverrideSet",
+                                               "alarm-override-set", 1)
+        state_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmState", "alarm-state", 1)
+
+        references = [activation_schema_ref, overrides_schema_ref, state_schema_ref]
+
+        activation_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmActivationUnion.avsc")
+        activation_schema_str = activation_bytes.decode('utf-8')
+
+        overrides_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideSet.avsc")
+        overrides_schema_str = overrides_bytes.decode('utf-8')
+
+        state_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmState.avsc")
+        state_schema_str = state_bytes.decode('utf-8')
+
+        named_schemas = self._override_serde.named_schemas()
+
+        ref_dict = json.loads(activation_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(overrides_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(state_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveActivation.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", references)
+
+        super().__init__(schema_registry_client, schema, references, named_schemas)
+
+    def to_dict(self, data):
+        """
+        Converts EffectiveActivation to a dict.
+
+        :param data: The EffectiveActivation
+        :return: A dict
+        """
+        return {
+            "actual": self._activation_serde.to_dict(data.actual),
+            "overrides": self._override_serde.to_dict(data.overrides),
+            "state": data.state.name
+        }
+
+    def from_dict(self, data):
+        """
+        Converts a dict to EffectiveActivation.
+
+        :param data: The dict
+        :return: The EffectiveActivation
+        """
+        return EffectiveActivation(
+            self._activation_serde.from_dict(data['actual'][1])
+            if data.get('actual') is not None else None,
+            self._override_serde.from_dict(data['overrides']),
+            _unwrap_enum(data['state'], AlarmState))
+
+
+class OverrideKeySerde(RegistryAvroSerde):
+    def __init__(self, schema_registry_client):
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideKey.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", [])
+
+        super().__init__(schema_registry_client, schema)
+
+    def to_dict(self, data):
+        """
+        Converts an AlarmOverrideKey to a dict.
+
+        :param data: The AlarmOverrideKey
+        :return: A dict
+        """
+        return {
+            "name": data.name,
+            "type": data.type.name
+        }
+
+    def from_dict(self, data):
         """
         Converts a dict to an AlarmOverrideKey.
 
-        :param the_dict: The dict
+        :param data: The dict
         :return: The AlarmOverrideKey
         """
-        return AlarmOverrideKey(the_dict['name'], _unwrap_enum(the_dict['type'], OverriddenAlarmType))
-
-    @staticmethod
-    def _from_dict_with_ctx(the_dict, ctx):
-        return AlarmOverrideKeySerde.from_dict(the_dict)
-
-    @staticmethod
-    def deserializer(schema_registry_client):
-        """
-            Return an AlarmOverrideKey deserializer.
-
-            :param schema_registry_client: The Confluent Schema Registry Client
-            :return: Deserializer
-        """
-
-        return AvroDeserializer(schema_registry_client, None,
-                                AlarmOverrideKeySerde._from_dict_with_ctx, True)
-
-    @staticmethod
-    def serializer(schema_registry_client):
-        """
-            Return an AlarmOverrideKey serializer.
-
-            :param schema_registry_client: The Confluent Schema Registry client
-            :return: Serializer
-        """
-
-        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideKey.avsc")
-        subject_schema_str = subject_bytes.decode('utf-8')
-
-        return AvroSerializer(schema_registry_client, subject_schema_str,
-                              AlarmOverrideKeySerde._to_dict_with_ctx, None)
+        return AlarmOverrideKey(data['name'], _unwrap_enum(data['type'], OverriddenAlarmType))
 
 
-class AlarmOverrideUnionSerde:
-    """
-        Provides AlarmOverrideUnion serde utilities
-    """
+class OverrideSerde(RegistryAvroWithReferencesSerde):
+    def __init__(self, schema_registry_client, union_encoding=UnionEncoding.TUPLE):
 
-    @staticmethod
-    def to_dict(obj, union_encoding=UnionEncoding.TUPLE):
+        self._union_encoding = union_encoding
+
+        disabled_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/DisabledOverride.avsc")
+        disabled_schema_str = disabled_bytes.decode('utf-8')
+
+        filtered_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/FilteredOverride.avsc")
+        filtered_schema_str = filtered_bytes.decode('utf-8')
+
+        latched_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/LatchedOverride.avsc")
+        latched_schema_str = latched_bytes.decode('utf-8')
+
+        masked_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/MaskedOverride.avsc")
+        masked_schema_str = masked_bytes.decode('utf-8')
+
+        off_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OffDelayedOverride.avsc")
+        off_delayed_schema_str = off_delayed_bytes.decode('utf-8')
+
+        on_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OnDelayedOverride.avsc")
+        on_delayed_schema_str = on_delayed_bytes.decode('utf-8')
+
+        shelved_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ShelvedOverride.avsc")
+        shelved_schema_str = shelved_bytes.decode('utf-8')
+
+        named_schemas = {}
+
+        ref_dict = json.loads(disabled_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(filtered_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(latched_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(masked_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(off_delayed_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(on_delayed_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(shelved_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
+
+        disabled_schema_ref = SchemaReference("org.jlab.jaws.entity.DisabledOverride", "disabled-override", 1)
+        filtered_schema_ref = SchemaReference("org.jlab.jaws.entity.FilteredOverride", "filtered-override", 1)
+        latched_schema_ref = SchemaReference("org.jlab.jaws.entity.LatchedOverride", "latched-override", 1)
+        masked_schema_ref = SchemaReference("org.jlab.jaws.entity.MaskedOverride", "masked-override", 1)
+        off_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OffDelayedOverride", "off-delayed-override", 1)
+        on_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OnDelayedOverride", "on-delayed-override", 1)
+        shelved_schema_ref = SchemaReference("org.jlab.jaws.entity.ShelvedOverride", "shelved-override", 1)
+
+        references = [disabled_schema_ref,
+                      filtered_schema_ref,
+                      latched_schema_ref,
+                      masked_schema_ref,
+                      off_delayed_schema_ref,
+                      on_delayed_schema_ref,
+                      shelved_schema_ref]
+
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideUnion.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", references)
+
+        super().__init__(schema_registry_client, schema, references, named_schemas)
+
+    def to_dict(self, data):
         """
         Converts an AlarmOverrideUnion to a dict.
 
-        :param obj: The AlarmOverrideUnion
-        :param union_encoding: How the union should be encoded
+        :param data: The AlarmOverrideUnion
         :return: A dict
         """
-        if isinstance(obj.msg, DisabledOverride):
+        if isinstance(data.msg, DisabledOverride):
             uniontype = "org.jlab.jaws.entity.DisabledOverride"
-            uniondict = {"comments": obj.msg.comments}
-        elif isinstance(obj.msg, FilteredOverride):
+            uniondict = {"comments": data.msg.comments}
+        elif isinstance(data.msg, FilteredOverride):
             uniontype = "org.jlab.jaws.entity.FilteredOverride"
-            uniondict = {"filtername": obj.msg.filtername}
-        elif isinstance(obj.msg, LatchedOverride):
+            uniondict = {"filtername": data.msg.filtername}
+        elif isinstance(data.msg, LatchedOverride):
             uniontype = "org.jlab.jaws.entity.LatchedOverride"
             uniondict = {}
-        elif isinstance(obj.msg, MaskedOverride):
+        elif isinstance(data.msg, MaskedOverride):
             uniontype = "org.jlab.jaws.entity.MaskedOverride"
             uniondict = {}
-        elif isinstance(obj.msg, OnDelayedOverride):
+        elif isinstance(data.msg, OnDelayedOverride):
             uniontype = "org.jlab.jaws.entity.OnDelayedOverride"
-            uniondict = {"expiration": obj.msg.expiration}
-        elif isinstance(obj.msg, OffDelayedOverride):
+            uniondict = {"expiration": data.msg.expiration}
+        elif isinstance(data.msg, OffDelayedOverride):
             uniontype = "org.jlab.jaws.entity.OffDelayedOverride"
-            uniondict = {"expiration": obj.msg.expiration}
-        elif isinstance(obj.msg, ShelvedOverride):
+            uniondict = {"expiration": data.msg.expiration}
+        elif isinstance(data.msg, ShelvedOverride):
             uniontype = "org.jlab.jaws.entity.ShelvedOverride"
-            uniondict = {"expiration": obj.msg.expiration, "comments": obj.msg.comments,
-                         "reason": obj.msg.reason.name, "oneshot": obj.msg.oneshot}
+            uniondict = {"expiration": data.msg.expiration, "comments": data.msg.comments,
+                         "reason": data.msg.reason.name, "oneshot": data.msg.oneshot}
         else:
-            print("Unknown alarming union type: {}".format(obj.msg))
+            print("Unknown alarming union type: {}".format(data.msg))
             uniontype = None
             uniondict = None
 
-        if union_encoding is UnionEncoding.TUPLE:
+        if self._union_encoding is UnionEncoding.TUPLE:
             union = (uniontype, uniondict)
-        elif union_encoding is UnionEncoding.DICT_WITH_TYPE:
+        elif self._union_encoding is UnionEncoding.DICT_WITH_TYPE:
             union = {uniontype: uniondict}
         else:
             union = uniondict
@@ -495,12 +845,7 @@ class AlarmOverrideUnionSerde:
             "msg": union
         }
 
-    @staticmethod
-    def _to_dict_with_ctx(obj, ctx):
-        return AlarmOverrideUnionSerde.to_dict(obj)
-
-    @staticmethod
-    def from_dict(the_dict):
+    def from_dict(self, data):
         """
         Converts a dict to an AlarmOverrideUnion.
 
@@ -508,10 +853,10 @@ class AlarmOverrideUnionSerde:
         but UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported at this time
         because I'm lazy and not going to try to guess what type is in your union.
 
-        :param the_dict: The dict (or maybe it's a duck)
+        :param data: The dict (or maybe it's a duck)
         :return: The AlarmOverrideUnion
         """
-        alarmingobj = the_dict['msg']
+        alarmingobj = data['msg']
 
         if type(alarmingobj) is tuple:
             alarmingtype = alarmingobj[0]
@@ -539,600 +884,79 @@ class AlarmOverrideUnionSerde:
             obj = ShelvedOverride(alarmingdict['expiration'], alarmingdict['comments'],
                                   _unwrap_enum(alarmingdict['reason'], ShelvedReason), alarmingdict['oneshot'])
         else:
-            print("Unknown alarming type: {}".format(the_dict['msg']))
+            print("Unknown alarming type: {}".format(data['msg']))
             obj = None
 
         return AlarmOverrideUnion(obj)
 
-    @staticmethod
-    def _from_dict_with_ctx(the_dict, ctx):
-        return AlarmOverrideUnionSerde.from_dict(the_dict)
 
-    @staticmethod
-    def references():
-        disabled_schema_ref = SchemaReference("org.jlab.jaws.entity.DisabledOverride", "disabled-override", 1)
-        filtered_schema_ref = SchemaReference("org.jlab.jaws.entity.FilteredOverride", "filtered-override", 1)
-        latched_schema_ref = SchemaReference("org.jlab.jaws.entity.LatchedOverride", "latched-override", 1)
-        masked_schema_ref = SchemaReference("org.jlab.jaws.entity.MaskedOverride", "masked-override", 1)
-        off_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OffDelayedOverride", "off-delayed-override", 1)
-        on_delayed_schema_ref = SchemaReference("org.jlab.jaws.entity.OnDelayedOverride", "on-delayed-override", 1)
-        shelved_schema_ref = SchemaReference("org.jlab.jaws.entity.ShelvedOverride", "shelved-override", 1)
-
-        return [disabled_schema_ref,
-                filtered_schema_ref,
-                latched_schema_ref,
-                masked_schema_ref,
-                off_delayed_schema_ref,
-                on_delayed_schema_ref,
-                shelved_schema_ref]
-
-    @staticmethod
-    def named_schemas():
-        disabled_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/DisabledOverride.avsc")
-        disabled_schema_str = disabled_bytes.decode('utf-8')
-
-        filtered_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/FilteredOverride.avsc")
-        filtered_schema_str = filtered_bytes.decode('utf-8')
-
-        latched_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/LatchedOverride.avsc")
-        latched_schema_str = latched_bytes.decode('utf-8')
-
-        masked_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/MaskedOverride.avsc")
-        masked_schema_str = masked_bytes.decode('utf-8')
-
-        off_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OffDelayedOverride.avsc")
-        off_delayed_schema_str = off_delayed_bytes.decode('utf-8')
-
-        on_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OnDelayedOverride.avsc")
-        on_delayed_schema_str = on_delayed_bytes.decode('utf-8')
-
-        shelved_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ShelvedOverride.avsc")
-        shelved_schema_str = shelved_bytes.decode('utf-8')
-
-        named_schemas = {}
-        ref_dict = loads(disabled_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(filtered_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(latched_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(masked_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(off_delayed_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(on_delayed_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(shelved_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-
-        return named_schemas
-
-    @staticmethod
-    def deserializer(schema_registry_client):
-        """
-            Return an AlarmOverrideUnion deserializer.
-
-            :param schema_registry_client: The Confluent Schema Registry Client
-            :return: Deserializer
-        """
-
-        return AvroDeserializerWithReferences(schema_registry_client, None,
-                                              AlarmOverrideUnionSerde._from_dict_with_ctx, True,
-                                              AlarmOverrideUnionSerde.named_schemas())
-
-    @staticmethod
-    def serializer(schema_registry_client):
-        """
-            Return an AlarmOverrideUnion serializer.
-
-            :param schema_registry_client: The Confluent Schema Registry client
-            :return: Serializer
-        """
-
-        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideUnion.avsc")
-        subject_schema_str = subject_bytes.decode('utf-8')
-
-        schema = Schema(subject_schema_str, "AVRO",
-                        AlarmOverrideUnionSerde.references())
-
-        return AvroSerializerWithReferences(schema_registry_client, schema,
-                                            AlarmOverrideUnionSerde._to_dict_with_ctx, None,
-                                            AlarmOverrideUnionSerde.named_schemas())
-
-
-class AlarmOverrideSetSerde:
-    """
-        Provides AlarmOverrideSet serde utilities
-    """
-
-    @staticmethod
-    def to_dict(obj):
-        """
-        Converts AlarmOverrideSet to a dict
-
-        :param obj: The AlarmOverrideSet
-        :return: A dict
-        """
-        return {
-            "disabled": {"comments": obj.disabled.comments} if obj.disabled is not None else None,
-            "filtered": {"filtername": obj.filtered.filtername} if obj.filtered is not None else None,
-            "latched": {} if obj.latched is not None else None,
-            "masked": {} if obj.masked is not None else None,
-            "ondelayed": {"expiration": obj.ondelayed.expiration} if obj.ondelayed is not None else None,
-            "offdelayed": {"expiration": obj.offdelayed.expiration} if obj.offdelayed is not None else None,
-            "shelved": {"expiration": obj.shelved.expiration,
-                        "comments": obj.shelved.comments,
-                        "oneshot": obj.shelved.oneshot,
-                        "reason": obj.shelved.reason.name} if obj.shelved is not None else None
-        }
-
-    @staticmethod
-    def from_dict(the_dict):
-        """
-        Converts a dict to AlarmOverrideSet.
-
-        :param the_dict: The dict
-        :return: The AlarmOverrideSet
-        """
-        return AlarmOverrideSet(DisabledOverride(the_dict['disabled'][1]['comments'])
-                                if the_dict.get('disabled') is not None else None,
-                                FilteredOverride(the_dict['filtered'][1]['filtername'])
-                                if the_dict.get('filtered') is not None else None,
-                                LatchedOverride()
-                                if the_dict.get('latched') is not None else None,
-                                MaskedOverride()
-                                if the_dict.get('masked') is not None else None,
-                                OnDelayedOverride(the_dict['ondelayed'][1]['expiration'])
-                                if the_dict.get('ondelayed') is not None else None,
-                                OffDelayedOverride(the_dict['offdelayed'][1]['expiration'])
-                                if the_dict.get('offdelayed') is not None else None,
-                                ShelvedOverride(the_dict['shelved'][1]['expiration'],
-                                                the_dict['shelved'][1]['comments'],
-                                                ShelvedReason[the_dict['shelved'][1]['reason']],
-                                                the_dict['shelved'][1]['oneshot'])
-                                if the_dict.get('shelved') is not None else None)
-
-
-class ProcessorTransitionsSerde:
+class ProcessorTransitionsSerde(RegistryAvroSerde):
     """
         Provides ProcessorTransitions serde utilities
     """
 
-    @staticmethod
-    def to_dict(obj):
+    def __init__(self, schema_registry_client):
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ProcessorTransition.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", [])
+
+        super().__init__(schema_registry_client, schema)
+
+    def to_dict(self, data):
         """
         Converts ProcessorTransitions to a dict
 
-        :param obj: The ProcessorTransitions
+        :param data: The ProcessorTransitions
         :return: A dict
         """
         return {
-            "transitionToActive": obj.transitionToActive,
-            "transitionToNormal": obj.transitionToNormal,
-            "latching": obj.latching,
-            "unshelving": obj.unshelving,
-            "masking": obj.masking,
-            "unmasking": obj.unmasking,
-            "ondelaying": obj.ondelaying,
-            "offdelaying": obj.offdelaying
+            "transitionToActive": data.transitionToActive,
+            "transitionToNormal": data.transitionToNormal,
+            "latching": data.latching,
+            "unshelving": data.unshelving,
+            "masking": data.masking,
+            "unmasking": data.unmasking,
+            "ondelaying": data.ondelaying,
+            "offdelaying": data.offdelaying
         }
 
-    @staticmethod
-    def from_dict(the_dict):
+    def from_dict(self, data):
         """
         Converts a dict to ProcessorTransitions.
 
-        :param the_dict: The dict
+        :param data: The dict
         :return: The ProcessorTransitions
         """
-        return ProcessorTransitions(the_dict['transitionToActive'],
-                                    the_dict['transitionToNormal'],
-                                    the_dict['latching'],
-                                    the_dict['unshelving'],
-                                    the_dict['masking'],
-                                    the_dict['unmasking'],
-                                    the_dict['ondelaying'],
-                                    the_dict['offdelaying'])
-
-
-class EffectiveRegistrationSerde:
-    """
-        Provides EffectiveRegistration serde utilities
-    """
-
-    @staticmethod
-    def to_dict(obj):
-        """
-        Converts EffectiveRegistration to a dict.
-
-        :param obj: The EffectiveRegistration
-        :return: A dict
-        """
-        return {
-            "class": AlarmClassSerde.to_dict(obj.alarm_class),
-            "actual": AlarmInstanceSerde.to_dict(obj.actual),
-            "calculated": AlarmInstanceSerde.to_dict(obj.calculated)
-        }
-
-    @staticmethod
-    def _to_dict_with_ctx(obj, ctx):
-        return EffectiveRegistrationSerde.to_dict(obj)
-
-    @staticmethod
-    def from_dict(the_dict):
-        """
-        Converts a dict to EffectiveRegistration.
-
-        :param the_dict: The dict
-        :return: The EffectiveRegistration
-        """
-        return EffectiveRegistration(
-            AlarmClassSerde.from_dict(the_dict['class'][1]) if the_dict.get('class') is not None else None,
-            AlarmInstanceSerde.from_dict(the_dict['actual'][1])
-            if the_dict.get('actual') is not None else None,
-            AlarmInstanceSerde.from_dict(the_dict['calculated'][1])
-            if the_dict.get('calculated') is not None else None)
-
-    @staticmethod
-    def _from_dict_with_ctx(the_dict, ctx):
-        return EffectiveRegistrationSerde.from_dict(the_dict)
-
-    @staticmethod
-    def references():
-        references = []
-
-        classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
-        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmInstance",
-                                                  "alarm-instances-value", 1)
-
-        references.append(classes_schema_ref)
-        references.append(registration_schema_ref)
-
-        return references
-
-    @staticmethod
-    def named_schemas():
-        classes_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
-        classes_schema_str = classes_bytes.decode('utf-8')
-
-        registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmInstance.avsc")
-        registrations_schema_str = registrations_bytes.decode('utf-8')
-
-        named_schemas = AlarmClassSerde.named_schemas()
-
-        named_schemas.update(AlarmOverrideUnionSerde.named_schemas())
-
-        ref_dict = loads(classes_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(registrations_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-
-        return named_schemas
-
-    @staticmethod
-    def deserializer(schema_registry_client):
-        """
-            Return an EffectiveRegistration deserializer.
-
-            :param schema_registry_client: The Confluent Schema Registry Client
-            :return: Deserializer
-        """
-
-        return AvroDeserializerWithReferences(schema_registry_client,
-                                              None,
-                                              EffectiveRegistrationSerde._from_dict_with_ctx,
-                                              True,
-                                              EffectiveRegistrationSerde.named_schemas())
-
-    @staticmethod
-    def serializer(schema_registry_client, conf=None):
-        """
-            Return an EffectiveRegistration serializer.
-
-            :param conf: Configuration
-            :param schema_registry_client: The Confluent Schema Registry client
-            :return: Serializer
-        """
-
-        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveRegistration.avsc")
-        subject_schema_str = subject_bytes.decode('utf-8')
-
-        schema = Schema(subject_schema_str, "AVRO",
-                        EffectiveRegistrationSerde.references())
-
-        return AvroSerializerWithReferences(schema_registry_client,
-                                            schema,
-                                            EffectiveRegistrationSerde._to_dict_with_ctx,
-                                            conf,
-                                            EffectiveRegistrationSerde.named_schemas())
-
-
-class EffectiveActivationSerde:
-    """
-        Provides EffectiveActivation serde utilities
-    """
-
-    @staticmethod
-    def to_dict(obj):
-        """
-        Converts EffectiveActivation to a dict.
-
-        :param obj: The EffectiveActivation
-        :return: A dict
-        """
-        return {
-            "actual": AlarmActivationUnionSerde.to_dict(obj.actual),
-            "overrides": AlarmOverrideSetSerde.to_dict(obj.overrides),
-            "state": obj.state.name
-        }
-
-    @staticmethod
-    def _to_dict_with_ctx(obj, ctx):
-        return EffectiveActivationSerde.to_dict(obj)
-
-    @staticmethod
-    def from_dict(the_dict):
-        """
-        Converts a dict to EffectiveActivation.
-
-        :param the_dict: The dict
-        :return: The EffectiveActivation
-        """
-        return EffectiveActivation(
-            AlarmActivationUnionSerde.from_dict(the_dict['actual'][1])
-            if the_dict.get('actual') is not None else None,
-            AlarmOverrideSetSerde.from_dict(the_dict['overrides']),
-            _unwrap_enum(the_dict['state'], AlarmState))
-
-    @staticmethod
-    def _from_dict_with_ctx(the_dict, ctx):
-        return EffectiveActivationSerde.from_dict(the_dict)
-
-    @staticmethod
-    def references():
-        references = []
-
-        activation_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmActivationUnion",
-                                                "alarm-activations-value", 1)
-        overrides_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmOverrideSet",
-                                               "alarm-override-set", 1)
-        state_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmState", "alarm-state", 1)
-
-        references.append(activation_schema_ref)
-        references.append(overrides_schema_ref)
-        references.append(state_schema_ref)
-
-        return references
-
-    @staticmethod
-    def named_schemas():
-        activation_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmActivationUnion.avsc")
-        activation_schema_str = activation_bytes.decode('utf-8')
-
-        overrides_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideSet.avsc")
-        overrides_schema_str = overrides_bytes.decode('utf-8')
-
-        state_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmState.avsc")
-        state_schema_str = state_bytes.decode('utf-8')
-
-        named_schemas = AlarmClassSerde.named_schemas()
-
-        named_schemas.update(AlarmOverrideUnionSerde.named_schemas())
-
-        ref_dict = loads(activation_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(overrides_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(state_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-
-        return named_schemas
-
-    @staticmethod
-    def deserializer(schema_registry_client):
-        """
-            Return an EffectiveActivation deserializer.
-
-            :param schema_registry_client: The Confluent Schema Registry Client
-            :return: Deserializer
-        """
-
-        return AvroDeserializerWithReferences(schema_registry_client,
-                                              None,
-                                              EffectiveActivationSerde._from_dict_with_ctx,
-                                              True,
-                                              EffectiveActivationSerde.named_schemas())
-
-    @staticmethod
-    def serializer(schema_registry_client, conf=None):
-        """
-            Return an EffectiveActivation serializer.
-
-            :param conf: Configuration
-            :param schema_registry_client: The Confluent Schema Registry client
-            :return: Serializer
-        """
-
-        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveActivation.avsc")
-        subject_schema_str = subject_bytes.decode('utf-8')
-
-        schema = Schema(subject_schema_str, "AVRO",
-                        EffectiveActivationSerde.references())
-
-        return AvroSerializerWithReferences(schema_registry_client,
-                                            schema,
-                                            EffectiveActivationSerde._to_dict_with_ctx,
-                                            conf,
-                                            EffectiveActivationSerde.named_schemas())
-
-
-class EffectiveAlarmSerde:
-    """
-        Provides EffectiveAlarm serde utilities
-    """
-
-    @staticmethod
-    def to_dict(obj):
-        """
-        Converts EffectiveAlarm to a dict.
-
-        :param obj: The EffectiveAlarm
-        :return: A dict
-        """
-        return {
-            "registration": EffectiveRegistrationSerde.to_dict(obj.registration),
-            "activation": EffectiveActivationSerde.to_dict(obj.activation),
-        }
-
-    @staticmethod
-    def _to_dict_with_ctx(obj, ctx):
-        return EffectiveAlarmSerde.to_dict(obj)
-
-    @staticmethod
-    def from_dict(the_dict):
-        """
-        Converts a dict to EffectiveAlarm.
-
-        :param the_dict: The dict
-        :return: The EffectiveAlarm
-        """
-        return EffectiveAlarm(EffectiveRegistrationSerde.from_dict(the_dict['registration']),
-                              EffectiveActivationSerde.from_dict(the_dict['activation']))
-
-    @staticmethod
-    def _from_dict_with_ctx(the_dict, ctx):
-        return EffectiveAlarmSerde.from_dict(the_dict)
-
-    @staticmethod
-    def references():
-        references = []
-
-        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveRegistration",
-                                                  "effective-registrations-value", 1)
-        activation_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveActivation",
-                                                "effective-activations-value", 1)
-
-        references.append(registration_schema_ref)
-        references.append(activation_schema_ref)
-
-        return references
-
-    @staticmethod
-    def named_schemas():
-        registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveRegistration.avsc")
-        registrations_schema_str = registrations_bytes.decode('utf-8')
-
-        activation_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveActivation.avsc")
-        activation_schema_str = activation_bytes.decode('utf-8')
-
-        named_schemas = EffectiveRegistrationSerde.named_schemas()
-        named_schemas.update(EffectiveActivationSerde.named_schemas())
-
-        ref_dict = loads(registrations_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = loads(activation_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
-
-        return named_schemas
-
-    @staticmethod
-    def deserializer(schema_registry_client):
-        """
-            Return an EffectiveAlarm deserializer.
-
-            :param schema_registry_client: The Confluent Schema Registry Client
-            :return: Deserializer
-        """
-
-        return AvroDeserializerWithReferences(schema_registry_client,
-                                              None,
-                                              EffectiveAlarmSerde._from_dict_with_ctx,
-                                              True,
-                                              EffectiveAlarmSerde.named_schemas())
-
-    @staticmethod
-    def serializer(schema_registry_client, conf=None):
-        """
-            Return an EffectiveAlarm serializer.
-
-            :param conf: Configuration
-            :param schema_registry_client: The Confluent Schema Registry client
-            :return: Serializer
-        """
-
-        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveAlarm.avsc")
-        subject_schema_str = subject_bytes.decode('utf-8')
-
-        schema = Schema(subject_schema_str, "AVRO",
-                        EffectiveAlarmSerde.references())
-
-        return AvroSerializerWithReferences(schema_registry_client,
-                                            schema,
-                                            EffectiveAlarmSerde._to_dict_with_ctx,
-                                            conf,
-                                            EffectiveAlarmSerde.named_schemas())
-
-
-class IntermediateMonologSerde:
+        return ProcessorTransitions(data['transitionToActive'],
+                                    data['transitionToNormal'],
+                                    data['latching'],
+                                    data['unshelving'],
+                                    data['masking'],
+                                    data['unmasking'],
+                                    data['ondelaying'],
+                                    data['offdelaying'])
+
+
+class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
     """
         Provides IntermediateMonolog serde utilities
     """
 
-    @staticmethod
-    def to_dict(obj):
-        """
-        Converts IntermediateMonolog to a dict.
-
-        :param obj: The IntermediateMonolog
-        :return: A dict
-        """
-        return {
-            "registration": EffectiveRegistrationSerde.to_dict(obj.registration),
-            "activation": EffectiveActivationSerde.to_dict(obj.activation),
-            "transitions": ProcessorTransitionsSerde.to_dict(obj.transitions)
-        }
-
-    @staticmethod
-    def _to_dict_with_ctx(obj, ctx):
-        return EffectiveAlarmSerde.to_dict(obj)
-
-    @staticmethod
-    def from_dict(the_dict):
-        """
-        Converts a dict to IntermediateMonolog.
-
-        :param the_dict: The dict
-        :return: The IntermediateMonolog
-        """
-        return IntermediateMonolog(EffectiveRegistrationSerde.from_dict(the_dict['registration']),
-                                   EffectiveActivationSerde.from_dict(the_dict['activation']),
-                                   ProcessorTransitionsSerde.from_dict(the_dict['transitions']))
-
-    @staticmethod
-    def _from_dict_with_ctx(the_dict, ctx):
-        return IntermediateMonologSerde.from_dict(the_dict)
-
-    @staticmethod
-    def references():
-        references = []
+    def __init__(self, schema_registry_client):
+        self._effective_registration_serde = EffectiveRegistrationSerde(schema_registry_client)
+        self._effective_activation_serde = EffectiveActivationSerde(schema_registry_client)
+        self._processor_transition_serde = ProcessorTransitionsSerde(schema_registry_client)
 
         registration_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveRegistration",
                                                   "effective-registrations-value", 1)
-
         activation_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveActivation",
                                                 "effective-activations-value", 1)
-
         transitions_schema_ref = SchemaReference("org.jlab.jaws.entity.ProcessorTransitions",
                                                  "processor-transitions", 1)
 
-        references.append(registration_schema_ref)
-        references.append(activation_schema_ref)
-        references.append(transitions_schema_ref)
+        references = [registration_schema_ref, activation_schema_ref, transitions_schema_ref]
 
-        return references
-
-    @staticmethod
-    def named_schemas():
         registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveRegistration.avsc")
         registrations_schema_str = registrations_bytes.decode('utf-8')
 
@@ -1142,19 +966,48 @@ class IntermediateMonologSerde:
         transitions_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ProcessorTransitions.avsc")
         transitions_schema_str = transitions_bytes.decode('utf-8')
 
-        named_schemas = EffectiveRegistrationSerde.named_schemas()
-        named_schemas.update(EffectiveActivationSerde.named_schemas())
+        named_schemas = self._effective_registration_serde.named_schemas()
+        named_schemas.update(self._effective_activation_serde.named_schemas())
 
-        ref_dict = loads(registrations_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(registrations_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
-        ref_dict = loads(activation_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(activation_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
-        ref_dict = loads(transitions_schema_str)
-        parse_schema(ref_dict, named_schemas=named_schemas)
+        ref_dict = json.loads(transitions_schema_str)
+        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
-        return named_schemas
+        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/IntermediateMonolog.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", references)
+
+        super().__init__(schema_registry_client, schema, references, named_schemas)
+
+    def to_dict(self, data):
+        """
+        Converts IntermediateMonolog to a dict.
+
+        :param data: The IntermediateMonolog
+        :return: A dict
+        """
+        return {
+            "registration": self._effective_registration_serde.to_dict(data.registration),
+            "activation": self._effective_activation_serde.to_dict(data.activation),
+            "transitions": self._processor_transition_serde.to_dict(data.transitions)
+        }
+
+    def from_dict(self, data):
+        """
+        Converts a dict to IntermediateMonolog.
+
+        :param data: The dict
+        :return: The IntermediateMonolog
+        """
+        return IntermediateMonolog(self._effective_registration_serde.from_dict(data['registration']),
+                                   self._effective_activation_serde.from_dict(data['activation']),
+                                   self._processor_transition_serde.from_dict(data['transitions']))
 
     @staticmethod
     def deserializer(schema_registry_client):
@@ -1192,83 +1045,3 @@ class IntermediateMonologSerde:
                                             IntermediateMonologSerde._to_dict_with_ctx,
                                             conf,
                                             IntermediateMonologSerde.named_schemas())
-
-
-class AlarmLocationSerde:
-    """
-        Provides AlarmLocation serde utilities
-    """
-
-    @staticmethod
-    def to_dict(obj):
-        """
-        Converts AlarmLocation to a dict.
-
-        :param obj: The AlarmLocation
-        :return: A dict
-        """
-        return {
-            "parent": obj.parent
-        }
-
-    @staticmethod
-    def _to_dict_with_ctx(obj, ctx):
-        return AlarmLocationSerde.to_dict(obj)
-
-    @staticmethod
-    def from_dict(the_dict):
-        """
-        Converts a dict to AlarmLocation.
-
-        :param the_dict: The dict
-        :return: The AlarmLocation
-        """
-        return AlarmLocation(the_dict['parent'])
-
-    @staticmethod
-    def _from_dict_with_ctx(the_dict, ctx):
-        return AlarmLocationSerde.from_dict(the_dict)
-
-    @staticmethod
-    def references():
-        references = []
-
-        return references
-
-    @staticmethod
-    def named_schemas():
-        named_schemas = {}
-
-        return named_schemas
-
-    @staticmethod
-    def deserializer(schema_registry_client):
-        """
-            Return an AlarmLocation deserializer.
-
-            :param schema_registry_client: The Confluent Schema Registry Client
-            :return: Deserializer
-        """
-
-        return AvroDeserializer(schema_registry_client,
-                                None,
-                                AlarmLocationSerde._from_dict_with_ctx,
-                                True)
-
-    @staticmethod
-    def serializer(schema_registry_client, conf=None):
-        """
-            Return an AlarmLocation serializer.
-
-            :param conf: Configuration
-            :param schema_registry_client: The Confluent Schema Registry client
-            :return: Serializer
-        """
-
-        subject_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmLocation.avsc")
-        subject_schema_str = subject_bytes.decode('utf-8')
-
-        return AvroSerializer(schema_registry_client,
-                              subject_schema_str,
-                              AlarmLocationSerde._to_dict_with_ctx,
-                              conf)
