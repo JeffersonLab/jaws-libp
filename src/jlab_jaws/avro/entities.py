@@ -371,11 +371,8 @@ class EffectiveRegistration:
     alarm_class: AlarmClass
     """The Alarm Class"""
 
-    actual: AlarmInstance
+    instance: AlarmInstance
     """The actual alarm registration instance"""
-
-    calculated: AlarmInstance
-    """The calculated alarm registration instance considering class defaults"""
 
 
 @dataclass
