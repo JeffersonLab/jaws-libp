@@ -1,16 +1,46 @@
 """
-    A module for Event Sourcing in Kafka
+   A Python module to facilitate Event Sourcing in Apache Kafka.
+
+   See Also:
+       - `Storing Data in Kafka <https://www.confluent.io/blog/okay-store-data-apache-kafka/>`_
+       - `Fowler on Event Sourcing <https://martinfowler.com/eaaDev/EventSourcing.html>`_
 """
 import logging
+from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from typing import List, Dict, Any, Callable
-
 from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING, Message
 from threading import Timer, Event
 
-from jlab_jaws.eventsource.listener import EventSourceListener
-
 logger = logging.getLogger(__name__)
+
+
+class EventSourceListener(ABC):
+    """
+        Listener interface for EventSourcing callbacks.
+    """
+    @abstractmethod
+    def on_highwater(self) -> None:
+        """
+            Callback for notification of highwater reached.
+        """
+        pass
+
+    @abstractmethod
+    def on_highwater_timeout(self) -> None:
+        """
+            Callback notification of timeout before highwater could be reached.
+        """
+        pass
+
+    @abstractmethod
+    def on_batch(self, msgs: Dict[Any, Message]) -> None:
+        """
+            Callback notification of a batch of messages received.
+
+            :param msgs: Batch of one or more messages, keyed by topic key object
+        """
+        pass
 
 
 def log_exception(e: Exception) -> None:
@@ -35,18 +65,18 @@ class EventSourceTable:
     """
 
     __slots__ = [
-                 '_config',
-                 '_consumer',
-                 '_listeners',
-                 '_end_reached',
-                 '_executor',
-                 '_high',
-                 '_highwater_signal',
-                 'is_highwater_timeout',
-                 '_low',
-                 '_run',
-                 '_state'
-                ]
+        '_config',
+        '_consumer',
+        '_listeners',
+        '_end_reached',
+        '_executor',
+        '_high',
+        '_highwater_signal',
+        'is_highwater_timeout',
+        '_low',
+        '_run',
+        '_state'
+    ]
 
     def __init__(self, config: Dict[str, Any]) -> None:
         """
@@ -244,3 +274,65 @@ class EventSourceTable:
             :return: The Event
         """
         return self._highwater_signal
+
+
+class CachedTable(EventSourceTable):
+    """
+        Adds an in-memory cache to an EventSourceTable.   Caller should be aware of size of topic being consumed and
+        this class should only be used for topics whose data will fit in caller's memory.
+    """
+
+    def __init__(self, config: Dict[str, Any]) -> None:
+        self._cache: Dict[Any, Message] = {}
+
+        super().__init__(config)
+
+        self._listener = _CacheListener(self)
+
+        self.add_listener(self._listener)
+
+    def update_cache(self, msgs: Dict[Any, Message]) -> None:
+        """
+            Merge updated set of unique messages with existing cache, replacing existing keys if any.
+
+            :param msgs: The new messages
+        """
+        for msg in msgs.values():
+            if msg.value() is None:
+                if msg.key() in self._cache:
+                    del self._cache[msg.key()]
+            else:
+                self._cache[msg.key()] = msg
+
+    def await_get(self, timeout_seconds) -> Dict[Any, Message]:
+        """
+            Synchronously get messages up to highwater mark.  Blocks with a timeout.
+
+            :param timeout_seconds: Seconds to wait for highwater to be reached
+            :raises TimeoutException: If highwater is not reached before timeout
+        """
+        self.await_highwater(timeout_seconds)
+        return self._cache
+
+
+class _CacheListener(EventSourceListener):
+    """
+        Internal listener implementation for the CacheTable
+    """
+
+    def __init__(self, parent: CachedTable) -> None:
+        """
+            Create a new _CacheListener with provided parent.
+
+            :param parent: The parent CachedTable
+        """
+        self._parent = parent
+
+    def on_highwater(self) -> None:
+        self._parent.highwater_signal.set()
+
+    def on_highwater_timeout(self) -> None:
+        pass
+
+    def on_batch(self, msgs: Dict[Any, Message]) -> None:
+        self._parent.update_cache(msgs)

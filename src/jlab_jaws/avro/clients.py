@@ -1,5 +1,5 @@
 """
-    Clients for interacting with JAWS entities.
+   A Python module containing clients for interacting with JAWS.
 """
 import logging
 import os
@@ -14,8 +14,7 @@ from tabulate import tabulate
 from jlab_jaws.avro.entities import UnionEncoding
 from jlab_jaws.avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
     StringSerde, Serde, EffectiveAlarmSerde, EffectiveActivationSerde, ClassSerde, ActivationSerde, InstanceSerde
-from jlab_jaws.eventsource.listener import EventSourceListener
-from jlab_jaws.eventsource.cached_table import CachedTable
+from jlab_jaws.eventsource import EventSourceListener, CachedTable
 
 logger = logging.getLogger(__name__)
 

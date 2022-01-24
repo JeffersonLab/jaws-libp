@@ -17,7 +17,7 @@ from jlab_jaws.avro.entities import SimpleProducer, AlarmInstance, AlarmActivati
     OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, ShelvedReason, \
     EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, AlarmClass, EffectiveRegistration, \
     EffectiveActivation, EffectiveAlarm, IntermediateMonolog, AlarmState, AlarmOverrideSet, ProcessorTransitions
-from jlab_jaws.serde.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
+from jlab_jaws.references.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
 def _unwrap_enum(value, enum_class):
