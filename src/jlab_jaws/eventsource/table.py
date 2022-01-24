@@ -6,13 +6,11 @@ from typing import List, Dict, Any
 
 from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING, Message
 from threading import Timer, Event
+
+from jlab_jaws.eventsource import TimeoutException
 from jlab_jaws.eventsource.listener import EventSourceListener
 
 logger = logging.getLogger(__name__)
-
-
-class TimeoutException(Exception):
-    pass
 
 
 class EventSourceTable:
@@ -193,3 +191,7 @@ class EventSourceTable:
                 self._end_reached = True
 
         consumer.assign(partitions)
+
+    @property
+    def highwater_signal(self):
+        return self._highwater_signal
