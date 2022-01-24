@@ -13,7 +13,7 @@ from confluent_kafka.schema_registry import SchemaRegistryClient
 from tabulate import tabulate
 
 from jlab_jaws.avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
-    StringSerde, Serde, EffectiveAlarmSerde
+    StringSerde, Serde, EffectiveAlarmSerde, EffectiveActivationSerde, ClassSerde, ActivationSerde, InstanceSerde
 from jlab_jaws.eventsource.listener import EventSourceListener
 from jlab_jaws.eventsource.cached_table import CachedTable
 
@@ -219,6 +219,15 @@ class JAWSProducer:
             logger.debug('Delivered')
 
 
+class ActivationConsumer(JAWSConsumer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = ActivationSerde(schema_registry_client)
+
+        super().__init__('alarm-activations', client_name, key_serde, value_serde)
+
+
 class CategoryConsumer(JAWSConsumer):
     def __init__(self, client_name: str):
         key_serde = StringSerde()
@@ -227,12 +236,102 @@ class CategoryConsumer(JAWSConsumer):
         super().__init__('alarm-categories', client_name, key_serde, value_serde)
 
 
+class ClassConsumer(JAWSConsumer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = ClassSerde(schema_registry_client)
+
+        super().__init__('alarm-classes', client_name, key_serde, value_serde)
+
+
+class EffectiveActivationConsumer(JAWSConsumer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = EffectiveActivationSerde(schema_registry_client)
+
+        super().__init__('effective-activations', client_name, key_serde, value_serde)
+
+
+class EffectiveAlarmConsumer(JAWSConsumer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = EffectiveAlarmSerde(schema_registry_client)
+
+        super().__init__('effective-alarms', client_name, key_serde, value_serde)
+
+
+class EffectiveRegistrationConsumer(JAWSConsumer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = EffectiveRegistrationSerde(schema_registry_client)
+
+        super().__init__('effective-registrations', client_name, key_serde, value_serde)
+
+
+class InstanceConsumer(JAWSConsumer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = InstanceSerde(schema_registry_client)
+
+        super().__init__('alarm-instances', client_name, key_serde, value_serde)
+
+
+class LocationConsumer(JAWSConsumer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = LocationSerde(schema_registry_client)
+
+        super().__init__('alarm-locations', client_name, key_serde, value_serde)
+
+
+class OverrideConsumer(JAWSConsumer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = OverrideSerde(schema_registry_client)
+
+        super().__init__('alarm-overrides', client_name, key_serde, value_serde)
+
+
+class ActivationProducer(JAWSProducer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = ActivationSerde(schema_registry_client)
+
+        super().__init__('alarm-activations', client_name, key_serde, value_serde)
+
+
 class CategoryProducer(JAWSProducer):
     def __init__(self, client_name: str):
         key_serde = StringSerde()
         value_serde = StringSerde()
 
         super().__init__('alarm-categories', client_name, key_serde, value_serde)
+
+
+class ClassProducer(JAWSProducer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = ClassSerde(schema_registry_client)
+
+        super().__init__('alarm-classes', client_name, key_serde, value_serde)
+
+
+class EffectiveActivationProducer(JAWSProducer):
+    def __init__(self, client_name: str):
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = EffectiveActivationSerde(schema_registry_client)
+
+        super().__init__('effective-activations', client_name, key_serde, value_serde)
 
 
 class EffectiveAlarmProducer(JAWSProducer):
@@ -257,7 +356,7 @@ class InstanceProducer(JAWSProducer):
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = LocationSerde(schema_registry_client)
+        value_serde = InstanceSerde(schema_registry_client)
 
         super().__init__('alarm-instances', client_name, key_serde, value_serde)
 
