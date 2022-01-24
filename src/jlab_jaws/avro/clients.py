@@ -10,12 +10,12 @@ from typing import Dict, Any
 
 from confluent_kafka import Message, SerializingProducer
 from confluent_kafka.schema_registry import SchemaRegistryClient
-from confluent_kafka.serialization import StringSerializer, StringDeserializer
 from tabulate import tabulate
 
 from jlab_jaws.avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
     StringSerde, Serde
-from jlab_jaws.eventsource import CachedTable, EventSourceListener, log_exception
+from jlab_jaws.eventsource.listener import EventSourceListener
+from jlab_jaws.eventsource.cached_table import CachedTable
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ class JAWSConsumer(CachedTable):
 
     def print_records_continuous(self):
         self.add_listener(MonitorListener())
-        self.start(log_exception)
+        self.start()
 
     def print_table(self, msg_to_list, head=[], nometa=False, filter_if=lambda key, value: True):
         records = self.get_records()
@@ -107,7 +107,7 @@ class JAWSConsumer(CachedTable):
                 print(key_json + '=' + value_json)
 
     def get_records(self) -> Dict[Any, Message]:
-        self.start(log_exception)
+        self.start()
         records = self.await_get(5)
         self.stop()
         return records
