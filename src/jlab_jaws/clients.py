@@ -267,7 +267,7 @@ class JAWSProducer:
 
     def send(self, key: Any, value: Any) -> None:
         """
-            Send a message to a Kafka topic.
+            Send a single message to a Kafka topic.
 
             :param key: The message key
             :param value: The message value
@@ -279,7 +279,7 @@ class JAWSProducer:
 
     def import_records(self, file: str, line_to_kv: Callable[[str], Tuple[str, str]]) -> None:
         """
-            Consumer for JAWS Override messages.
+            Send a batch of messages stored in a JAWS formatted file to a Kafka topic.
 
             :param file: Path to file to import
             :param line_to_kv: Function to convert line from file to key and value pair
@@ -315,6 +315,11 @@ class ActivationConsumer(JAWSConsumer):
         Consumer for JAWS Activation messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Consumer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = ActivationSerde(schema_registry_client)
@@ -327,6 +332,11 @@ class CategoryConsumer(JAWSConsumer):
         Consumer for JAWS Category messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Consumer.
+
+            :param client_name: The name of the client application
+        """
         key_serde = StringSerde()
         value_serde = StringSerde()
 
@@ -338,6 +348,11 @@ class ClassConsumer(JAWSConsumer):
         Consumer for JAWS Class messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Consumer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = ClassSerde(schema_registry_client)
@@ -350,6 +365,11 @@ class EffectiveActivationConsumer(JAWSConsumer):
         Consumer for JAWS EffectiveActivation messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Consumer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = EffectiveActivationSerde(schema_registry_client)
@@ -362,6 +382,11 @@ class EffectiveAlarmConsumer(JAWSConsumer):
         Consumer for JAWS EffectiveAlarm messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Consumer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = EffectiveAlarmSerde(schema_registry_client)
@@ -374,6 +399,11 @@ class EffectiveRegistrationConsumer(JAWSConsumer):
         Consumer for JAWS EffectiveRegistration messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Consumer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = EffectiveRegistrationSerde(schema_registry_client)
@@ -386,6 +416,11 @@ class InstanceConsumer(JAWSConsumer):
         Consumer for JAWS Instance messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Consumer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = InstanceSerde(schema_registry_client, UnionEncoding.DICT_WITH_TYPE)
@@ -398,6 +433,11 @@ class LocationConsumer(JAWSConsumer):
         Consumer for JAWS Location messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Consumer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = LocationSerde(schema_registry_client)
@@ -410,6 +450,11 @@ class OverrideConsumer(JAWSConsumer):
         Consumer for JAWS Override messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Consumer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = OverrideSerde(schema_registry_client)
@@ -422,6 +467,11 @@ class ActivationProducer(JAWSProducer):
         Producer for JAWS Activation messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Producer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = ActivationSerde(schema_registry_client)
@@ -434,6 +484,11 @@ class CategoryProducer(JAWSProducer):
         Producer for JAWS Category messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Producer.
+
+            :param client_name: The name of the client application
+        """
         key_serde = StringSerde()
         value_serde = StringSerde()
 
@@ -445,6 +500,11 @@ class ClassProducer(JAWSProducer):
         Producer for JAWS Class messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Producer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = ClassSerde(schema_registry_client)
@@ -457,6 +517,11 @@ class EffectiveActivationProducer(JAWSProducer):
         Producer for JAWS EffectiveActivation messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Producer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = EffectiveActivationSerde(schema_registry_client)
@@ -469,6 +534,11 @@ class EffectiveAlarmProducer(JAWSProducer):
         Producer for JAWS EffectiveAlarm messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Producer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = EffectiveAlarmSerde(schema_registry_client)
@@ -481,6 +551,11 @@ class EffectiveRegistrationProducer(JAWSProducer):
         Producer for JAWS EffectiveRegistration messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Producer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = EffectiveRegistrationSerde(schema_registry_client)
@@ -493,6 +568,11 @@ class InstanceProducer(JAWSProducer):
         Producer for JAWS Instance messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Producer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = InstanceSerde(schema_registry_client)
@@ -505,6 +585,11 @@ class LocationProducer(JAWSProducer):
         Producer for JAWS Location messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Producer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
         value_serde = LocationSerde(schema_registry_client)
@@ -517,6 +602,11 @@ class OverrideProducer(JAWSProducer):
         Producer for JAWS Override messages.
     """
     def __init__(self, client_name: str):
+        """
+            Create a new Producer.
+
+            :param client_name: The name of the client application
+        """
         schema_registry_client = get_registry_client()
         key_serde = OverrideKeySerde(schema_registry_client)
         value_serde = OverrideSerde(schema_registry_client)
