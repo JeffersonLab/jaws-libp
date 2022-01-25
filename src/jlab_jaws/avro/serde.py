@@ -11,13 +11,14 @@ from confluent_kafka.schema_registry import SchemaReference, Schema
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
 from confluent_kafka.serialization import StringSerializer, StringDeserializer
 
-from jlab_jaws.avro.entities import AlarmLocation, AlarmPriority
-from jlab_jaws.avro.entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
-    EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride, \
-    OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, ShelvedReason, \
-    EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, AlarmClass, EffectiveRegistration, \
-    EffectiveActivation, EffectiveAlarm, IntermediateMonolog, AlarmState, AlarmOverrideSet, ProcessorTransitions
-from jlab_jaws.references.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
+from ..entities import AlarmLocation, AlarmPriority
+from ..entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
+    EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
+    OnDelayedOverride, OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, \
+    ShelvedReason, EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, AlarmClass, \
+    EffectiveRegistration, EffectiveActivation, EffectiveAlarm, IntermediateMonolog, AlarmState, AlarmOverrideSet, \
+    ProcessorTransitions
+from ..references.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
 def _unwrap_enum(value, enum_class):

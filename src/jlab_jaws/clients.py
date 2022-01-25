@@ -11,10 +11,10 @@ from typing import Dict, Any, List, Callable
 from confluent_kafka import Message, SerializingProducer
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from tabulate import tabulate
-from jlab_jaws.avro.entities import UnionEncoding
-from jlab_jaws.avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
+from .entities import UnionEncoding
+from .avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
     StringSerde, Serde, EffectiveAlarmSerde, EffectiveActivationSerde, ClassSerde, ActivationSerde, InstanceSerde
-from jlab_jaws.eventsource import EventSourceListener, CachedTable
+from .eventsource import EventSourceListener, CachedTable
 
 logger = logging.getLogger(__name__)
 

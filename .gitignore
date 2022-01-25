@@ -2,6 +2,7 @@
 /build/
 /.idea/
 /.venv/
+/venv/
 /docsrc/source/_autosummary/
 /.idea_venv/
 /.venv_dev/
