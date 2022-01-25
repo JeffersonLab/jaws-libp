@@ -3,14 +3,12 @@
 """
 import json
 import pkgutil
-from abc import abstractmethod, ABC
-
 import fastavro
 
+from abc import abstractmethod, ABC
 from confluent_kafka.schema_registry import SchemaReference, Schema
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
 from confluent_kafka.serialization import StringSerializer, StringDeserializer
-
 from ..entities import AlarmLocation, AlarmPriority
 from ..entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \

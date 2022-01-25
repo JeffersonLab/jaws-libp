@@ -115,7 +115,7 @@ class JAWSConsumer(CachedTable):
             :param msg_to_list: Callback to convert Message to list of strings needed to create a table row
             :param nometa: If True, exclude timestamp, producer app name, host, and username from table
             :param filter_if: Callback applied to each Message to indicate if Message should be included
-            :param timeout_seconds The number of seconds to wait before giving up
+            :param timeout_seconds: The number of seconds to wait before giving up
             :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
         """
         if head is None:
@@ -143,7 +143,7 @@ class JAWSConsumer(CachedTable):
             records in the JAWS file format to standard output.
 
             :param filter_if: Callback applied to each Message to indicate if Message should be included
-            :param timeout_seconds The number of seconds to wait before giving up
+            :param timeout_seconds: The number of seconds to wait before giving up
             :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
         """
         records = self.get_records(timeout_seconds)
