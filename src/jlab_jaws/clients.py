@@ -7,8 +7,8 @@ import signal
 import time
 
 from psutil import Process
-from typing import Dict, Any, List, Callable
-from confluent_kafka import Message, SerializingProducer
+from typing import Dict, Any, List, Callable, Tuple
+from confluent_kafka import Message, SerializingProducer, KafkaError
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from tabulate import tabulate
 from .entities import UnionEncoding
@@ -196,7 +196,8 @@ class JAWSConsumer(CachedTable):
         else:
             self.print_table(head, msg_to_list, nometa, filter_if)
 
-    def __get_row(self, msg: Message, msg_to_list, filter_if, nometa: bool):
+    def __get_row(self, msg: Message, msg_to_list: Callable[[Message], List[str]],
+                  filter_if: Callable[[Any, Any], bool], nometa: bool):
         timestamp = msg.timestamp()
         headers = msg.headers()
 
@@ -212,7 +213,7 @@ class JAWSConsumer(CachedTable):
         return row
 
     @staticmethod
-    def __get_row_header(headers, timestamp):
+    def __get_row_header(headers: List[Tuple[str, str]], timestamp: Tuple[int, int]) -> List[str]:
         ts = time.ctime(timestamp[1] / 1000)
 
         user = ''
@@ -247,7 +248,7 @@ class JAWSProducer:
         This producer also knows how to import records from a file using the JAWS expected file format.
     """
 
-    def __init__(self, topic: str, client_name: str, key_serde: Serde, value_serde: Serde):
+    def __init__(self, topic: str, client_name: str, key_serde: Serde, value_serde: Serde) -> None:
         set_log_level_from_env()
 
         self._topic = topic
@@ -264,13 +265,25 @@ class JAWSProducer:
         self._producer = SerializingProducer(producer_conf)
         self._headers = self.__get_headers()
 
-    def send(self, key, value):
+    def send(self, key: Any, value: Any) -> None:
+        """
+            Send a message to a Kafka topic.
+
+            :param key: The message key
+            :param value: The message value
+        """
         logger.debug("{}={}".format(key, value))
         self._producer.produce(topic=self._topic, headers=self._headers, key=key, value=value,
                                on_delivery=self.__on_delivery)
         self._producer.flush()
 
-    def import_records(self, file, line_to_kv):
+    def import_records(self, file: str, line_to_kv: Callable[[str], Tuple[str, str]]) -> None:
+        """
+            Consumer for JAWS Override messages.
+
+            :param file: Path to file to import
+            :param line_to_kv: Function to convert line from file to key and value pair
+        """
         logger.debug("Loading file", file)
         handle = open(file, 'r')
         lines = handle.readlines()
@@ -284,13 +297,13 @@ class JAWSProducer:
 
         self._producer.flush()
 
-    def __get_headers(self):
+    def __get_headers(self) -> List[Tuple[str, str]]:
         return [('user', Process().username()),
                 ('producer', self._client_name),
                 ('host', os.uname().nodename)]
 
     @staticmethod
-    def __on_delivery(err, msg):
+    def __on_delivery(err: KafkaError, msg: Message) -> None:
         if err is not None:
             logger.error('Failed: {}'.format(err))
         else:
@@ -298,6 +311,9 @@ class JAWSProducer:
 
 
 class ActivationConsumer(JAWSConsumer):
+    """
+        Consumer for JAWS Activation messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -307,6 +323,9 @@ class ActivationConsumer(JAWSConsumer):
 
 
 class CategoryConsumer(JAWSConsumer):
+    """
+        Consumer for JAWS Category messages.
+    """
     def __init__(self, client_name: str):
         key_serde = StringSerde()
         value_serde = StringSerde()
@@ -315,6 +334,9 @@ class CategoryConsumer(JAWSConsumer):
 
 
 class ClassConsumer(JAWSConsumer):
+    """
+        Consumer for JAWS Class messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -324,6 +346,9 @@ class ClassConsumer(JAWSConsumer):
 
 
 class EffectiveActivationConsumer(JAWSConsumer):
+    """
+        Consumer for JAWS EffectiveActivation messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -333,6 +358,9 @@ class EffectiveActivationConsumer(JAWSConsumer):
 
 
 class EffectiveAlarmConsumer(JAWSConsumer):
+    """
+        Consumer for JAWS EffectiveAlarm messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -342,6 +370,9 @@ class EffectiveAlarmConsumer(JAWSConsumer):
 
 
 class EffectiveRegistrationConsumer(JAWSConsumer):
+    """
+        Consumer for JAWS EffectiveRegistration messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -351,6 +382,9 @@ class EffectiveRegistrationConsumer(JAWSConsumer):
 
 
 class InstanceConsumer(JAWSConsumer):
+    """
+        Consumer for JAWS Instance messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -360,6 +394,9 @@ class InstanceConsumer(JAWSConsumer):
 
 
 class LocationConsumer(JAWSConsumer):
+    """
+        Consumer for JAWS Location messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -369,6 +406,9 @@ class LocationConsumer(JAWSConsumer):
 
 
 class OverrideConsumer(JAWSConsumer):
+    """
+        Consumer for JAWS Override messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -378,6 +418,9 @@ class OverrideConsumer(JAWSConsumer):
 
 
 class ActivationProducer(JAWSProducer):
+    """
+        Producer for JAWS Activation messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -387,6 +430,9 @@ class ActivationProducer(JAWSProducer):
 
 
 class CategoryProducer(JAWSProducer):
+    """
+        Producer for JAWS Category messages.
+    """
     def __init__(self, client_name: str):
         key_serde = StringSerde()
         value_serde = StringSerde()
@@ -395,6 +441,9 @@ class CategoryProducer(JAWSProducer):
 
 
 class ClassProducer(JAWSProducer):
+    """
+        Producer for JAWS Class messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -404,6 +453,9 @@ class ClassProducer(JAWSProducer):
 
 
 class EffectiveActivationProducer(JAWSProducer):
+    """
+        Producer for JAWS EffectiveActivation messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -413,6 +465,9 @@ class EffectiveActivationProducer(JAWSProducer):
 
 
 class EffectiveAlarmProducer(JAWSProducer):
+    """
+        Producer for JAWS EffectiveAlarm messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -422,6 +477,9 @@ class EffectiveAlarmProducer(JAWSProducer):
 
 
 class EffectiveRegistrationProducer(JAWSProducer):
+    """
+        Producer for JAWS EffectiveRegistration messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -431,6 +489,9 @@ class EffectiveRegistrationProducer(JAWSProducer):
 
 
 class InstanceProducer(JAWSProducer):
+    """
+        Producer for JAWS Instance messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -440,6 +501,9 @@ class InstanceProducer(JAWSProducer):
 
 
 class LocationProducer(JAWSProducer):
+    """
+        Producer for JAWS Location messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
@@ -449,6 +513,9 @@ class LocationProducer(JAWSProducer):
 
 
 class OverrideProducer(JAWSProducer):
+    """
+        Producer for JAWS Override messages.
+    """
     def __init__(self, client_name: str):
         schema_registry_client = get_registry_client()
         key_serde = OverrideKeySerde(schema_registry_client)
