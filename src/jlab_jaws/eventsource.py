@@ -1,5 +1,5 @@
 """
-   A Python module to facilitate Event Sourcing in Apache Kafka.
+   Event Sourcing database abstraction layer for Apache Kafka.
 
    See Also:
        - `Storing Data in Kafka <https://www.confluent.io/blog/okay-store-data-apache-kafka/>`_

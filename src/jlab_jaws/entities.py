@@ -1,5 +1,5 @@
 """
-    Python entities corresponding to AVRO schemas.
+    Entities corresponding to Kafka messages defined with AVRO schemas for JAWS.
 """
 
 from dataclasses import dataclass

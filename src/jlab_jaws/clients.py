@@ -1,5 +1,5 @@
 """
-   A Python module containing clients for interacting with JAWS.
+   Clients for producing and consuming messages on the various Kafka topics in JAWS.
 """
 import logging
 import os
