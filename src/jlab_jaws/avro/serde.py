@@ -22,16 +22,16 @@ from ..entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, Simp
 from ..references.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
-def _unwrap_enum(value: Any, enum_class: Enum) -> str:
+def _unwrap_enum(value: [None, Tuple[str, str], str], enum_class: Enum) -> str:
     """
-    When instantiating classes using from_dict often a variable intended to be an enum is encountered that
-    may actually be a String, a Tuple, or an Enum so this function attempts to convert to an Enum if needed.
+        When instantiating classes using from_dict often a variable intended to be an enum is encountered that
+        may actually be a String, a Tuple, or an Enum so this function attempts to convert to an Enum if needed.
 
-    A tuple is allowed due to fastavro supporting tuples for complex types.
+        A tuple is allowed due to fastavro supporting tuples for complex types.
 
-    :param value: The value to massage into the correct type
-    :param enum_class: Enum class to instantiate
-    :return: A value likely as an Enum or None
+        :param value: The value to massage into the correct type
+        :param enum_class: Enum class to instantiate
+        :return: A value likely as an Enum or None
     """
 
     if value is None:
@@ -113,15 +113,17 @@ class RegistryAvroSerde(Serde):
     """
         AVRO Serde which relies on Confluent Schema Registry.
     """
-    def __init__(self, schema_registry_client: SchemaRegistryClient, schema: Schema):
+    def __init__(self, schema_registry_client: SchemaRegistryClient, schema: Schema, union_encoding: UnionEncoding):
         """
             Creates a new RegistryAvroSerde.
 
             :param schema_registry_client: The SchemaRegistryClient
             :param schema: The Schema
+            :param union_encoding: The union encoding to use
         """
         self._schema_registry_client = schema_registry_client
         self._schema = schema
+        self._union_encoding = union_encoding
 
     @abstractmethod
     def from_dict(self, data: Dict) -> Any:
@@ -196,20 +198,21 @@ class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
     """
         AVRO Registry Serde with Schema References support.
     """
-    def __init__(self, schema_registry_client: SchemaRegistryClient, schema: Schema, references: List[SchemaReference],
-                 named_schemas: Dict[str, Any]):
+    def __init__(self, schema_registry_client: SchemaRegistryClient, schema: Schema, union_encoding: UnionEncoding,
+                 references: List[SchemaReference], named_schemas: Dict[str, Any]):
         """
             Create a new RegistryAvroWithReferencesSerde.
 
             :param schema_registry_client: The SchemaRegistryClient
             :param schema: The entity Schema
+            :param union_encoding: The union encoding to use
             :param references: List of SchemaReference
             :param named_schemas: Dict of named schemas
         """
         self._references = references
         self._named_schemas = named_schemas
 
-        super().__init__(schema_registry_client, schema)
+        super().__init__(schema_registry_client, schema, union_encoding)
 
     @abstractmethod
     def from_dict(self, data):
@@ -277,9 +280,9 @@ class ClassSerde(RegistryAvroWithReferencesSerde):
 
         schema = Schema(schema_str, "AVRO", references)
 
-        super().__init__(schema_registry_client, schema, references, named_schemas)
+        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, references, named_schemas)
 
-    def to_dict(self, data: AlarmClass) -> Dict[str, str]:
+    def to_dict(self, data: AlarmClass) -> Union[None, Dict[str, str]]:
         """
             Converts an AlarmClass to a dict.
 
@@ -341,7 +344,7 @@ class LocationSerde(RegistryAvroSerde):
 
         schema = Schema(schema_str, "AVRO", [])
 
-        super().__init__(schema_registry_client, schema)
+        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE)
 
     def to_dict(self, data: AlarmLocation) -> Dict[str, str]:
         """
@@ -369,22 +372,20 @@ class ActivationSerde(RegistryAvroSerde):
         Provides AlarmActivationUnion serde utilities
     """
 
-    def __init__(self, schema_registry_client, union_encoding=UnionEncoding.TUPLE):
+    def __init__(self, schema_registry_client: SchemaRegistryClient,
+                 union_encoding: UnionEncoding = UnionEncoding.TUPLE):
         """
             Create a new ActivationSerde.
 
             :param schema_registry_client: The SchemaRegistryClient
             :param union_encoding: The union encoding to use
         """
-
-        self._union_encoding = union_encoding
-
         schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmActivationUnion.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
 
-        super().__init__(schema_registry_client, schema)
+        super().__init__(schema_registry_client, schema, union_encoding)
 
     def to_dict(self, data: AlarmActivationUnion) -> Dict[str, Union[Tuple[str, Dict[str, str]],
                                                                      Dict[str, str],
@@ -455,23 +456,27 @@ class InstanceSerde(RegistryAvroSerde):
         Provides AlarmInstance serde utilities
     """
 
-    def __init__(self, schema_registry_client, union_encoding=UnionEncoding.TUPLE):
+    def __init__(self, schema_registry_client: SchemaRegistryClient,
+                 union_encoding: UnionEncoding = UnionEncoding.TUPLE):
+        """
+            Create a new InstanceSerde.
 
-        self._union_encoding = union_encoding
-
+            :param schema_registry_client: The SchemaRegistryClient
+            :param union_encoding: The union encoding to use
+        """
         schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmInstance.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
 
-        super().__init__(schema_registry_client, schema)
+        super().__init__(schema_registry_client, schema, union_encoding)
 
-    def to_dict(self, data):
+    def to_dict(self, data: AlarmInstance) -> Dict[str, Union[str, Dict[str, Any]]]:
         """
-        Converts an AlarmInstance to a dict.
+            Converts an AlarmInstance to a dict.
 
-        :param data: The AlarmInstance
-        :return: A dict
+            :param data: The AlarmInstance
+            :return: A dict
         """
 
         if data is None:
@@ -499,14 +504,14 @@ class InstanceSerde(RegistryAvroSerde):
             "screencommand": data.screen_command
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, Union[str, Dict[str, Any]]]) -> Union[None, AlarmInstance]:
         """
-        Converts a dict to an AlarmInstance.
+            Converts a dict to an AlarmInstance.
 
-        Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
+            Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
 
-        :param data: The dict
-        :return: The AlarmInstance
+            :param data: The dict
+            :return: The AlarmInstance
         """
 
         if data is None:
@@ -535,7 +540,13 @@ class OverrideSetSerde(RegistryAvroWithReferencesSerde):
         Provides OverrideSet serde utilities
     """
 
-    def __init__(self, schema_registry_client):
+    def __init__(self, schema_registry_client: SchemaRegistryClient) -> None:
+        """
+            Create a new OverrideSetSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+        """
+
         disabled_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/DisabledOverride.avsc")
         disabled_schema_str = disabled_bytes.decode('utf-8')
 
@@ -595,14 +606,14 @@ class OverrideSetSerde(RegistryAvroWithReferencesSerde):
 
         schema = Schema(schema_str, "AVRO", references)
 
-        super().__init__(schema_registry_client, schema, references, named_schemas)
+        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, references, named_schemas)
 
-    def to_dict(self, data):
+    def to_dict(self, data: AlarmOverrideSet) -> Dict[str, Union[None, Dict[str, str]]]:
         """
-        Converts AlarmOverrideSet to a dict
+            Converts AlarmOverrideSet to a dict.
 
-        :param data: The AlarmOverrideSet
-        :return: A dict
+            :param data: The AlarmOverrideSet
+            :return: A dict
         """
         return {
             "disabled": {"comments": data.disabled.comments} if data.disabled is not None else None,
@@ -617,12 +628,12 @@ class OverrideSetSerde(RegistryAvroWithReferencesSerde):
                         "reason": data.shelved.reason.name} if data.shelved is not None else None
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, Union[None, Dict[str, str]]]) -> AlarmOverrideSet:
         """
-        Converts a dict to AlarmOverrideSet.
+            Converts a dict to AlarmOverrideSet.
 
-        :param data: The dict
-        :return: The AlarmOverrideSet
+            :param data: The dict
+            :return: The AlarmOverrideSet
         """
         return AlarmOverrideSet(DisabledOverride(data['disabled'][1]['comments'])
                                 if data.get('disabled') is not None else None,
@@ -648,7 +659,12 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
         Provides EffectiveRegistration serde utilities
     """
 
-    def __init__(self, schema_registry_client):
+    def __init__(self, schema_registry_client: SchemaRegistryClient) -> None:
+        """
+            Create a new EffectiveRegistrationSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+        """
         self._class_serde = ClassSerde(schema_registry_client)
         self._instance_serde = InstanceSerde(schema_registry_client)
 
@@ -676,26 +692,26 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
 
         schema = Schema(schema_str, "AVRO", references)
 
-        super().__init__(schema_registry_client, schema, references, named_schemas)
+        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, references, named_schemas)
 
-    def to_dict(self, data):
+    def to_dict(self, data: EffectiveRegistration) -> Dict[str, Any]:
         """
-        Converts EffectiveRegistration to a dict.
+            Converts EffectiveRegistration to a dict.
 
-        :param data: The EffectiveRegistration
-        :return: A dict
+            :param data: The EffectiveRegistration
+            :return: A dict
         """
         return {
             "class": self._class_serde.to_dict(data.alarm_class),
             "instance": self._instance_serde.to_dict(data.instance)
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, Any]) -> EffectiveRegistration:
         """
-        Converts a dict to EffectiveRegistration.
+            Converts a dict to EffectiveRegistration.
 
-        :param data: The dict
-        :return: The EffectiveRegistration
+            :param data: The dict
+            :return: The EffectiveRegistration
         """
         return EffectiveRegistration(
             self._class_serde.from_dict(data['class'][1]) if data.get('class') is not None else None,
@@ -708,7 +724,12 @@ class EffectiveActivationSerde(RegistryAvroWithReferencesSerde):
         Provides EffectiveActivation serde utilities
     """
 
-    def __init__(self, schema_registry_client):
+    def __init__(self, schema_registry_client: SchemaRegistryClient) -> None:
+        """
+            Create a new EffectiveActivationSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+        """
         self._activation_serde = ActivationSerde(schema_registry_client)
         self._override_serde = OverrideSetSerde(schema_registry_client)
 
@@ -743,14 +764,14 @@ class EffectiveActivationSerde(RegistryAvroWithReferencesSerde):
 
         schema = Schema(schema_str, "AVRO", references)
 
-        super().__init__(schema_registry_client, schema, references, named_schemas)
+        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, references, named_schemas)
 
-    def to_dict(self, data):
+    def to_dict(self, data: EffectiveActivation) -> Dict[str, Any]:
         """
-        Converts EffectiveActivation to a dict.
+            Converts EffectiveActivation to a dict.
 
-        :param data: The EffectiveActivation
-        :return: A dict
+            :param data: The EffectiveActivation
+            :return: A dict
         """
         return {
             "actual": self._activation_serde.to_dict(data.actual),
@@ -758,12 +779,12 @@ class EffectiveActivationSerde(RegistryAvroWithReferencesSerde):
             "state": data.state.name
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, Any]) -> EffectiveActivation:
         """
-        Converts a dict to EffectiveActivation.
+            Converts a dict to EffectiveActivation.
 
-        :param data: The dict
-        :return: The EffectiveActivation
+            :param data: The dict
+            :return: The EffectiveActivation
         """
         return EffectiveActivation(
             self._activation_serde.from_dict(data['actual'][1])
@@ -777,7 +798,12 @@ class EffectiveAlarmSerde(RegistryAvroWithReferencesSerde):
         Provides EffectiveAlarm serde utilities
     """
 
-    def __init__(self, schema_registry_client):
+    def __init__(self, schema_registry_client: SchemaRegistryClient) -> None:
+        """
+            Create a new EffectiveAlarmSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+        """
         self._effective_registration_serde = EffectiveRegistrationSerde(schema_registry_client)
         self._effective_activation_serde = EffectiveActivationSerde(schema_registry_client)
 
@@ -808,41 +834,50 @@ class EffectiveAlarmSerde(RegistryAvroWithReferencesSerde):
 
         schema = Schema(schema_str, "AVRO", references)
 
-        super().__init__(schema_registry_client, schema, references, named_schemas)
+        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, references, named_schemas)
 
-    def to_dict(self, data):
+    def to_dict(self, data: EffectiveAlarm) -> Dict[str, Any]:
         """
-        Converts EffectiveAlarm to a dict.
+            Converts EffectiveAlarm to a dict.
 
-        :param data: The EffectiveAlarm
-        :return: A dict
+            :param data: The EffectiveAlarm
+            :return: A dict
         """
         return {
             "registration": self._effective_registration_serde.to_dict(data.registration),
             "activation": self._effective_activation_serde.to_dict(data.activation)
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, Any]) -> EffectiveAlarm:
         """
-        Converts a dict to EffectiveAlarm.
+            Converts a dict to EffectiveAlarm.
 
-        :param data: The dict
-        :return: The EffectiveAlarm
+            :param data: The dict
+            :return: The EffectiveAlarm
         """
         return EffectiveAlarm(self._effective_registration_serde.from_dict(data['registration']),
                               self._effective_activation_serde.from_dict(data['activation']))
 
 
 class OverrideKeySerde(RegistryAvroSerde):
-    def __init__(self, schema_registry_client):
+    """
+        Provides OverrideKey serde utilities
+    """
+
+    def __init__(self, schema_registry_client: SchemaRegistryClient) -> None:
+        """
+            Create a new OverrideKeySerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+        """
         schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideKey.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
 
-        super().__init__(schema_registry_client, schema)
+        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE)
 
-    def to_dict(self, data):
+    def to_dict(self, data: AlarmOverrideKey) -> Dict[str, str]:
         """
         Converts an AlarmOverrideKey to a dict.
 
@@ -854,7 +889,7 @@ class OverrideKeySerde(RegistryAvroSerde):
             "type": data.type.name
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, Union[Tuple, str]]) -> AlarmOverrideKey:
         """
         Converts a dict to an AlarmOverrideKey.
 
@@ -865,7 +900,18 @@ class OverrideKeySerde(RegistryAvroSerde):
 
 
 class OverrideSerde(RegistryAvroWithReferencesSerde):
-    def __init__(self, schema_registry_client, union_encoding=UnionEncoding.TUPLE):
+    """
+        Provides Override serde utilities
+    """
+
+    def __init__(self, schema_registry_client: SchemaRegistryClient,
+                 union_encoding: UnionEncoding = UnionEncoding.TUPLE):
+        """
+            Create a new OverrideSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+            :param union_encoding: The union encoding to use
+        """
 
         self._union_encoding = union_encoding
 
@@ -928,14 +974,14 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
 
         schema = Schema(schema_str, "AVRO", references)
 
-        super().__init__(schema_registry_client, schema, references, named_schemas)
+        super().__init__(schema_registry_client, schema, union_encoding, references, named_schemas)
 
-    def to_dict(self, data):
+    def to_dict(self, data: AlarmOverrideUnion) -> Dict[str, Any]:
         """
-        Converts an AlarmOverrideUnion to a dict.
+            Converts an AlarmOverrideUnion to a dict.
 
-        :param data: The AlarmOverrideUnion
-        :return: A dict
+            :param data: The AlarmOverrideUnion
+            :return: A dict
         """
         if isinstance(data.msg, DisabledOverride):
             uniontype = "org.jlab.jaws.entity.DisabledOverride"
@@ -970,16 +1016,17 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
             "msg": union
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, Any]) -> AlarmOverrideUnion:
         """
-        Converts a dict to an AlarmOverrideUnion.
+            Converts a dict to an AlarmOverrideUnion.
 
-        Note: Both UnionEncoding.TUPLE and UnionEncoding.DICT_WITH_TYPE are supported,
-        but UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported at this time
-        because I'm lazy and not going to try to guess what type is in your union.
+            Note: Both UnionEncoding.TUPLE and UnionEncoding.DICT_WITH_TYPE are supported,
+            but UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported at this time
+            because I'm lazy and not going to try to guess what type is in your union (and it's not always possible
+            in some scenarios).
 
-        :param data: The dict (or maybe it's a duck)
-        :return: The AlarmOverrideUnion
+            :param data: The dict
+            :return: The AlarmOverrideUnion
         """
         unionobj = data['msg']
 
@@ -1012,20 +1059,25 @@ class ProcessorTransitionsSerde(RegistryAvroSerde):
         Provides ProcessorTransitions serde utilities
     """
 
-    def __init__(self, schema_registry_client):
+    def __init__(self, schema_registry_client: SchemaRegistryClient):
+        """
+            Create a new ProcessorTransitionSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+        """
         schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ProcessorTransition.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
 
-        super().__init__(schema_registry_client, schema)
+        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE)
 
-    def to_dict(self, data):
+    def to_dict(self, data: ProcessorTransitions) -> Dict[str, bool]:
         """
-        Converts ProcessorTransitions to a dict
+            Converts ProcessorTransitions to a dict
 
-        :param data: The ProcessorTransitions
-        :return: A dict
+            :param data: The ProcessorTransitions
+            :return: A dict
         """
         return {
             "transitionToActive": data.transitionToActive,
@@ -1038,7 +1090,7 @@ class ProcessorTransitionsSerde(RegistryAvroSerde):
             "offdelaying": data.offdelaying
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, bool]) -> ProcessorTransitions:
         """
         Converts a dict to ProcessorTransitions.
 
@@ -1060,7 +1112,15 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
         Provides IntermediateMonolog serde utilities
     """
 
-    def __init__(self, schema_registry_client):
+    def __init__(self, schema_registry_client: SchemaRegistryClient,
+                 union_encoding: UnionEncoding = UnionEncoding.DICT_WITH_TYPE):
+        """
+            Create a new IntermediateMonologSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+            :param union_encoding: The union encoding to use
+        """
+        self._union_encoding = union_encoding
         self._effective_registration_serde = EffectiveRegistrationSerde(schema_registry_client)
         self._effective_activation_serde = EffectiveActivationSerde(schema_registry_client)
         self._processor_transition_serde = ProcessorTransitionsSerde(schema_registry_client)
@@ -1100,14 +1160,14 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
 
         schema = Schema(schema_str, "AVRO", references)
 
-        super().__init__(schema_registry_client, schema, references, named_schemas)
+        super().__init__(schema_registry_client, schema, union_encoding, references, named_schemas)
 
-    def to_dict(self, data):
+    def to_dict(self, data: IntermediateMonolog) -> Dict[str, Any]:
         """
-        Converts IntermediateMonolog to a dict.
+            Converts IntermediateMonolog to a dict.
 
-        :param data: The IntermediateMonolog
-        :return: A dict
+            :param data: The IntermediateMonolog
+            :return: A dict
         """
         return {
             "registration": self._effective_registration_serde.to_dict(data.registration),
@@ -1115,12 +1175,12 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
             "transitions": self._processor_transition_serde.to_dict(data.transitions)
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, Any]) -> IntermediateMonolog:
         """
-        Converts a dict to IntermediateMonolog.
+            Converts a dict to IntermediateMonolog.
 
-        :param data: The dict
-        :return: The IntermediateMonolog
+            :param data: The dict
+            :return: The IntermediateMonolog
         """
         return IntermediateMonolog(self._effective_registration_serde.from_dict(data['registration']),
                                    self._effective_activation_serde.from_dict(data['activation']),
