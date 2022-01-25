@@ -5,10 +5,11 @@ import json
 import pkgutil
 import fastavro
 
+from typing import Any, Dict, List
 from abc import abstractmethod, ABC
-from confluent_kafka.schema_registry import SchemaReference, Schema
+from confluent_kafka.schema_registry import SchemaReference, Schema, SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
-from confluent_kafka.serialization import StringSerializer, StringDeserializer
+from confluent_kafka.serialization import StringSerializer, StringDeserializer, Serializer, Deserializer
 from ..entities import AlarmLocation, AlarmPriority
 from ..entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
@@ -43,28 +44,60 @@ def _unwrap_enum(value, enum_class):
 
 
 class Serde(ABC):
+    """
+        Serialization and Deserialization base class (interface).   Converts to/from bytes (AVRO) to JAWS entities
+        (classes and strings).
+
+        Internally relies on the Confluent Kafka Python API, which converts bytes to/from Dicts, Tuples, or primitive
+        types (which one is entity specific).  The Confluent lib itself relies on the fastavro lib.
+    """
     @abstractmethod
-    def from_json(self, data):
+    def from_json(self, data: str) -> Any:
+        """
+            Convert an entity to a JSON string.
+
+            :param data: A JSON string
+            :return: An entity class or string
+        """
         pass
 
     @abstractmethod
-    def to_json(self, data):
+    def to_json(self, data: Any) -> str:
+        """
+            Convert a JSON string to an entity.
+
+            :param data: An entity class or string
+            :return: A JSON string
+        """
         pass
 
     @abstractmethod
-    def serializer(self):
+    def serializer(self) -> Serializer:
+        """
+            Get the serializer.
+
+            :return: The Serializer
+        """
         pass
 
     @abstractmethod
-    def deserializer(self):
+    def deserializer(self) -> Deserializer:
+        """
+            Get the deserializer.
+
+            :return: The Deserializer
+        """
         pass
 
 
 class StringSerde(Serde):
-    def from_json(self, data):
+    """
+        String Serde.
+    """
+    def from_json(self, data: str) -> str:
         return data
 
-    def to_json(self, data):
+    def to_json(self, data: str) -> str:
         return data
 
     def serializer(self):
@@ -75,57 +108,56 @@ class StringSerde(Serde):
 
 
 class RegistryAvroSerde(Serde):
-    def __init__(self, schema_registry_client, schema):
+    """
+        AVRO Serde which relies on Confluent Schema Registry.
+    """
+    def __init__(self, schema_registry_client: SchemaRegistryClient, schema: Schema):
+        """
+            Creates a new RegistryAvroSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+            :param schema: The Schema
+        """
         self._schema_registry_client = schema_registry_client
         self._schema = schema
 
     @abstractmethod
-    def from_dict(self, data):
+    def from_dict(self, data: Dict) -> Any:
         pass
 
-    def _from_dict_with_ctx(self, data, ctx):
+    def _from_dict_with_ctx(self, data: Dict, ctx) -> Any:
         return self.from_dict(data)
 
     @abstractmethod
-    def to_dict(self, data):
+    def to_dict(self, data: Any) -> Dict:
         pass
 
-    def _to_dict_with_ctx(self, data, ctx):
+    def _to_dict_with_ctx(self, data: Any, ctx) -> Dict:
         return self.to_dict(data)
 
-    def from_json(self, data):
+    def from_json(self, data: str) -> Any:
         pass
 
-    def to_json(self, data):
+    def to_json(self, data: Any) -> str:
         sorteddata = dict(sorted(self.to_dict(data).items()))
         jsondata = json.dumps(sorteddata)
         return jsondata
 
     def get_schema(self) -> Schema:
+        """
+            Get Schema.
+
+            :return: The Schema
+        """
         return self._schema
 
-    def get_schema_str(self) -> str:
-        return self._schema_str
-
-    def serializer(self):
-        """
-            Return a serializer.
-
-            :return: Serializer
-        """
-
+    def serializer(self) -> Serializer:
         return AvroSerializer(self._schema_registry_client,
                               self._schema.schema_str,
                               self._to_dict_with_ctx,
                               None)
 
-    def deserializer(self):
-        """
-            Return an AlarmActivationUnion deserializer.
-
-            :return: Deserializer
-        """
-
+    def deserializer(self) -> Deserializer:
         return AvroDeserializer(self._schema_registry_client,
                                 None,
                                 self._from_dict_with_ctx,
@@ -133,7 +165,19 @@ class RegistryAvroSerde(Serde):
 
 
 class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
-    def __init__(self, schema_registry_client, schema, references, named_schemas):
+    """
+        AVRO Registry Serde with Schema References support.
+    """
+    def __init__(self, schema_registry_client: SchemaRegistryClient, schema: Schema, references: List[SchemaReference],
+                 named_schemas: Dict[str, Any]):
+        """
+            Create a new RegistryAvroWithReferencesSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+            :param schema: The entity Schema
+            :param references: List of SchemaReference
+            :param named_schemas: Dict of named schemas
+        """
         self._references = references
         self._named_schemas = named_schemas
 
@@ -154,11 +198,6 @@ class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
         return self._named_schemas
 
     def serializer(self):
-        """
-                Return a serializer.
-
-                :return: Serializer
-            """
         return AvroSerializerWithReferences(self._schema_registry_client,
                                             self.get_schema(),
                                             self._to_dict_with_ctx,
@@ -166,11 +205,6 @@ class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
                                             self.named_schemas())
 
     def deserializer(self):
-        """
-                Return a deserializer.
-
-                :return: Deserializer
-            """
         return AvroDeserializerWithReferences(self._schema_registry_client,
                                               None,
                                               self._from_dict_with_ctx,
@@ -183,8 +217,12 @@ class ClassSerde(RegistryAvroWithReferencesSerde):
         Provides AlarmClass serde utilities
     """
 
-    def __init__(self, schema_registry_client):
+    def __init__(self, schema_registry_client: SchemaRegistryClient):
+        """
+            Create a new LocationSerde.
 
+            :param schema_registry_client: The SchemaRegistryClient
+        """
         priority_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmPriority.avsc")
         priority_schema_str = priority_bytes.decode('utf-8')
 
@@ -252,7 +290,12 @@ class LocationSerde(RegistryAvroSerde):
         Provides AlarmLocation serde utilities
     """
 
-    def __init__(self, schema_registry_client):
+    def __init__(self, schema_registry_client: SchemaRegistryClient):
+        """
+            Create a new LocationSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+        """
         schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmLocation.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
