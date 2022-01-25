@@ -26,5 +26,5 @@
     * :download:`ProcessorTransitions.avsc </../../src/jlab_jaws/avro/schemas/ProcessorTransitions.avsc>`
     * :download:`ShelvedOverride.avsc </../../src/jlab_jaws/avro/schemas/ShelvedOverride.avsc>`
 
-    `View Schemas no GitHub <https://github.com/JeffersonLab/jaws-libp/tree/main/src/jlab_jaws/avro/schemas>`_
+    `View Schemas on GitHub <https://github.com/JeffersonLab/jaws-libp/tree/main/src/jlab_jaws/avro/schemas>`_
 """
