@@ -249,6 +249,14 @@ class JAWSProducer:
     """
 
     def __init__(self, topic: str, client_name: str, key_serde: Serde, value_serde: Serde) -> None:
+        """
+            Create a new JAWSProducer with the provided attributes.
+
+            :param topic: The Kafka topic name
+            :param client_name: The name of the client application
+            :param key_serde: The appropriate Kafka message key Serde for the given topic
+            :param value_serde: The appropriate Kafka message value Serde for the given topic
+        """
         set_log_level_from_env()
 
         self._topic = topic
