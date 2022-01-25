@@ -3,9 +3,11 @@
 """
 import json
 import pkgutil
+from enum import Enum
+
 import fastavro
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union, Tuple
 from abc import abstractmethod, ABC
 from confluent_kafka.schema_registry import SchemaReference, Schema, SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
@@ -20,9 +22,9 @@ from ..entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, Simp
 from ..references.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
-def _unwrap_enum(value, enum_class):
+def _unwrap_enum(value: Any, enum_class: Enum) -> str:
     """
-    When instantiating classes using _from_dict often a variable intended to be an enum is encountered that
+    When instantiating classes using from_dict often a variable intended to be an enum is encountered that
     may actually be a String, a Tuple, or an Enum so this function attempts to convert to an Enum if needed.
 
     A tuple is allowed due to fastavro supporting tuples for complex types.
@@ -128,6 +130,32 @@ class RegistryAvroSerde(Serde):
     def _from_dict_with_ctx(self, data: Dict, ctx) -> Any:
         return self.from_dict(data)
 
+    def _from_union(self, unionobj: Union[Tuple[str, Dict[str, Any]],
+                                          Dict[str, Dict[str, Any]]]) -> Tuple[str, Dict[str, Any]]:
+        if type(unionobj) is tuple:
+            uniontype = unionobj[0]
+            uniondict = unionobj[1]
+        elif type(unionobj is dict):
+            value = next(iter(unionobj.items()))
+            uniontype = value[0]
+            uniondict = value[1]
+        else:
+            raise Exception("Unsupported union encoding")
+
+        return uniontype, uniondict
+
+    def _to_union(self, uniontype: str, uniondict: Dict[str, Any]) -> Union[Tuple[str, Dict[str, Any]],
+                                                                            Dict[str, Any],
+                                                                            Dict[str, Dict[str, Any]]]:
+        if self._union_encoding is UnionEncoding.TUPLE:
+            union = (uniontype, uniondict)
+        elif self._union_encoding is UnionEncoding.DICT_WITH_TYPE:
+            union = {uniontype: uniondict}
+        else:
+            union = uniondict
+
+        return union
+
     @abstractmethod
     def to_dict(self, data: Any) -> Dict:
         pass
@@ -191,10 +219,20 @@ class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
     def to_dict(self, data):
         pass
 
-    def references(self):
+    def references(self) -> List[SchemaReference]:
+        """
+            Get the Schema References.
+
+            :return: The List of SchemaReference
+        """
         return self._references
 
-    def named_schemas(self):
+    def named_schemas(self) -> Dict[str, Any]:
+        """
+            Get the named schemas.
+
+            :return: Return the named schemas
+        """
         return self._named_schemas
 
     def serializer(self):
@@ -241,7 +279,7 @@ class ClassSerde(RegistryAvroWithReferencesSerde):
 
         super().__init__(schema_registry_client, schema, references, named_schemas)
 
-    def to_dict(self, data):
+    def to_dict(self, data: AlarmClass) -> Dict[str, str]:
         """
             Converts an AlarmClass to a dict.
 
@@ -264,9 +302,11 @@ class ClassSerde(RegistryAvroWithReferencesSerde):
             "offdelayseconds": data.off_delay_seconds
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, Any]) -> AlarmClass:
         """
             Converts a dict to an AlarmClass.
+
+            Note: Generally the Dict values are Strings, but the priority field may be a Tuple or Enum.
 
             :param data: The dict
             :return: The AlarmClass
@@ -303,7 +343,7 @@ class LocationSerde(RegistryAvroSerde):
 
         super().__init__(schema_registry_client, schema)
 
-    def to_dict(self, data):
+    def to_dict(self, data: AlarmLocation) -> Dict[str, str]:
         """
         Converts AlarmLocation to a dict.
 
@@ -314,7 +354,7 @@ class LocationSerde(RegistryAvroSerde):
             "parent": data.parent
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, str]) -> AlarmLocation:
         """
         Converts a dict to AlarmLocation.
 
@@ -330,6 +370,12 @@ class ActivationSerde(RegistryAvroSerde):
     """
 
     def __init__(self, schema_registry_client, union_encoding=UnionEncoding.TUPLE):
+        """
+            Create a new ActivationSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+            :param union_encoding: The union encoding to use
+        """
 
         self._union_encoding = union_encoding
 
@@ -340,12 +386,18 @@ class ActivationSerde(RegistryAvroSerde):
 
         super().__init__(schema_registry_client, schema)
 
-    def to_dict(self, data):
+    def to_dict(self, data: AlarmActivationUnion) -> Dict[str, Union[Tuple[str, Dict[str, str]],
+                                                                     Dict[str, str],
+                                                                     Dict[str, Dict[str, str]]]]:
         """
-        Converts an AlarmActivationUnion to a dict.
+            Converts an AlarmActivationUnion to a dict.
 
-        :param data: The AlarmActivationUnion
-        :return: A dict
+            Note: The returned dict if not None is always keyed with "msg" and the value is either
+            a (1) Tuple, (2) Dict, or (3) Dict with one key which is name of union entity and valued with Dict.  This
+            is determined by union_encoding.
+
+            :param data: The AlarmActivationUnion
+            :return: A dict
         """
 
         if data is None:
@@ -363,25 +415,21 @@ class ActivationSerde(RegistryAvroSerde):
         else:
             raise Exception("Unknown alarming union type: {}".format(data.msg))
 
-        if self._union_encoding is UnionEncoding.TUPLE:
-            union = (uniontype, uniondict)
-        elif self._union_encoding is UnionEncoding.DICT_WITH_TYPE:
-            union = {uniontype: uniondict}
-        else:
-            union = uniondict
+        union = self._to_union(uniontype, uniondict)
 
         return {
             "msg": union
         }
 
-    def from_dict(self, data):
+    def from_dict(self, data: Dict[str, Union[Tuple[str, Dict[str, str]],
+                                              Dict[str, Dict[str, str]]]]) -> AlarmActivationUnion:
         """
-        Converts a dict to an AlarmActivationUnion.
+            Converts a dict to an AlarmActivationUnion.
 
-        Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
+            Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.  See to_dict().
 
-        :param data: The dict
-        :return: The AlarmActivationUnion
+            :param data: The dict
+            :return: The AlarmActivationUnion
         """
 
         if data is None:
@@ -389,15 +437,7 @@ class ActivationSerde(RegistryAvroSerde):
 
         unionobj = data['msg']
 
-        if type(unionobj) is tuple:
-            uniontype = unionobj[0]
-            uniondict = unionobj[1]
-        elif type(unionobj is dict):
-            value = next(iter(unionobj.items()))
-            uniontype = value[0]
-            uniondict = value[1]
-        else:
-            raise Exception("Unsupported union encoding")
+        uniontype, uniondict = self._from_union(unionobj)
 
         if uniontype == "org.jlab.jaws.entity.NoteAlarming":
             obj = NoteAlarming(uniondict['note'])
@@ -449,12 +489,7 @@ class InstanceSerde(RegistryAvroSerde):
         else:
             raise Exception("Unknown instance producer union type: {}".format(data.producer))
 
-        if self._union_encoding is UnionEncoding.TUPLE:
-            union = (uniontype, uniondict)
-        elif self._union_encoding is UnionEncoding.DICT_WITH_TYPE:
-            union = {uniontype: uniondict}
-        else:
-            union = uniondict
+        union = self._to_union(uniontype, uniondict)
 
         return {
             "class": data.alarm_class,
@@ -479,15 +514,7 @@ class InstanceSerde(RegistryAvroSerde):
 
         unionobj = data['producer']
 
-        if type(unionobj) is tuple:
-            uniontype = unionobj[0]
-            uniondict = unionobj[1]
-        elif type(unionobj is dict):
-            value = next(iter(unionobj.items()))
-            uniontype = value[0]
-            uniondict = value[1]
-        else:
-            raise Exception("Unsupported union encoding")
+        uniontype, uniondict = self._from_union(unionobj)
 
         if uniontype == "org.jlab.jaws.entity.CalcProducer":
             producer = CALCProducer(uniondict['expression'])
@@ -937,12 +964,7 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
             uniontype = None
             uniondict = None
 
-        if self._union_encoding is UnionEncoding.TUPLE:
-            union = (uniontype, uniondict)
-        elif self._union_encoding is UnionEncoding.DICT_WITH_TYPE:
-            union = {uniontype: uniondict}
-        else:
-            union = uniondict
+        union = self._to_union(uniontype, uniondict)
 
         return {
             "msg": union
@@ -959,33 +981,25 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
         :param data: The dict (or maybe it's a duck)
         :return: The AlarmOverrideUnion
         """
-        alarmingobj = data['msg']
+        unionobj = data['msg']
 
-        if type(alarmingobj) is tuple:
-            alarmingtype = alarmingobj[0]
-            alarmingdict = alarmingobj[1]
-        elif type(alarmingobj is dict):
-            value = next(iter(alarmingobj.items()))
-            alarmingtype = value[0]
-            alarmingdict = value[1]
-        else:
-            raise Exception("Unsupported union encoding")
+        uniontype, uniondict = self._from_union(unionobj)
 
-        if alarmingtype == "org.jlab.jaws.entity.DisabledOverride":
-            obj = DisabledOverride(alarmingdict['comments'])
-        elif alarmingtype == "org.jlab.jaws.entity.FilteredOverride":
-            obj = FilteredOverride(alarmingdict['filtername'])
-        elif alarmingtype == "org.jlab.jaws.entity.LatchedOverride":
+        if uniontype == "org.jlab.jaws.entity.DisabledOverride":
+            obj = DisabledOverride(uniondict['comments'])
+        elif uniontype == "org.jlab.jaws.entity.FilteredOverride":
+            obj = FilteredOverride(uniondict['filtername'])
+        elif uniontype == "org.jlab.jaws.entity.LatchedOverride":
             obj = LatchedOverride()
-        elif alarmingtype == "org.jlab.jaws.entity.MaskedOverride":
+        elif uniontype == "org.jlab.jaws.entity.MaskedOverride":
             obj = MaskedOverride()
-        elif alarmingtype == "org.jlab.jaws.entity.OnDelayedOverride":
-            obj = OnDelayedOverride(alarmingdict['expiration'])
-        elif alarmingtype == "org.jlab.jaws.entity.OffDelayedOverride":
-            obj = OffDelayedOverride(alarmingdict['expiration'])
-        elif alarmingtype == "org.jlab.jaws.entity.ShelvedOverride":
-            obj = ShelvedOverride(alarmingdict['expiration'], alarmingdict['comments'],
-                                  _unwrap_enum(alarmingdict['reason'], ShelvedReason), alarmingdict['oneshot'])
+        elif uniontype == "org.jlab.jaws.entity.OnDelayedOverride":
+            obj = OnDelayedOverride(uniondict['expiration'])
+        elif uniontype == "org.jlab.jaws.entity.OffDelayedOverride":
+            obj = OffDelayedOverride(uniondict['expiration'])
+        elif uniontype == "org.jlab.jaws.entity.ShelvedOverride":
+            obj = ShelvedOverride(uniondict['expiration'], uniondict['comments'],
+                                  _unwrap_enum(uniondict['reason'], ShelvedReason), uniondict['oneshot'])
         else:
             print("Unknown alarming type: {}".format(data['msg']))
             obj = None
