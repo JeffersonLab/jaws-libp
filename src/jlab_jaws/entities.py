@@ -8,6 +8,9 @@ from typing import Union, Optional, List
 
 
 class AlarmPriority(Enum):
+    """
+        Alarm Priority
+    """
     P1_CRITICAL = 1
     P2_MAJOR = 2
     P3_MINOR = 3
@@ -30,6 +33,9 @@ class UnionEncoding(Enum):
 
 
 class AlarmState(Enum):
+    """
+        Alarm State
+    """
     NormalDisabled = 1
     """Effectively Normal, out-of-service"""
     NormalFiltered = 2
@@ -53,6 +59,9 @@ class AlarmState(Enum):
 
 
 class OverriddenAlarmType(Enum):
+    """
+        Override Type
+    """
     Disabled = 1
     """A broken alarm can be flagged as out-of-service"""
     Filtered = 2
@@ -75,6 +84,9 @@ class OverriddenAlarmType(Enum):
 
 
 class ShelvedReason(Enum):
+    """
+        Shelve Reason
+    """
     Stale_Alarm = 1
     """Nuisance alarm which remains active for an extended period of time"""
     Chattering_Fleeting_Alarm = 2
@@ -85,6 +97,9 @@ class ShelvedReason(Enum):
 
 
 class EPICSSEVR(Enum):
+    """
+        EPICS Alarm Severity
+    """
     NO_ALARM = 1
     MINOR = 2
     MAJOR = 3
@@ -92,6 +107,9 @@ class EPICSSEVR(Enum):
 
 
 class EPICSSTAT(Enum):
+    """
+        EPICS Alarm Status
+    """
     NO_ALARM = 1
     READ = 2
     WRITE = 3
@@ -247,7 +265,7 @@ class ShelvedOverride:
 @dataclass
 class AlarmClass:
     """
-        alarm-classes-value subject
+        Alarm Class
     """
     category: str
     """The Alarm Category"""
@@ -272,10 +290,8 @@ class AlarmClass:
 @dataclass
 class AlarmInstance:
     """
-        alarm-instances-value subject
-
-        Note: Any attributes inherited from AlarmClass can be set to None which indicate the class value
-        should be used.
+        Alarm Instance (of an AlarmClass).   An instance inherits class attributes, but also brings instance-specific
+        attributes.
     """
     alarm_class: str
     """The Alarm Class"""
@@ -292,7 +308,7 @@ class AlarmInstance:
 @dataclass
 class AlarmActivationUnion:
     """
-        alarm-activations-value subject
+        Alarm Activation (annunciation, alarming).
     """
     msg: Union[SimpleAlarming, NoteAlarming, EPICSAlarming]
     """The message payload is a union of possible alarming types"""
@@ -312,7 +328,7 @@ class AlarmOverrideKey:
 @dataclass
 class AlarmOverrideUnion:
     """
-        alarm-overrides-value subject
+        Alarm Override (a single override modeled as a union of possible types, like an enum)
     """
     msg: Union[DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride,
                OffDelayedOverride, ShelvedOverride]
@@ -366,7 +382,7 @@ class ProcessorTransitions:
 @dataclass
 class EffectiveRegistration:
     """
-        effective-registrations-value subject
+        Effective Registration (class + instance)
     """
     alarm_class: AlarmClass
     """The Alarm Class"""
@@ -378,7 +394,7 @@ class EffectiveRegistration:
 @dataclass
 class EffectiveActivation:
     """
-        effective-activations-value subject
+        Effective Activation (activation + overrides)
     """
     actual: AlarmActivationUnion
     """The Alarm Activation"""
@@ -393,7 +409,7 @@ class EffectiveActivation:
 @dataclass
 class EffectiveAlarm:
     """
-        effective-alarms-value subject
+        Effective Alarm (effective registration + effective activation)
     """
     registration: EffectiveRegistration
     """The effective AlarmRegistration considering class defaults"""
@@ -405,7 +421,7 @@ class EffectiveAlarm:
 @dataclass
 class IntermediateMonolog:
     """
-        intermediate-\\*-value subject
+        IntermediateMonolog - used internally by the effective-state-processor.
     """
     registration: EffectiveRegistration
     """The effective AlarmRegistration considering class defaults"""
