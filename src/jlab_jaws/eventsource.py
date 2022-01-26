@@ -106,6 +106,7 @@ class EventSourceTable:
 
          Args:
              config (dict): Configuration
+
              on_exception (Callable): Function to call when an asynchronous exception occurs, including a Timeout.
 
 
