@@ -449,10 +449,10 @@ class EffectiveActivationConsumer(JAWSConsumer):
 
         super().__init__('effective-activations', client_name, key_serde, value_serde)
 
-    def get_table_headers(self) -> List[str]:
+    def _get_table_headers(self) -> List[str]:
         return ["Alarm Name", "State", "Overrides"]
 
-    def get_table_row(self, msg: Message) -> List[str]:
+    def _get_table_row(self, msg: Message) -> List[str]:
         value = msg.value()
 
         return [msg.key(),
@@ -476,10 +476,10 @@ class EffectiveAlarmConsumer(JAWSConsumer):
 
         super().__init__('effective-alarms', client_name, key_serde, value_serde)
 
-    def get_table_headers(self) -> List[str]:
+    def _get_table_headers(self) -> List[str]:
         return ["Alarm Name", "State", "Overrides", "Instance", "Class"]
 
-    def get_table_row(self, msg: Message) -> List[str]:
+    def _get_table_row(self, msg: Message) -> List[str]:
         value = msg.value()
 
         return [msg.key(),
@@ -505,10 +505,10 @@ class EffectiveRegistrationConsumer(JAWSConsumer):
 
         super().__init__('effective-registrations', client_name, key_serde, value_serde)
 
-    def get_table_headers(self) -> List[str]:
+    def _get_table_headers(self) -> List[str]:
         return ["Alarm Name", "Instance", "Class"]
 
-    def get_table_row(self, msg: Message) -> List[str]:
+    def _get_table_row(self, msg: Message) -> List[str]:
         value = msg.value()
 
         return [msg.key(),
@@ -532,10 +532,10 @@ class InstanceConsumer(JAWSConsumer):
 
         super().__init__('alarm-instances', client_name, key_serde, value_serde)
 
-    def get_table_headers(self) -> List[str]:
+    def _get_table_headers(self) -> List[str]:
         return ["Alarm Name", "Class", "Producer", "Location", "Masked By", "Screen Command"]
 
-    def get_table_row(self, msg: Message) -> List[str]:
+    def _get_table_row(self, msg: Message) -> List[str]:
         value = msg.value()
 
         return [msg.key(),
@@ -562,10 +562,10 @@ class LocationConsumer(JAWSConsumer):
 
         super().__init__('alarm-locations', client_name, key_serde, value_serde)
 
-    def get_table_headers(self) -> List[str]:
+    def _get_table_headers(self) -> List[str]:
         return ["Location Name", "Parent"]
 
-    def get_table_row(self, msg: Message) -> List[str]:
+    def _get_table_row(self, msg: Message) -> List[str]:
         value = msg.value()
 
         return [msg.key(),
@@ -588,10 +588,10 @@ class OverrideConsumer(JAWSConsumer):
 
         super().__init__('alarm-overrides', client_name, key_serde, value_serde)
 
-    def get_table_headers(self) -> List[str]:
+    def _get_table_headers(self) -> List[str]:
         return ["Alarm Name", "Override Type", "Value"]
 
-    def get_table_row(self, msg: Message) -> List[str]:
+    def _get_table_row(self, msg: Message) -> List[str]:
         key = msg.key()
 
         return [key.name,
