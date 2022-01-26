@@ -339,7 +339,7 @@ class CachedTable(EventSourceTable):
         caching_enabled = config.get('caching.enabled') if False else True
 
         if caching_enabled:
-            self._listener = _CacheEventSourceListener(self._cache, self._cache_listeners)
+            self._listener = _CacheEventSourceListener(self, self._cache, self._cache_listeners)
             self.add_listener(self._listener)
 
     def add_cache_listener(self, listener: CacheListener) -> None:
@@ -387,13 +387,14 @@ class _CacheEventSourceListener(EventSourceListener):
         Internal listener implementation for the CacheTable
     """
 
-    def __init__(self, cache: Dict[Any, Message], cache_listeners: List[CacheListener]) -> None:
+    def __init__(self, parent: CachedTable, cache: Dict[Any, Message], cache_listeners: List[CacheListener]) -> None:
         """
             Create a new _EventSourceCacheListener.
 
             :param cache: The cache
             :param cache_listeners: The cache listeners
         """
+        self._parent = parent
         self._cache = cache
         self._cache_listeners = cache_listeners
 
@@ -414,7 +415,7 @@ class _CacheEventSourceListener(EventSourceListener):
             else:
                 self._cache[msg.key()] = msg
 
-        if self.highwater_reached():
+        if self._parent.highwater_reached():
             for listener in self._cache_listeners:
                 listener.on_update(msgs)
 
