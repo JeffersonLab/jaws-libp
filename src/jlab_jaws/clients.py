@@ -108,7 +108,7 @@ class JAWSConsumer(CachedTable):
             :param filter_if: Callback applied to each Message to indicate if Message should be included
             :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
         """
-        head = self.get_table_headers()
+        head = self._get_table_headers()
 
         records = self.await_highwater_get()
 
@@ -160,7 +160,7 @@ class JAWSConsumer(CachedTable):
             if filter_if(key, value):
                 print(self.__to_line(key, value))
 
-    def get_table_headers(self) -> List[str]:
+    def _get_table_headers(self) -> List[str]:
         """
             Get the printed table headers.
 
@@ -168,7 +168,7 @@ class JAWSConsumer(CachedTable):
         """
         return ["Key", "Value"]
 
-    def get_table_row(self, msg: Message) -> List[str]:
+    def _get_table_row(self, msg: Message) -> List[str]:
         """
             Function to convert Message to table row (List of strings).
 
@@ -226,7 +226,7 @@ class JAWSConsumer(CachedTable):
         timestamp = msg.timestamp()
         headers = msg.headers()
 
-        row = self.get_table_row(msg)
+        row = self._get_table_row(msg)
 
         if filter_if(msg.key(), msg.value()):
             if not nometa:
@@ -391,10 +391,10 @@ class CategoryConsumer(JAWSConsumer):
 
         super().__init__('alarm-categories', client_name, key_serde, value_serde)
 
-    def get_table_headers(self) -> List[str]:
+    def _get_table_headers(self) -> List[str]:
         return ['Category']
 
-    def get_table_row(self, msg: Message) -> List[str]:
+    def _get_table_row(self, msg: Message) -> List[str]:
         return [msg.key()]
 
 
@@ -414,11 +414,11 @@ class ClassConsumer(JAWSConsumer):
 
         super().__init__('alarm-classes', client_name, key_serde, value_serde)
 
-    def get_table_headers(self) -> List[str]:
+    def _get_table_headers(self) -> List[str]:
         return ["Class Name", "Category", "Priority", "Rationale", "Corrective Action",
                 "P.O.C. Username", "Latching", "Filterable", "On Delay", "Off Delay"]
 
-    def get_table_row(self, msg: Message) -> List[str]:
+    def _get_table_row(self, msg: Message) -> List[str]:
         value = msg.value()
 
         return [msg.key(),
