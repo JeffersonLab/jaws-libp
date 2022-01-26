@@ -375,7 +375,8 @@ class CachedTable(EventSourceTable):
 
     def await_highwater_get(self) -> Dict[Any, Message]:
         """
-            Synchronously wait for highwater mark, then get cache.  Blocks with a timeout.
+            Block the calling thread and wait for topic highwater to be reached, then return cache of compacted
+            messages.
 
             See: The 'highwater.timeout' option passed to the config Dict in constructor
 
