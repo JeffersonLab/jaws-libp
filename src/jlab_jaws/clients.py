@@ -104,22 +104,22 @@ class JAWSConsumer(CachedTable):
         self.add_listener(_MonitorListener())
         self.start()
 
-    def print_table(self, head: List[str] = None, msg_to_list: Callable[[Message], List[str]] = lambda msg: list(),
-                    nometa: bool = False, filter_if: Callable[[Any, Any], bool] = lambda key, value: True,
+    def print_table(self, nometa: bool = False, filter_if: Callable[[Any, Any], bool] = lambda key, value: True,
                     timeout_seconds: float = 5) -> None:
         """
             Queries Kafka for the initial set of records (up to the topic highwater mark) and prints a table using the
             supplied display hints to standard output.  If the query timeout is exceeded a TimeoutException is raised.
 
-            :param head: List of table header names
-            :param msg_to_list: Callback to convert Message to list of strings needed to create a table row
             :param nometa: If True, exclude timestamp, producer app name, host, and username from table
             :param filter_if: Callback applied to each Message to indicate if Message should be included
             :param timeout_seconds: The number of seconds to wait before giving up
             :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
         """
+        head = self.get_table_headers()
+
         if head is None:
             head = []
+
         records = self.get_records(timeout_seconds)
 
         table = []
@@ -128,7 +128,7 @@ class JAWSConsumer(CachedTable):
             head = ["Timestamp", "User", "Host", "Produced By"] + head
 
         for record in records.values():
-            row = self.__get_row(record, msg_to_list, filter_if, nometa)
+            row = self.__filtered_row_with_header(record, filter_if, nometa)
             if row is not None:
                 table.append(row)
 
@@ -184,8 +184,24 @@ class JAWSConsumer(CachedTable):
         self.stop()
         return records
 
-    def consume(self, monitor: bool = False, nometa: bool = False, export: bool = False, head: List[str] = None,
-                msg_to_list: Callable[[Message], List[str]] = lambda msg: list(),
+    def get_table_headers(self) -> List[str]:
+        """
+            Get the printed table headers.
+
+            :return: The list of table headers
+        """
+        return ["Key", "Value"]
+
+    def get_table_row(self, msg: Message) -> List[str]:
+        """
+            Function to convert Message to table row (List of strings).
+
+            :param msg: The Message
+            :return: The table row (List of strings)
+        """
+        return [msg.key(), msg.value()]
+
+    def consume(self, monitor: bool = False, nometa: bool = False, export: bool = False,
                 filter_if: Callable[[Any, Any], bool] = lambda key, value: True) -> None:
         """
             Convenience function for taking exactly one action given a set of hints.  If more than one action is
@@ -195,8 +211,6 @@ class JAWSConsumer(CachedTable):
             :param monitor: If True call print_records_continuous()
             :param nometa: If True do not include timestamp, producer app, host, and username in output
             :param export: If True call export_records()
-            :param head: The list of table headers
-            :param msg_to_list: The Callable function to convert a Message to a List of strings representing the row
             :param filter_if: Callback applied to each Message to indicate if Message should be included
         """
         if monitor:
@@ -204,18 +218,17 @@ class JAWSConsumer(CachedTable):
         elif export:
             self.export_records(filter_if)
         else:
-            self.print_table(head, msg_to_list, nometa, filter_if)
+            self.print_table(nometa, filter_if)
 
-    def __get_row(self, msg: Message, msg_to_list: Callable[[Message], List[str]],
-                  filter_if: Callable[[Any, Any], bool], nometa: bool):
+    def __filtered_row_with_header(self, msg: Message, filter_if: Callable[[Any, Any], bool], nometa: bool):
         timestamp = msg.timestamp()
         headers = msg.headers()
 
-        row = msg_to_list(msg)
+        row = self.get_table_row(msg)
 
         if filter_if(msg.key(), msg.value()):
             if not nometa:
-                row_header = self.__get_row_header(headers, timestamp)
+                row_header = self.__get_row_meta_header(headers, timestamp)
                 row = row_header + row
         else:
             row = None
@@ -223,7 +236,7 @@ class JAWSConsumer(CachedTable):
         return row
 
     @staticmethod
-    def __get_row_header(headers: List[Tuple[str, str]], timestamp: Tuple[int, int]) -> List[str]:
+    def __get_row_meta_header(headers: List[Tuple[str, str]], timestamp: Tuple[int, int]) -> List[str]:
         ts = time.ctime(timestamp[1] / 1000)
 
         user = ''
@@ -375,6 +388,20 @@ class CategoryConsumer(JAWSConsumer):
         value_serde = StringSerde()
 
         super().__init__('alarm-categories', client_name, key_serde, value_serde)
+
+    def get_table_headers(self) -> List[str]:
+        return ['Category']
+
+    def get_table_row(self, msg: Message) -> List[str]:
+        key = msg.key()
+        value = msg.value()
+
+        if value is not None:
+            row = [key]
+        else:
+            row = [None]
+
+        return row
 
 
 class ClassConsumer(JAWSConsumer):
