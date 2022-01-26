@@ -158,7 +158,7 @@ class EventSourceTable:
 
     def add_listener(self, listener: EventSourceListener) -> None:
         """
-            Add a listener.
+            Add an EventSourceListener.
 
             :param listener: The EventSourceListener to register
         """
@@ -167,7 +167,7 @@ class EventSourceTable:
 
     def remove_listener(self, listener: EventSourceListener) -> None:
         """
-            Remove a listener.
+            Remove an EventSourceListener.
 
             :param listener: The EventSourceListener to unregister
         """
@@ -348,7 +348,7 @@ class CachedTable(EventSourceTable):
 
     def add_cache_listener(self, listener: CacheListener) -> None:
         """
-            Add a cache listener.
+            Add a CacheListener.
 
             :param listener: The CacheListener to register
         """
@@ -357,7 +357,7 @@ class CachedTable(EventSourceTable):
 
     def remove_cache_listener(self, listener: CacheListener) -> None:
         """
-            Remove a cache listener.
+            Remove a CacheListener.
 
             :param listener: The CacheListener to unregister
         """
