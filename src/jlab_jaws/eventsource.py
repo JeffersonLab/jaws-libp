@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class EventSourceListener(ABC):
     """
-        Listener interface for EventSourcing callbacks.
+        Listener interface for EventSourceTable callbacks.
     """
     @abstractmethod
     def on_highwater(self) -> None:
@@ -39,6 +39,9 @@ class EventSourceListener(ABC):
 
 
 class CacheListener(ABC):
+    """
+        Listener interface for CachedTable callbacks.
+    """
 
     @abstractmethod
     def on_load(self, cache: Dict[Any, Message]) -> None:
@@ -50,7 +53,7 @@ class CacheListener(ABC):
     @abstractmethod
     def on_update(self, msgs: List[Message]) -> None:
         """
-            Callback notification of a batch of messages received.
+            Callback notification of a batch of update messages.
 
             This method is only called after highwater has been reached.
 
