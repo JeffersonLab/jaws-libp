@@ -175,7 +175,7 @@ class JAWSConsumer(CachedTable):
             Queries Kafka for the initial set of records (up to the topic highwater mark) and returns them
             in a Dict keyed Message keys.
 
-            :param timeout_seconds:
+            :param timeout_seconds: The number of seconds to wait before giving up
             :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
             :return: The initial set of messages
         """
@@ -195,6 +195,9 @@ class JAWSConsumer(CachedTable):
     def get_table_row(self, msg: Message) -> List[str]:
         """
             Function to convert Message to table row (List of strings).
+
+            Note: This function assumes the Message.value() is never None as
+            this function should be called against a compacted Dict of Messages.
 
             :param msg: The Message
             :return: The table row (List of strings)
@@ -393,15 +396,7 @@ class CategoryConsumer(JAWSConsumer):
         return ['Category']
 
     def get_table_row(self, msg: Message) -> List[str]:
-        key = msg.key()
-        value = msg.value()
-
-        if value is not None:
-            row = [key]
-        else:
-            row = [None]
-
-        return row
+        return [msg.key()]
 
 
 class ClassConsumer(JAWSConsumer):
@@ -419,6 +414,24 @@ class ClassConsumer(JAWSConsumer):
         value_serde = ClassSerde(schema_registry_client)
 
         super().__init__('alarm-classes', client_name, key_serde, value_serde)
+
+    def get_table_headers(self) -> List[str]:
+        return ["Class Name", "Category", "Priority", "Rationale", "Corrective Action",
+                "P.O.C. Username", "Latching", "Filterable", "On Delay", "Off Delay"]
+
+    def get_table_row(self, msg: Message) -> List[str]:
+        value = msg.value()
+
+        return [msg.key(),
+                value.category,
+                value.priority.name if value.priority is not None else None,
+                value.rationale.replace("\n", "\\n ") if value.rationale is not None else None,
+                value.corrective_action.replace("\n", "\\n") if value.corrective_action is not None else None,
+                value.point_of_contact_username,
+                value.latching,
+                value.filterable,
+                value.on_delay_seconds,
+                value.off_delay_seconds]
 
 
 class EffectiveActivationConsumer(JAWSConsumer):
