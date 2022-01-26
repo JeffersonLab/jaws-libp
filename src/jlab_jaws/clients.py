@@ -107,12 +107,9 @@ class JAWSConsumer(CachedTable):
             :param filter_if: Callback applied to each Message to indicate if Message should be included
             :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
         """
-        head = self.await_highwater_get()
+        head = self.get_table_headers()
 
-        if head is None:
-            head = []
-
-        records = self.get_records()
+        records = self.await_highwater_get()
 
         table = []
 
