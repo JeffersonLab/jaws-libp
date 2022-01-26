@@ -682,8 +682,8 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
             :return: A dict
         """
         return {
-            "class": self._class_serde.to_dict(data.alarm_class),
-            "instance": self._instance_serde.to_dict(data.instance)
+            "class": self._class_serde.to_dict(data.alarm_class) if data.alarm_class is not None else None,
+            "instance": self._instance_serde.to_dict(data.instance) if data.instance is not None else None
         }
 
     def from_dict(self, data: Dict[str, Any]) -> EffectiveRegistration:
@@ -754,7 +754,7 @@ class EffectiveActivationSerde(RegistryAvroWithReferencesSerde):
             :return: A dict
         """
         return {
-            "actual": self._activation_serde.to_dict(data.actual),
+            "actual": self._activation_serde.to_dict(data.actual) if data.actual is not None else None,
             "overrides": self._override_serde.to_dict(data.overrides),
             "state": data.state.name
         }
