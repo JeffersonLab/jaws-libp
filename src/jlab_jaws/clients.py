@@ -602,6 +602,8 @@ class OverrideConsumer(JAWSConsumer):
     def get_table_row(self, msg: Message) -> List[str]:
         key = msg.key()
 
+        print("Msg: {}={}".format(msg.key(), msg.value()))
+
         return [key.name,
                 key.type.name,
                 msg.value()]
