@@ -34,11 +34,11 @@ class EventSourceListener(ABC):
         pass
 
     @abstractmethod
-    def on_batch(self, msgs: Dict[Any, Message]) -> None:
+    def on_batch(self, msgs: List[Message]) -> None:
         """
             Callback notification of a batch of messages received.
 
-            :param msgs: Batch of one or more messages, keyed by topic key object
+            :param msgs: Batch of one or more ordered messages
         """
         pass
 
@@ -124,7 +124,7 @@ class EventSourceTable:
         self._is_highwater_timeout: bool = False
         self._low: int = None
         self._run: bool = True
-        self._state: Dict[Any, Message] = {}
+        self._state: List[Message] = []
 
     def add_listener(self, listener: EventSourceListener) -> None:
         """
@@ -173,11 +173,7 @@ class EventSourceTable:
 
     def __update_state(self, msg: Message) -> None:
         logger.debug("__update_state")
-        if msg.value() is None:
-            if msg.key() in self._state:
-                del self._state[msg.key()]
-        else:
-            self._state[msg.key()] = msg
+        self._state.append(msg)
 
     def __notify_changes(self) -> None:
         for listener in self._listeners:
@@ -291,13 +287,13 @@ class CachedTable(EventSourceTable):
 
         self.add_listener(self._listener)
 
-    def update_cache(self, msgs: Dict[Any, Message]) -> None:
+    def update_cache(self, msgs: List[Message]) -> None:
         """
-            Merge updated set of unique messages with existing cache, replacing existing keys if any.
+            Merge (compact) updated set of unique messages with existing cache, replacing existing keys if any.
 
             :param msgs: The new messages
         """
-        for msg in msgs.values():
+        for msg in msgs:
             if msg.value() is None:
                 if msg.key() in self._cache:
                     del self._cache[msg.key()]
@@ -334,5 +330,5 @@ class _CacheListener(EventSourceListener):
     def on_highwater_timeout(self) -> None:
         pass
 
-    def on_batch(self, msgs: Dict[Any, Message]) -> None:
+    def on_batch(self, msgs: List[Message]) -> None:
         self._parent.update_cache(msgs)

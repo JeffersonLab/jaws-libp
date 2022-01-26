@@ -50,8 +50,8 @@ class _MonitorListener(EventSourceListener):
     def on_highwater_timeout(self) -> None:
         pass
 
-    def on_batch(self, msgs: Dict[Any, Message]) -> None:
-        for msg in msgs.values():
+    def on_batch(self, msgs: List[Message]) -> None:
+        for msg in msgs:
             print("{}={}".format(msg.key(), msg.value()))
 
     def on_highwater(self) -> None:
