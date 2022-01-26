@@ -100,8 +100,9 @@ class JAWSConsumer(CachedTable):
     def print_table(self, nometa: bool = False,
                     filter_if: Callable[[Any, Any], bool] = lambda key, value: True) -> None:
         """
-            Queries Kafka for the initial set of records (up to the topic highwater mark) and prints a table using the
-            supplied display hints to standard output.  If the query timeout is exceeded a TimeoutException is raised.
+            Prints the compacted cache of records as a table to standard output.
+
+            Note: Blocks until the highwater mark has been reached.
 
             :param nometa: If True, exclude timestamp, producer app name, host, and username from table
             :param filter_if: Callback applied to each Message to indicate if Message should be included
@@ -141,8 +142,9 @@ class JAWSConsumer(CachedTable):
 
     def export_records(self, filter_if=lambda key, value: True) -> None:
         """
-            Queries Kafka for the initial set of records (up to the topic highwater mark) and prints the
-            records in the JAWS file format to standard output.
+            Prints the compacted cache of records in the JAWS file format to standard output.
+
+            Note: Blocks until the highwater mark has been reached.
 
             :param filter_if: Callback applied to each Message to indicate if Message should be included
             :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
