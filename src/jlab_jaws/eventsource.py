@@ -206,7 +206,7 @@ class EventSourceTable:
         self._consumer = DeserializingConsumer(consumer_conf)
         self._consumer.subscribe([self._config['topic']], on_assign=self.__on_assign)
 
-        timeout_seconds = self._config['highwater.timeout'] if not None else 30
+        timeout_seconds = self._config.get('highwater.timeout') if not None else 30
 
         t = Timer(timeout_seconds, self.__do_highwater_timeout)
         t.start()
