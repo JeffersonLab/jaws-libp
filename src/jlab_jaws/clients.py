@@ -591,7 +591,7 @@ class OverrideConsumer(JAWSConsumer):
             :param client_name: The name of the client application
         """
         schema_registry_client = get_registry_client()
-        key_serde = StringSerde()
+        key_serde = OverrideKeySerde(schema_registry_client)
         value_serde = OverrideSerde(schema_registry_client)
 
         super().__init__('alarm-overrides', client_name, key_serde, value_serde)
@@ -601,8 +601,6 @@ class OverrideConsumer(JAWSConsumer):
 
     def get_table_row(self, msg: Message) -> List[str]:
         key = msg.key()
-
-        print("Msg: {}={}".format(msg.key(), msg.value()))
 
         return [key.name,
                 key.type.name,
