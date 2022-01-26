@@ -7,11 +7,12 @@ from enum import Enum
 
 import fastavro
 
-from typing import Any, Dict, List, Union, Tuple
+from typing import Any, Dict, List, Union, Tuple, Type
 from abc import abstractmethod, ABC
 from confluent_kafka.schema_registry import SchemaReference, Schema, SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
-from confluent_kafka.serialization import StringSerializer, StringDeserializer, Serializer, Deserializer
+from confluent_kafka.serialization import StringSerializer, StringDeserializer, Serializer, Deserializer, \
+    SerializationContext
 from ..entities import AlarmLocation, AlarmPriority
 from ..entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
@@ -22,7 +23,7 @@ from ..entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, Simp
 from ..references.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
-def _unwrap_enum(value: [None, Tuple[str, str], str], enum_class: Enum) -> str:
+def _unwrap_enum(value: [None, Tuple[str, str], str], enum_class: Type[Enum]) -> str:
     """
         When instantiating classes using from_dict often a variable intended to be an enum is encountered that
         may actually be a String, a Tuple, or an Enum so this function attempts to convert to an Enum if needed.
@@ -129,7 +130,7 @@ class RegistryAvroSerde(Serde):
     def from_dict(self, data: Dict) -> Any:
         pass
 
-    def _from_dict_with_ctx(self, data: Dict, ctx) -> Any:
+    def _from_dict_with_ctx(self, data: Dict, ctx: SerializationContext) -> Any:
         return self.from_dict(data)
 
     def _from_union(self, unionobj: Union[Tuple[str, Dict[str, Any]],
@@ -162,11 +163,14 @@ class RegistryAvroSerde(Serde):
     def to_dict(self, data: Any) -> Dict:
         pass
 
-    def _to_dict_with_ctx(self, data: Any, ctx) -> Dict:
+    def _to_dict_with_ctx(self, data: Any, ctx: SerializationContext) -> Dict:
         return self.to_dict(data)
 
     def from_json(self, data: str) -> Any:
-        pass
+        entity_dict = json.loads(data)
+        entity = self.from_dict(entity_dict)
+
+        return entity
 
     def to_json(self, data: Any) -> str:
         sorteddata = dict(sorted(self.to_dict(data).items()))
@@ -282,16 +286,13 @@ class ClassSerde(RegistryAvroWithReferencesSerde):
 
         super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, references, named_schemas)
 
-    def to_dict(self, data: AlarmClass) -> Union[None, Dict[str, str]]:
+    def to_dict(self, data: AlarmClass) -> Dict[str, str]:
         """
             Converts an AlarmClass to a dict.
 
             :param data: The AlarmClass
             :return: A dict
         """
-
-        if data is None:
-            return None
 
         return {
             "category": data.category,
@@ -314,9 +315,6 @@ class ClassSerde(RegistryAvroWithReferencesSerde):
             :param data: The dict
             :return: The AlarmClass
             """
-        if data is None:
-            return None
-
         return AlarmClass(data.get('category'),
                           _unwrap_enum(data.get('priority'), AlarmPriority),
                           data.get('rationale'),
@@ -400,10 +398,6 @@ class ActivationSerde(RegistryAvroSerde):
             :param data: The AlarmActivationUnion
             :return: A dict
         """
-
-        if data is None:
-            return None
-
         if isinstance(data.msg, SimpleAlarming):
             uniontype = "org.jlab.jaws.entity.SimpleAlarming"
             uniondict = {}
@@ -432,10 +426,6 @@ class ActivationSerde(RegistryAvroSerde):
             :param data: The dict
             :return: The AlarmActivationUnion
         """
-
-        if data is None:
-            return None
-
         unionobj = data['msg']
 
         uniontype, uniondict = self._from_union(unionobj)
@@ -478,10 +468,6 @@ class InstanceSerde(RegistryAvroSerde):
             :param data: The AlarmInstance
             :return: A dict
         """
-
-        if data is None:
-            return None
-
         if isinstance(data.producer, SimpleProducer):
             uniontype = "org.jlab.jaws.entity.SimpleProducer"
             uniondict = {}
@@ -504,7 +490,7 @@ class InstanceSerde(RegistryAvroSerde):
             "screencommand": data.screen_command
         }
 
-    def from_dict(self, data: Dict[str, Union[str, Dict[str, Any]]]) -> Union[None, AlarmInstance]:
+    def from_dict(self, data: Dict[str, Union[str, Dict[str, Any]]]) -> AlarmInstance:
         """
             Converts a dict to an AlarmInstance.
 
@@ -513,10 +499,6 @@ class InstanceSerde(RegistryAvroSerde):
             :param data: The dict
             :return: The AlarmInstance
         """
-
-        if data is None:
-            return None
-
         unionobj = data['producer']
 
         uniontype, uniondict = self._from_union(unionobj)
@@ -608,7 +590,7 @@ class OverrideSetSerde(RegistryAvroWithReferencesSerde):
 
         super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, references, named_schemas)
 
-    def to_dict(self, data: AlarmOverrideSet) -> Dict[str, Union[None, Dict[str, str]]]:
+    def to_dict(self, data: AlarmOverrideSet) -> Union[None, Dict[str, str]]:
         """
             Converts AlarmOverrideSet to a dict.
 

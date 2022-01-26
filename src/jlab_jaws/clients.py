@@ -137,6 +137,19 @@ class JAWSConsumer(CachedTable):
 
         print(tabulate(table, head))
 
+    def __to_line(self, key: Any, value: Any) -> str:
+        """
+            Function to convert key and value pair to line for file.
+
+            :param key: The topic key entity
+            :param value: The topic value entity
+            :return: The line (string)
+        """
+        key_json = self._key_serde.to_json(key)
+        value_json = self._value_serde.to_json(value)
+
+        return key_json + '=' + value_json
+
     def export_records(self, filter_if=lambda key, value: True, timeout_seconds: float = 5) -> None:
         """
             Queries Kafka for the initial set of records (up to the topic highwater mark) and prints the
@@ -155,10 +168,7 @@ class JAWSConsumer(CachedTable):
             value = item[1].value()
 
             if filter_if(key, value):
-                key_json = self._key_serde.to_json(key)
-                value_json = self._value_serde.to_json(value)
-
-                print(key_json + '=' + value_json)
+                print(self.__to_line(key, value))
 
     def get_records(self, timeout_seconds: float = 5) -> Dict[Any, Message]:
         """
@@ -261,6 +271,8 @@ class JAWSProducer:
 
         self._topic = topic
         self._client_name = client_name
+        self._key_serde = key_serde
+        self._value_serde = value_serde
 
         key_serializer = key_serde.serializer()
         value_serializer = value_serde.serializer()
@@ -285,19 +297,33 @@ class JAWSProducer:
                                on_delivery=self.__on_delivery)
         self._producer.flush()
 
-    def import_records(self, file: str, line_to_kv: Callable[[str], Tuple[str, str]]) -> None:
+    def __from_line(self, line: str) -> Tuple[Any, Any]:
+        """
+            Function to convert line from file to key and value pair
+            :param line: The line (string)
+            :return: A Tuple containing the key and value pair
+        """
+        tokens = line.split("=", 1)
+        key_str = tokens[0]
+        value_str = tokens[1]
+
+        key = self._key_serde.from_json(key_str)
+        value = self._value_serde.from_json(value_str)
+
+        return key, value
+
+    def import_records(self, file: str) -> None:
         """
             Send a batch of messages stored in a JAWS formatted file to a Kafka topic.
 
             :param file: Path to file to import
-            :param line_to_kv: Function to convert line from file to key and value pair
         """
         logger.debug("Loading file", file)
         handle = open(file, 'r')
         lines = handle.readlines()
 
         for line in lines:
-            key, value = line_to_kv(line)
+            key, value = self.__from_line(line)
 
             logger.debug("{}={}".format(key, value))
             self._producer.produce(topic=self._topic, headers=self._headers, key=key, value=value,
