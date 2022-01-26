@@ -23,7 +23,7 @@ from ..entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, Simp
 from ..references.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
-def _unwrap_enum(value: [None, Tuple[str, str], str], enum_class: Type[Enum]) -> str:
+def _unwrap_enum(value: [None, Tuple[str, str], str], enum_class: Type[Enum]) -> [None, Tuple[str, str], str]:
     """
         When instantiating classes using from_dict often a variable intended to be an enum is encountered that
         may actually be a String, a Tuple, or an Enum so this function attempts to convert to an Enum if needed.
@@ -188,8 +188,7 @@ class RegistryAvroSerde(Serde):
     def serializer(self) -> Serializer:
         return AvroSerializer(self._schema_registry_client,
                               self._schema.schema_str,
-                              self._to_dict_with_ctx,
-                              None)
+                              self._to_dict_with_ctx)
 
     def deserializer(self) -> Deserializer:
         return AvroDeserializer(self._schema_registry_client,
@@ -243,11 +242,10 @@ class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
         return self._named_schemas
 
     def serializer(self):
-        return AvroSerializerWithReferences(self._schema_registry_client,
-                                            self.get_schema(),
-                                            self._to_dict_with_ctx,
-                                            None,
-                                            self.named_schemas())
+        return AvroSerializerWithReferences(schema_registry_client=self._schema_registry_client,
+                                            schema=self.get_schema(),
+                                            to_dict=self._to_dict_with_ctx,
+                                            named_schemas=self.named_schemas())
 
     def deserializer(self):
         return AvroDeserializerWithReferences(self._schema_registry_client,
@@ -490,7 +488,7 @@ class InstanceSerde(RegistryAvroSerde):
             "screencommand": data.screen_command
         }
 
-    def from_dict(self, data: Dict[str, Union[str, Dict[str, Any]]]) -> AlarmInstance:
+    def from_dict(self, data: Dict[str, Union[str, Any]]) -> AlarmInstance:
         """
             Converts a dict to an AlarmInstance.
 
@@ -590,7 +588,7 @@ class OverrideSetSerde(RegistryAvroWithReferencesSerde):
 
         super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, references, named_schemas)
 
-    def to_dict(self, data: AlarmOverrideSet) -> Union[None, Dict[str, str]]:
+    def to_dict(self, data: AlarmOverrideSet) -> Dict[str, Any]:
         """
             Converts AlarmOverrideSet to a dict.
 
@@ -610,7 +608,7 @@ class OverrideSetSerde(RegistryAvroWithReferencesSerde):
                         "reason": data.shelved.reason.name} if data.shelved is not None else None
         }
 
-    def from_dict(self, data: Dict[str, Union[None, Dict[str, str]]]) -> AlarmOverrideSet:
+    def from_dict(self, data: Dict[str, Union[None, Any]]) -> AlarmOverrideSet:
         """
             Converts a dict to AlarmOverrideSet.
 
