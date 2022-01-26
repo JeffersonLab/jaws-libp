@@ -450,6 +450,16 @@ class EffectiveActivationConsumer(JAWSConsumer):
 
         super().__init__('effective-activations', client_name, key_serde, value_serde)
 
+    def get_table_headers(self) -> List[str]:
+        return ["Alarm Name", "State", "Overrides"]
+
+    def get_table_row(self, msg: Message) -> List[str]:
+        value = msg.value()
+
+        return [msg.key(),
+                value.state.name,
+                value.overrides]
+
 
 class EffectiveAlarmConsumer(JAWSConsumer):
     """
@@ -466,6 +476,18 @@ class EffectiveAlarmConsumer(JAWSConsumer):
         value_serde = EffectiveAlarmSerde(schema_registry_client)
 
         super().__init__('effective-alarms', client_name, key_serde, value_serde)
+
+    def get_table_headers(self) -> List[str]:
+        return ["Alarm Name", "State", "Overrides", "Instance", "Class"]
+
+    def get_table_row(self, msg: Message) -> List[str]:
+        value = msg.value()
+
+        return [msg.key(),
+                value.activation.state.name,
+                value.activation.overrides,
+                value.registration.instance,
+                value.registration.alarm_class]
 
 
 class EffectiveRegistrationConsumer(JAWSConsumer):
@@ -484,6 +506,16 @@ class EffectiveRegistrationConsumer(JAWSConsumer):
 
         super().__init__('effective-registrations', client_name, key_serde, value_serde)
 
+    def get_table_headers(self) -> List[str]:
+        return ["Alarm Name", "Instance", "Class"]
+
+    def get_table_row(self, msg: Message) -> List[str]:
+        value = msg.value()
+
+        return [msg.key(),
+                value.instance,
+                value.alarm_class]
+
 
 class InstanceConsumer(JAWSConsumer):
     """
@@ -500,6 +532,19 @@ class InstanceConsumer(JAWSConsumer):
         value_serde = InstanceSerde(schema_registry_client, UnionEncoding.DICT_WITH_TYPE)
 
         super().__init__('alarm-instances', client_name, key_serde, value_serde)
+
+    def get_table_headers(self) -> List[str]:
+        return ["Alarm Name", "Class", "Producer", "Location", "Masked By", "Screen Command"]
+
+    def get_table_row(self, msg: Message) -> List[str]:
+        value = msg.value()
+
+        return [msg.key(),
+                value.alarm_class,
+                value.producer,
+                value.location,
+                value.masked_by,
+                value.screen_command]
 
 
 class LocationConsumer(JAWSConsumer):
@@ -518,6 +563,15 @@ class LocationConsumer(JAWSConsumer):
 
         super().__init__('alarm-locations', client_name, key_serde, value_serde)
 
+    def get_table_headers(self) -> List[str]:
+        return ["Location Name", "Parent"]
+
+    def get_table_row(self, msg: Message) -> List[str]:
+        value = msg.value()
+
+        return [msg.key(),
+                value.parent]
+
 
 class OverrideConsumer(JAWSConsumer):
     """
@@ -534,6 +588,16 @@ class OverrideConsumer(JAWSConsumer):
         value_serde = OverrideSerde(schema_registry_client)
 
         super().__init__('alarm-overrides', client_name, key_serde, value_serde)
+
+    def get_table_headers(self) -> List[str]:
+        return ["Alarm Name", "Override Type", "Value"]
+
+    def get_table_row(self, msg: Message) -> List[str]:
+        key = msg.key()
+
+        return [key.name,
+                key.type.name,
+                msg.value()]
 
 
 class ActivationProducer(JAWSProducer):
