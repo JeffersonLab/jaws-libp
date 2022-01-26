@@ -97,28 +97,17 @@ class JAWSConsumer(CachedTable):
 
         super().__init__(config)
 
-    def print_records_continuous(self) -> None:
-        """
-            Logs messages as they come in to standard output until stop() is called.
-
-            WARNING: This method should only be called once.
-        """
-        self.add_listener(_MonitorListener())
-        self.start()
-
     def print_table(self, nometa: bool = False,
                     filter_if: Callable[[Any, Any], bool] = lambda key, value: True) -> None:
         """
             Queries Kafka for the initial set of records (up to the topic highwater mark) and prints a table using the
             supplied display hints to standard output.  If the query timeout is exceeded a TimeoutException is raised.
 
-            WARNING: This method should only be called once.
-
             :param nometa: If True, exclude timestamp, producer app name, host, and username from table
             :param filter_if: Callback applied to each Message to indicate if Message should be included
             :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
         """
-        head = self.get_table_headers()
+        head = self.await_highwater_get()
 
         if head is None:
             head = []
@@ -158,12 +147,10 @@ class JAWSConsumer(CachedTable):
             Queries Kafka for the initial set of records (up to the topic highwater mark) and prints the
             records in the JAWS file format to standard output.
 
-            WARNING: This method should only be called once.
-
             :param filter_if: Callback applied to each Message to indicate if Message should be included
             :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
         """
-        records = self.get_records()
+        records = self.await_highwater_get()
 
         sortedtuples = sorted(records.items())
 
@@ -173,21 +160,6 @@ class JAWSConsumer(CachedTable):
 
             if filter_if(key, value):
                 print(self.__to_line(key, value))
-
-    def get_records(self) -> Dict[Any, Message]:
-        """
-            Queries Kafka for the initial set of records (up to the topic highwater mark) and returns them
-            in a Dict keyed Message keys.
-
-            WARNING: This method should only be called once.
-
-            :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
-            :return: The initial set of messages
-        """
-        self.start()
-        records = self.await_highwater_get()
-        self.stop()
-        return records
 
     def get_table_headers(self) -> List[str]:
         """
@@ -216,19 +188,25 @@ class JAWSConsumer(CachedTable):
             indicated the first one in parameter order wins.  If Neither monitor nor export is indicated then
             print_table is called.
 
-            WARNING: This method should only be called once.
+            WARNING: This method should only be called once.  start() is called and then stop() is called except for
+            when monitor flag is True.
 
-            :param monitor: If True call print_records_continuous()
+            :param monitor: If True print records as they arrive (uncompressed) indefinitely (kill with Ctrl-C)
             :param nometa: If True do not include timestamp, producer app, host, and username in output
             :param export: If True call export_records()
             :param filter_if: Callback applied to each Message to indicate if Message should be included
         """
         if monitor:
-            self.print_records_continuous()
+            self.add_listener(_MonitorListener())
+            self.start()
         elif export:
+            self.start()
             self.export_records(filter_if)
+            self.stop()
         else:
+            self.start()
             self.print_table(nometa, filter_if)
+            self.stop()
 
     def __filtered_row_with_header(self, msg: Message, filter_if: Callable[[Any, Any], bool], nometa: bool):
         timestamp = msg.timestamp()

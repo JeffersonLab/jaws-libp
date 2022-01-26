@@ -38,6 +38,19 @@ class EventSourceListener(ABC):
         """
             Callback notification of a batch of messages received.
 
+            This method is called regardless of highwater status.
+
+            :param msgs: Batch of one or more ordered messages
+        """
+        pass
+
+    @abstractmethod
+    def on_after_highwater_batch(self, msgs: List[Message]) -> None:
+        """
+            Callback notification of a batch of messages received.
+
+            This method is only called after highwater has been reached.
+
             :param msgs: Batch of one or more ordered messages
         """
         pass
@@ -68,11 +81,11 @@ class EventSourceTable:
         '_config',
         '_consumer',
         '_listeners',
-        '_end_reached',
         '_executor',
         '_high',
+        '_highwater_reached',
         '_highwater_signal',
-        'is_highwater_timeout',
+        '_is_highwater_timeout',
         '_low',
         '_run',
         '_state'
@@ -121,9 +134,9 @@ class EventSourceTable:
         self._config: Dict[str, Any] = config
         self._consumer: DeserializingConsumer = None
         self._listeners: List[EventSourceListener] = []
-        self._end_reached: bool = False
         self._executor: ThreadPoolExecutor = None
         self._high: int = None
+        self._highwater_reached: bool = False
         self._highwater_signal: Event = Event()
         self._is_highwater_timeout: bool = False
         self._low: int = None
@@ -164,6 +177,10 @@ class EventSourceTable:
         """
             Start monitoring for state updates.
 
+            Note: start() should only be called once.  I'm too lazy to come up with some thread-safe locking check
+            to ensure it, so just like Python doesn't actually have private members, I'm not actually going to stop you,
+            but you've been warned.
+
             :param on_exception: function to call if an Exception occurs, defaults to log_exception function
         """
         logger.debug("start")
@@ -171,6 +188,15 @@ class EventSourceTable:
         self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='TableThread')
 
         future = self._executor.submit(self.__monitor, on_exception)
+
+    def highwater_reached(self) -> bool:
+        """
+            Check whether initial highwater has been reached.
+
+            :return: True if highwater reached
+        """
+
+        return self._highwater_reached
 
     def __do_highwater_timeout(self) -> None:
         logger.debug("__do_highwater_timeout")
@@ -183,6 +209,14 @@ class EventSourceTable:
     def __notify_changes(self) -> None:
         for listener in self._listeners:
             listener.on_batch(self._state.copy())
+
+        self._state.clear()
+
+    def __notify_changes_after_highwater(self) -> None:
+        for listener in self._listeners:
+            s = self._state.copy()
+            listener.on_batch(s)
+            listener.on_after_highwater_batch(s)
 
         self._state.clear()
 
@@ -211,7 +245,7 @@ class EventSourceTable:
         t = Timer(timeout_seconds, self.__do_highwater_timeout)
         t.start()
 
-        while not (self._end_reached or self._is_highwater_timeout):
+        while not (self._highwater_reached or self._is_highwater_timeout):
             msg = self._consumer.poll(1)
 
             logger.debug("__monitor_initial poll None: {}".format(msg is None))
@@ -223,7 +257,7 @@ class EventSourceTable:
                     self.__update_state(msg)
 
                     if msg.offset() + 1 == self._high:
-                        self._end_reached = True
+                        self._highwater_reached = True
 
                 self.__notify_changes()
 
@@ -250,7 +284,7 @@ class EventSourceTable:
                 for msg in msgs:
                     self.__update_state(msg)
 
-                self.__notify_changes()
+                self.__notify_changes_after_highwater()
 
     def stop(self) -> None:
         """
@@ -266,7 +300,7 @@ class EventSourceTable:
             self._low, self._high = consumer.get_watermark_offsets(p)
 
             if self._high == 0:
-                self._end_reached = True
+                self._highwater_reached = True
 
         consumer.assign(partitions)
 
@@ -275,6 +309,18 @@ class CachedTable(EventSourceTable):
     """
         Adds an in-memory cache to an EventSourceTable.   Caller should be aware of size of topic being consumed and
         this class should only be used for topics whose data will fit in caller's memory.
+
+        This class is great for clients that want to grab all data in a topic, use it immediately, then done.  For
+        example a shell script to dump contents of topic.
+
+        This class can also be used by apps that want to do both: (1) grab all data up to highwater mark, and
+        (2) continue monitoring for changes.  To do both register an EventSourceListener and in the 'on_highwater()'
+        callback invoke the 'await_highwater_get()' method.  This ensures no updates are lost because
+        'on_batch_after_highwater()' will not be called concurrently with on_highwater() - CachedTable internally has
+        only one thread.
+
+        The cached state is not copied, but shared via 'await_highwater_get()' so you won't be wasting any extra memory.
+
     """
 
     def __init__(self, config: Dict[str, Any]) -> None:
