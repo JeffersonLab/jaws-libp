@@ -162,10 +162,9 @@ class JAWSConsumer(CachedTable):
             WARNING: This method should only be called once.
 
             :param filter_if: Callback applied to each Message to indicate if Message should be included
-            :param timeout_seconds: The number of seconds to wait before giving up
             :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
         """
-        records = self.get_records(timeout_seconds)
+        records = self.get_records()
 
         sortedtuples = sorted(records.items())
 
