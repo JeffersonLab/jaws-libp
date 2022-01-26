@@ -181,15 +181,30 @@ class JAWSConsumer(CachedTable):
         """
         return [msg.key(), msg.value()]
 
-    def consume(self, monitor: bool = False, nometa: bool = False, export: bool = False,
-                filter_if: Callable[[Any, Any], bool] = lambda key, value: True) -> None:
+    def get_keys_then_done(self) -> List[Any]:
+        """
+            Convenience function to get the list of keys.  This function blocks until the highwater mark is reached.
+
+            WARNING: No other functions should be called on this JAWSConsumer afterwards as start() and stop() are
+            called.
+
+            :return: List of keys
+        """
+        self.start()
+        msgs = self.await_highwater_get()
+        self.stop()
+
+        return msgs.keys()
+
+    def consume_then_done(self, monitor: bool = False, nometa: bool = False, export: bool = False,
+                          filter_if: Callable[[Any, Any], bool] = lambda key, value: True) -> None:
         """
             Convenience function for taking exactly one action given a set of hints.  If more than one action is
             indicated the first one in parameter order wins.  If Neither monitor nor export is indicated then
             print_table is called.
 
-            WARNING: This method should only be called once.  start() is called and then stop() is called except for
-            when monitor flag is True.
+            WARNING: No other functions should be called on this JAWSConsumer afterwards as start() and stop() are
+            called.
 
             :param monitor: If True print records as they arrive (uncompressed) indefinitely (kill with Ctrl-C)
             :param nometa: If True do not include timestamp, producer app, host, and username in output
