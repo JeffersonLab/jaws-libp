@@ -109,6 +109,10 @@ class EventSourceTable:
             | ``topic``               | str                 |                                                     |
             |                         |                     |                                                     |
             +-------------------------+---------------------+-----------------------------------------------------+
+            |                         |                     | Number of seconds to wait for highwater             |
+            | ``highwater.timeout``   | float               |                                                     |
+            |                         |                     |                                                     |
+            +-------------------------+---------------------+-----------------------------------------------------+
 
         Warning:
                 Keys must be hashable so your key deserializer generally must generate immutable types.
@@ -143,16 +147,17 @@ class EventSourceTable:
         """
         self._listeners.remove(listener)
 
-    def await_highwater(self, timeout_seconds: float) -> None:
+    def await_highwater(self) -> None:
         """
             Block the calling thread and wait for topic highwater to be reached.
 
-            :param timeout_seconds: Number of seconds to wait before giving up
+            See: The 'highwater.timeout' option passed to the config Dict in constructor
+
             :raises TimeoutException: If highwater is not reached before timeout
         """
         logger.debug("await_highwater")
-        flag = self._highwater_signal.wait(timeout_seconds)
-        if not flag:
+        self._highwater_signal.wait()
+        if self._is_highwater_timeout:
             raise TimeoutException
 
     def start(self, on_exception: Callable[[Exception], None] = log_exception):
@@ -201,7 +206,9 @@ class EventSourceTable:
         self._consumer = DeserializingConsumer(consumer_conf)
         self._consumer.subscribe([self._config['topic']], on_assign=self.__on_assign)
 
-        t = Timer(30, self.__do_highwater_timeout)
+        timeout_seconds = self._config['highwater.timeout'] if not None else 30
+
+        t = Timer(timeout_seconds, self.__do_highwater_timeout)
         t.start()
 
         while not (self._end_reached or self._is_highwater_timeout):
@@ -221,6 +228,7 @@ class EventSourceTable:
                 self.__notify_changes()
 
         t.cancel()
+        self._highwater_signal.set()
 
         if self._is_highwater_timeout:
             for listener in self._listeners:
@@ -262,15 +270,6 @@ class EventSourceTable:
 
         consumer.assign(partitions)
 
-    @property
-    def highwater_signal(self) -> Event:
-        """
-            An Event object for threads to wait on for highwater notification.
-
-            :return: The Event
-        """
-        return self._highwater_signal
-
 
 class CachedTable(EventSourceTable):
     """
@@ -300,14 +299,15 @@ class CachedTable(EventSourceTable):
             else:
                 self._cache[msg.key()] = msg
 
-    def await_get(self, timeout_seconds) -> Dict[Any, Message]:
+    def await_highwater_get(self) -> Dict[Any, Message]:
         """
             Synchronously get messages up to highwater mark.  Blocks with a timeout.
 
-            :param timeout_seconds: Seconds to wait for highwater to be reached
+            See: The 'highwater.timeout' option passed to the config Dict in constructor
+
             :raises TimeoutException: If highwater is not reached before timeout
         """
-        self.await_highwater(timeout_seconds)
+        self.await_highwater()
         return self._cache
 
 
@@ -325,7 +325,7 @@ class _CacheListener(EventSourceListener):
         self._parent = parent
 
     def on_highwater(self) -> None:
-        self._parent.highwater_signal.set()
+        pass
 
     def on_highwater_timeout(self) -> None:
         pass
