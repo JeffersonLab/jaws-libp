@@ -1,0 +1,35 @@
+jlab\_jaws.entities.AlarmInstance
+=================================
+
+.. currentmodule:: jlab_jaws.entities
+
+.. autoclass:: AlarmInstance
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AlarmInstance.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AlarmInstance.alarm_class
+      ~AlarmInstance.producer
+      ~AlarmInstance.location
+      ~AlarmInstance.masked_by
+      ~AlarmInstance.screen_command
+   
+   

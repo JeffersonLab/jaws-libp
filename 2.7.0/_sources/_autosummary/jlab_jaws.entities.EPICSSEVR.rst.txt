@@ -1,0 +1,28 @@
+jlab\_jaws.entities.EPICSSEVR
+=============================
+
+.. currentmodule:: jlab_jaws.entities
+
+.. autoclass:: EPICSSEVR
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EPICSSEVR.NO_ALARM
+      ~EPICSSEVR.MINOR
+      ~EPICSSEVR.MAJOR
+      ~EPICSSEVR.INVALID
+   
+   

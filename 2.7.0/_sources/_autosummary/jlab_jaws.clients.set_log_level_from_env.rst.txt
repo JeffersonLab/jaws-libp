@@ -1,0 +1,6 @@
+jlab\_jaws.clients.set\_log\_level\_from\_env
+=============================================
+
+.. currentmodule:: jlab_jaws.clients
+
+.. autofunction:: set_log_level_from_env

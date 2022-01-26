@@ -1,0 +1,39 @@
+jlab\_jaws.clients.LocationConsumer
+===================================
+
+.. currentmodule:: jlab_jaws.clients
+
+.. autoclass:: LocationConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LocationConsumer.__init__
+      ~LocationConsumer.add_cache_listener
+      ~LocationConsumer.add_listener
+      ~LocationConsumer.await_highwater
+      ~LocationConsumer.await_highwater_get
+      ~LocationConsumer.consume_then_done
+      ~LocationConsumer.export_records
+      ~LocationConsumer.get
+      ~LocationConsumer.get_keys_then_done
+      ~LocationConsumer.highwater_reached
+      ~LocationConsumer.print_table
+      ~LocationConsumer.remove_cache_listener
+      ~LocationConsumer.remove_listener
+      ~LocationConsumer.start
+      ~LocationConsumer.stop
+   
+   
+
+   
+   
+   

@@ -1,0 +1,39 @@
+jlab\_jaws.clients.EffectiveAlarmConsumer
+=========================================
+
+.. currentmodule:: jlab_jaws.clients
+
+.. autoclass:: EffectiveAlarmConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EffectiveAlarmConsumer.__init__
+      ~EffectiveAlarmConsumer.add_cache_listener
+      ~EffectiveAlarmConsumer.add_listener
+      ~EffectiveAlarmConsumer.await_highwater
+      ~EffectiveAlarmConsumer.await_highwater_get
+      ~EffectiveAlarmConsumer.consume_then_done
+      ~EffectiveAlarmConsumer.export_records
+      ~EffectiveAlarmConsumer.get
+      ~EffectiveAlarmConsumer.get_keys_then_done
+      ~EffectiveAlarmConsumer.highwater_reached
+      ~EffectiveAlarmConsumer.print_table
+      ~EffectiveAlarmConsumer.remove_cache_listener
+      ~EffectiveAlarmConsumer.remove_listener
+      ~EffectiveAlarmConsumer.start
+      ~EffectiveAlarmConsumer.stop
+   
+   
+
+   
+   
+   

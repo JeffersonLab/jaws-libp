@@ -1,0 +1,31 @@
+jlab\_jaws.entities.OnDelayedOverride
+=====================================
+
+.. currentmodule:: jlab_jaws.entities
+
+.. autoclass:: OnDelayedOverride
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OnDelayedOverride.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OnDelayedOverride.expiration
+   
+   

@@ -1,0 +1,32 @@
+jlab\_jaws.entities.AlarmOverrideKey
+====================================
+
+.. currentmodule:: jlab_jaws.entities
+
+.. autoclass:: AlarmOverrideKey
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AlarmOverrideKey.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AlarmOverrideKey.name
+      ~AlarmOverrideKey.type
+   
+   

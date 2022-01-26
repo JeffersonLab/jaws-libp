@@ -1,0 +1,25 @@
+jlab\_jaws.entities.SimpleProducer
+==================================
+
+.. currentmodule:: jlab_jaws.entities
+
+.. autoclass:: SimpleProducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SimpleProducer.__init__
+   
+   
+
+   
+   
+   

@@ -1,0 +1,39 @@
+jlab\_jaws.clients.OverrideConsumer
+===================================
+
+.. currentmodule:: jlab_jaws.clients
+
+.. autoclass:: OverrideConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OverrideConsumer.__init__
+      ~OverrideConsumer.add_cache_listener
+      ~OverrideConsumer.add_listener
+      ~OverrideConsumer.await_highwater
+      ~OverrideConsumer.await_highwater_get
+      ~OverrideConsumer.consume_then_done
+      ~OverrideConsumer.export_records
+      ~OverrideConsumer.get
+      ~OverrideConsumer.get_keys_then_done
+      ~OverrideConsumer.highwater_reached
+      ~OverrideConsumer.print_table
+      ~OverrideConsumer.remove_cache_listener
+      ~OverrideConsumer.remove_listener
+      ~OverrideConsumer.start
+      ~OverrideConsumer.stop
+   
+   
+
+   
+   
+   

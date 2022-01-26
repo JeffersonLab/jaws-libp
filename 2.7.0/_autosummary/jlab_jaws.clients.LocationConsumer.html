@@ -1,0 +1,537 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>jlab_jaws.clients.LocationConsumer &mdash; jlab-jaws 2.7.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jlab_jaws.clients.LocationProducer" href="jlab_jaws.clients.LocationProducer.html" />
+    <link rel="prev" title="jlab_jaws.clients.JAWSProducer" href="jlab_jaws.clients.JAWSProducer.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> jlab-jaws
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jlab_jaws.html">jlab_jaws</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jlab_jaws.avro.html">jlab_jaws.avro</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jlab_jaws.clients.html">jlab_jaws.clients</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.get_registry_client.html">jlab_jaws.clients.get_registry_client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.set_log_level_from_env.html">jlab_jaws.clients.set_log_level_from_env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.ActivationConsumer.html">jlab_jaws.clients.ActivationConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.ActivationProducer.html">jlab_jaws.clients.ActivationProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.CategoryConsumer.html">jlab_jaws.clients.CategoryConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.CategoryProducer.html">jlab_jaws.clients.CategoryProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.ClassConsumer.html">jlab_jaws.clients.ClassConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.ClassProducer.html">jlab_jaws.clients.ClassProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.EffectiveActivationConsumer.html">jlab_jaws.clients.EffectiveActivationConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.EffectiveActivationProducer.html">jlab_jaws.clients.EffectiveActivationProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.EffectiveAlarmConsumer.html">jlab_jaws.clients.EffectiveAlarmConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.EffectiveAlarmProducer.html">jlab_jaws.clients.EffectiveAlarmProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.EffectiveRegistrationConsumer.html">jlab_jaws.clients.EffectiveRegistrationConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.EffectiveRegistrationProducer.html">jlab_jaws.clients.EffectiveRegistrationProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.InstanceConsumer.html">jlab_jaws.clients.InstanceConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.InstanceProducer.html">jlab_jaws.clients.InstanceProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.JAWSConsumer.html">jlab_jaws.clients.JAWSConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.JAWSProducer.html">jlab_jaws.clients.JAWSProducer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jlab_jaws.clients.LocationConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.LocationProducer.html">jlab_jaws.clients.LocationProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.OverrideConsumer.html">jlab_jaws.clients.OverrideConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.clients.OverrideProducer.html">jlab_jaws.clients.OverrideProducer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jlab_jaws.entities.html">jlab_jaws.entities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jlab_jaws.eventsource.html">jlab_jaws.eventsource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jlab_jaws.references.html">jlab_jaws.references</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jlab-jaws</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="jlab_jaws.html">jlab_jaws</a> &raquo;</li>
+        
+          <li><a href="jlab_jaws.clients.html">jlab_jaws.clients</a> &raquo;</li>
+        
+      <li>jlab_jaws.clients.LocationConsumer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/_autosummary/jlab_jaws.clients.LocationConsumer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="jlab-jaws-clients-locationconsumer">
+<h1>jlab_jaws.clients.LocationConsumer<a class="headerlink" href="#jlab-jaws-clients-locationconsumer" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">jlab_jaws.clients.</span></span><span class="sig-name descname"><span class="pre">LocationConsumer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jlab_jaws/clients.html#LocationConsumer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="jlab_jaws.clients.JAWSConsumer.html#jlab_jaws.clients.JAWSConsumer" title="jlab_jaws.clients.JAWSConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">jlab_jaws.clients.JAWSConsumer</span></code></a></p>
+<p>Consumer for JAWS Location messages.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jlab_jaws/clients.html#LocationConsumer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new Consumer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>client_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The name of the client application</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.__init__" title="jlab_jaws.clients.LocationConsumer.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(client_name)</p></td>
+<td><p>Create a new Consumer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.add_cache_listener" title="jlab_jaws.clients.LocationConsumer.add_cache_listener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_cache_listener</span></code></a>(listener)</p></td>
+<td><p>Add a CacheListener.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.add_listener" title="jlab_jaws.clients.LocationConsumer.add_listener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_listener</span></code></a>(listener)</p></td>
+<td><p>Add an EventSourceListener.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.await_highwater" title="jlab_jaws.clients.LocationConsumer.await_highwater"><code class="xref py py-obj docutils literal notranslate"><span class="pre">await_highwater</span></code></a>()</p></td>
+<td><p>Block the calling thread and wait for topic highwater to be reached.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.await_highwater_get" title="jlab_jaws.clients.LocationConsumer.await_highwater_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">await_highwater_get</span></code></a>()</p></td>
+<td><p>Block the calling thread and wait for topic highwater to be reached, then return cache of compacted messages.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.consume_then_done" title="jlab_jaws.clients.LocationConsumer.consume_then_done"><code class="xref py py-obj docutils literal notranslate"><span class="pre">consume_then_done</span></code></a>([monitor, nometa, export, ...])</p></td>
+<td><p>Convenience function for taking exactly one action given a set of hints.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.export_records" title="jlab_jaws.clients.LocationConsumer.export_records"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_records</span></code></a>([filter_if])</p></td>
+<td><p>Prints the compacted cache of records in the JAWS file format to standard output.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.get" title="jlab_jaws.clients.LocationConsumer.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code></a>()</p></td>
+<td><p>Returns the cache of compacted messages.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.get_keys_then_done" title="jlab_jaws.clients.LocationConsumer.get_keys_then_done"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_keys_then_done</span></code></a>()</p></td>
+<td><p>Convenience function to get the list of keys.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.highwater_reached" title="jlab_jaws.clients.LocationConsumer.highwater_reached"><code class="xref py py-obj docutils literal notranslate"><span class="pre">highwater_reached</span></code></a>()</p></td>
+<td><p>Check whether initial highwater has been reached.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.print_table" title="jlab_jaws.clients.LocationConsumer.print_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_table</span></code></a>([nometa, filter_if])</p></td>
+<td><p>Prints the compacted cache of records as a table to standard output.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.remove_cache_listener" title="jlab_jaws.clients.LocationConsumer.remove_cache_listener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_cache_listener</span></code></a>(listener)</p></td>
+<td><p>Remove a CacheListener.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.remove_listener" title="jlab_jaws.clients.LocationConsumer.remove_listener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_listener</span></code></a>(listener)</p></td>
+<td><p>Remove an EventSourceListener.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.start" title="jlab_jaws.clients.LocationConsumer.start"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code></a>()</p></td>
+<td><p>Start monitoring for state updates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jlab_jaws.clients.LocationConsumer.stop" title="jlab_jaws.clients.LocationConsumer.stop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stop</span></code></a>()</p></td>
+<td><p>Stop monitoring for state updates.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.add_cache_listener">
+<span class="sig-name descname"><span class="pre">add_cache_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.add_cache_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a CacheListener.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>listener</strong> (<a class="reference internal" href="jlab_jaws.eventsource.CacheListener.html#jlab_jaws.eventsource.CacheListener" title="jlab_jaws.eventsource.CacheListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">CacheListener</span></code></a>) – The CacheListener to register</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.add_listener">
+<span class="sig-name descname"><span class="pre">add_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.add_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an EventSourceListener.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>listener</strong> (<a class="reference internal" href="jlab_jaws.eventsource.EventSourceListener.html#jlab_jaws.eventsource.EventSourceListener" title="jlab_jaws.eventsource.EventSourceListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">EventSourceListener</span></code></a>) – The EventSourceListener to register</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.await_highwater">
+<span class="sig-name descname"><span class="pre">await_highwater</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.await_highwater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Block the calling thread and wait for topic highwater to be reached.</p>
+<p>See: The ‘highwater.timeout’ option passed to the config Dict in constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jlab_jaws.eventsource.TimeoutException.html#jlab_jaws.eventsource.TimeoutException" title="jlab_jaws.eventsource.TimeoutException"><strong>TimeoutException</strong></a> – If highwater is not reached before timeout</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.await_highwater_get">
+<span class="sig-name descname"><span class="pre">await_highwater_get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.await_highwater_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Block the calling thread and wait for topic highwater to be reached, then return cache of compacted
+messages.</p>
+<p>See: The ‘highwater.timeout’ option passed to the config Dict in constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Message</span></code>]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The cache of compacted messages</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jlab_jaws.eventsource.TimeoutException.html#jlab_jaws.eventsource.TimeoutException" title="jlab_jaws.eventsource.TimeoutException"><strong>TimeoutException</strong></a> – If highwater is not reached before timeout</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.consume_then_done">
+<span class="sig-name descname"><span class="pre">consume_then_done</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monitor=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nometa=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_if=&lt;function</span> <span class="pre">JAWSConsumer.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.consume_then_done" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for taking exactly one action given a set of hints.  If more than one action is
+indicated the first one in parameter order wins.  If Neither monitor nor export is indicated then
+print_table is called.</p>
+<p>WARNING: No other functions should be called on this JAWSConsumer afterwards as start() and stop() are
+called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>monitor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If True print records as they arrive (uncompressed) indefinitely (kill with Ctrl-C)</p></li>
+<li><p><strong>nometa</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If True do not include timestamp, producer app, host, and username in output</p></li>
+<li><p><strong>export</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If True call export_records()</p></li>
+<li><p><strong>filter_if</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]) – Callback applied to each Message to indicate if Message should be included</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.export_records">
+<span class="sig-name descname"><span class="pre">export_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_if=&lt;function</span> <span class="pre">JAWSConsumer.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.export_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the compacted cache of records in the JAWS file format to standard output.</p>
+<p>Note: Blocks until the highwater mark has been reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filter_if</strong> – Callback applied to each Message to indicate if Message should be included</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>TimeoutException if unable to obtain initial list of records up to highwater before timeout</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the cache of compacted messages.</p>
+<p>See Also: ‘await_highwater_get()’ to block until highwater reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Message</span></code>]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The cache of compacted messages</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.get_keys_then_done">
+<span class="sig-name descname"><span class="pre">get_keys_then_done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.get_keys_then_done" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function to get the list of keys.  This function blocks until the highwater mark is reached.</p>
+<p>WARNING: No other functions should be called on this JAWSConsumer afterwards as start() and stop() are
+called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of keys</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.highwater_reached">
+<span class="sig-name descname"><span class="pre">highwater_reached</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.highwater_reached" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether initial highwater has been reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if highwater reached</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.print_table">
+<span class="sig-name descname"><span class="pre">print_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nometa=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_if=&lt;function</span> <span class="pre">JAWSConsumer.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.print_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the compacted cache of records as a table to standard output.</p>
+<p>Note: Blocks until the highwater mark has been reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nometa</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If True, exclude timestamp, producer app name, host, and username from table</p></li>
+<li><p><strong>filter_if</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]) – Callback applied to each Message to indicate if Message should be included</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>TimeoutException if unable to obtain initial list of records up to highwater before timeout</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.remove_cache_listener">
+<span class="sig-name descname"><span class="pre">remove_cache_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.remove_cache_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a CacheListener.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>listener</strong> (<a class="reference internal" href="jlab_jaws.eventsource.CacheListener.html#jlab_jaws.eventsource.CacheListener" title="jlab_jaws.eventsource.CacheListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">CacheListener</span></code></a>) – The CacheListener to unregister</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.remove_listener">
+<span class="sig-name descname"><span class="pre">remove_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.remove_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an EventSourceListener.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>listener</strong> (<a class="reference internal" href="jlab_jaws.eventsource.EventSourceListener.html#jlab_jaws.eventsource.EventSourceListener" title="jlab_jaws.eventsource.EventSourceListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">EventSourceListener</span></code></a>) – The EventSourceListener to unregister</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start monitoring for state updates.</p>
+<p>Note: start() should only be called once.  I’m too lazy to come up with some thread-safe locking check
+to ensure it, so just like Python doesn’t actually have private members, I’m not actually going to stop you,
+but you’ve been warned.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.clients.LocationConsumer.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.clients.LocationConsumer.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop monitoring for state updates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="jlab_jaws.clients.LocationProducer.html" class="btn btn-neutral float-right" title="jlab_jaws.clients.LocationProducer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="jlab_jaws.clients.JAWSProducer.html" class="btn btn-neutral float-left" title="jlab_jaws.clients.JAWSProducer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jefferson Lab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

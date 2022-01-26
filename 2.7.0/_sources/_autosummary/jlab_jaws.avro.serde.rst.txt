@@ -1,0 +1,46 @@
+jlab\_jaws.avro.serde
+=====================
+
+.. automodule:: jlab_jaws.avro.serde
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ActivationSerde
+      ClassSerde
+      EffectiveActivationSerde
+      EffectiveAlarmSerde
+      EffectiveRegistrationSerde
+      InstanceSerde
+      IntermediateMonologSerde
+      LocationSerde
+      OverrideKeySerde
+      OverrideSerde
+      OverrideSetSerde
+      ProcessorTransitionsSerde
+      RegistryAvroSerde
+      RegistryAvroWithReferencesSerde
+      Serde
+      StringSerde
+   
+   
+
+   
+   
+   
+
+
+

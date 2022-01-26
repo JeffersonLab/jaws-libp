@@ -1,0 +1,25 @@
+jlab\_jaws.references.avro.AvroSerializerWithReferences
+=======================================================
+
+.. currentmodule:: jlab_jaws.references.avro
+
+.. autoclass:: AvroSerializerWithReferences
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AvroSerializerWithReferences.__init__
+   
+   
+
+   
+   
+   

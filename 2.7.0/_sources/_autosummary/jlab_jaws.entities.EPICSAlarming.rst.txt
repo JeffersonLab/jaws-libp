@@ -1,0 +1,32 @@
+jlab\_jaws.entities.EPICSAlarming
+=================================
+
+.. currentmodule:: jlab_jaws.entities
+
+.. autoclass:: EPICSAlarming
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EPICSAlarming.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EPICSAlarming.sevr
+      ~EPICSAlarming.stat
+   
+   

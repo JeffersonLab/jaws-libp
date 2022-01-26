@@ -1,0 +1,32 @@
+jlab\_jaws.avro.serde.RegistryAvroSerde
+=======================================
+
+.. currentmodule:: jlab_jaws.avro.serde
+
+.. autoclass:: RegistryAvroSerde
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RegistryAvroSerde.__init__
+      ~RegistryAvroSerde.deserializer
+      ~RegistryAvroSerde.from_dict
+      ~RegistryAvroSerde.from_json
+      ~RegistryAvroSerde.get_schema
+      ~RegistryAvroSerde.serializer
+      ~RegistryAvroSerde.to_dict
+      ~RegistryAvroSerde.to_json
+   
+   
+
+   
+   
+   
