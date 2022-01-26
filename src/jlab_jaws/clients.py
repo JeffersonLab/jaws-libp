@@ -318,7 +318,7 @@ class JAWSProducer:
 
             :param file: Path to file to import
         """
-        logger.debug("Loading file", file)
+        logger.debug("Loading file %s", file)
         handle = open(file, 'r')
         lines = handle.readlines()
 
