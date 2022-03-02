@@ -1,10 +1,10 @@
-avro-python3==1.10.0
-certifi==2020.12.5
+avro==1.11.0
+certifi==2021.10.8
 chardet==4.0.0
-confluent-kafka==1.6.1
-fastavro==1.4.0
-idna==2.10
+confluent-kafka==1.8.2
+fastavro==1.4.9
+idna==3.3
 psutil==5.9.0
-requests==2.25.1
+requests==2.27.1
 tabulate==0.8.9
-urllib3==1.26.4
+urllib3==1.26.8
