@@ -1,0 +1,29 @@
+jlab\_jaws.avro.serde.Serde
+===========================
+
+.. currentmodule:: jlab_jaws.avro.serde
+
+.. autoclass:: Serde
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Serde.__init__
+      ~Serde.deserializer
+      ~Serde.from_json
+      ~Serde.serializer
+      ~Serde.to_json
+   
+   
+
+   
+   
+   

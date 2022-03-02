@@ -1,0 +1,6 @@
+jlab\_jaws.clients.get\_registry\_client
+========================================
+
+.. currentmodule:: jlab_jaws.clients
+
+.. autofunction:: get_registry_client

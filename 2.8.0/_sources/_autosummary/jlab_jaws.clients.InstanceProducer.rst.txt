@@ -1,0 +1,27 @@
+jlab\_jaws.clients.InstanceProducer
+===================================
+
+.. currentmodule:: jlab_jaws.clients
+
+.. autoclass:: InstanceProducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~InstanceProducer.__init__
+      ~InstanceProducer.import_records
+      ~InstanceProducer.send
+   
+   
+
+   
+   
+   

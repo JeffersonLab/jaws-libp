@@ -1,0 +1,32 @@
+jlab\_jaws.entities.EffectiveAlarm
+==================================
+
+.. currentmodule:: jlab_jaws.entities
+
+.. autoclass:: EffectiveAlarm
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EffectiveAlarm.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EffectiveAlarm.registration
+      ~EffectiveAlarm.activation
+   
+   

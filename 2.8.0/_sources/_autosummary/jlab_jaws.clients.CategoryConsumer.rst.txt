@@ -1,0 +1,39 @@
+jlab\_jaws.clients.CategoryConsumer
+===================================
+
+.. currentmodule:: jlab_jaws.clients
+
+.. autoclass:: CategoryConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CategoryConsumer.__init__
+      ~CategoryConsumer.add_cache_listener
+      ~CategoryConsumer.add_listener
+      ~CategoryConsumer.await_highwater
+      ~CategoryConsumer.await_highwater_get
+      ~CategoryConsumer.consume_then_done
+      ~CategoryConsumer.export_records
+      ~CategoryConsumer.get
+      ~CategoryConsumer.get_keys_then_done
+      ~CategoryConsumer.highwater_reached
+      ~CategoryConsumer.print_table
+      ~CategoryConsumer.remove_cache_listener
+      ~CategoryConsumer.remove_listener
+      ~CategoryConsumer.start
+      ~CategoryConsumer.stop
+   
+   
+
+   
+   
+   

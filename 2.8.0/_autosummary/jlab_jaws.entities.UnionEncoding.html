@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>jlab_jaws.entities.UnionEncoding &mdash; jlab-jaws 2.8.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jlab_jaws.eventsource" href="jlab_jaws.eventsource.html" />
+    <link rel="prev" title="jlab_jaws.entities.SimpleProducer" href="jlab_jaws.entities.SimpleProducer.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> jlab-jaws
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jlab_jaws.html">jlab_jaws</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jlab_jaws.avro.html">jlab_jaws.avro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jlab_jaws.clients.html">jlab_jaws.clients</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jlab_jaws.entities.html">jlab_jaws.entities</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.AlarmActivationUnion.html">jlab_jaws.entities.AlarmActivationUnion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.AlarmClass.html">jlab_jaws.entities.AlarmClass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.AlarmInstance.html">jlab_jaws.entities.AlarmInstance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.AlarmLocation.html">jlab_jaws.entities.AlarmLocation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.AlarmOverrideKey.html">jlab_jaws.entities.AlarmOverrideKey</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.AlarmOverrideSet.html">jlab_jaws.entities.AlarmOverrideSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.AlarmOverrideUnion.html">jlab_jaws.entities.AlarmOverrideUnion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.AlarmPriority.html">jlab_jaws.entities.AlarmPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.AlarmState.html">jlab_jaws.entities.AlarmState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.CALCProducer.html">jlab_jaws.entities.CALCProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.DisabledOverride.html">jlab_jaws.entities.DisabledOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.EPICSAlarming.html">jlab_jaws.entities.EPICSAlarming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.EPICSProducer.html">jlab_jaws.entities.EPICSProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.EPICSSEVR.html">jlab_jaws.entities.EPICSSEVR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.EPICSSTAT.html">jlab_jaws.entities.EPICSSTAT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.EffectiveActivation.html">jlab_jaws.entities.EffectiveActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.EffectiveAlarm.html">jlab_jaws.entities.EffectiveAlarm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.EffectiveRegistration.html">jlab_jaws.entities.EffectiveRegistration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.FilteredOverride.html">jlab_jaws.entities.FilteredOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.IntermediateMonolog.html">jlab_jaws.entities.IntermediateMonolog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.LatchedOverride.html">jlab_jaws.entities.LatchedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.MaskedOverride.html">jlab_jaws.entities.MaskedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.NoteAlarming.html">jlab_jaws.entities.NoteAlarming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.OffDelayedOverride.html">jlab_jaws.entities.OffDelayedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.OnDelayedOverride.html">jlab_jaws.entities.OnDelayedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.OverriddenAlarmType.html">jlab_jaws.entities.OverriddenAlarmType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.ProcessorTransitions.html">jlab_jaws.entities.ProcessorTransitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.ShelvedOverride.html">jlab_jaws.entities.ShelvedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.ShelvedReason.html">jlab_jaws.entities.ShelvedReason</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.SimpleAlarming.html">jlab_jaws.entities.SimpleAlarming</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jlab_jaws.entities.SimpleProducer.html">jlab_jaws.entities.SimpleProducer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jlab_jaws.entities.UnionEncoding</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jlab_jaws.eventsource.html">jlab_jaws.eventsource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jlab_jaws.references.html">jlab_jaws.references</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jlab-jaws</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="jlab_jaws.html">jlab_jaws</a> &raquo;</li>
+        
+          <li><a href="jlab_jaws.entities.html">jlab_jaws.entities</a> &raquo;</li>
+        
+      <li>jlab_jaws.entities.UnionEncoding</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/_autosummary/jlab_jaws.entities.UnionEncoding.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="jlab-jaws-entities-unionencoding">
+<h1>jlab_jaws.entities.UnionEncoding<a class="headerlink" href="#jlab-jaws-entities-unionencoding" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="jlab_jaws.entities.UnionEncoding">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">jlab_jaws.entities.</span></span><span class="sig-name descname"><span class="pre">UnionEncoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jlab_jaws/entities.html#UnionEncoding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jlab_jaws.entities.UnionEncoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Enum of possible ways to encode an AVRO union instance in Python.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="jlab_jaws.entities.UnionEncoding.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jlab_jaws.entities.UnionEncoding.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jlab_jaws.entities.UnionEncoding.TUPLE" title="jlab_jaws.entities.UnionEncoding.TUPLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TUPLE</span></code></a></p></td>
+<td><p>Instance is a two-tuple of (str - type name, dict); this is how fastavro works (<a class="reference external" href="https://fastavro.readthedocs.io/en/latest/writer.html#using-the-tuple-notation-to-specify-which-branch-of-a-union-to-take">https://fastavro.readthedocs.io/en/latest/writer.html#using-the-tuple-notation-to-specify-which-branch-of-a-union-to-take</a>)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jlab_jaws.entities.UnionEncoding.DICT_WITH_TYPE" title="jlab_jaws.entities.UnionEncoding.DICT_WITH_TYPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DICT_WITH_TYPE</span></code></a></p></td>
+<td><p>Instance is a dict with one entry of key type name str and value dict; this serializes to JSON as AVRO expects (except for logical types and bytes) - See:  <a class="reference external" href="http://avro.apache.org/docs/current/spec.html#json_encoding">http://avro.apache.org/docs/current/spec.html#json_encoding</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jlab_jaws.entities.UnionEncoding.POSSIBLY_AMBIGUOUS_DICT" title="jlab_jaws.entities.UnionEncoding.POSSIBLY_AMBIGUOUS_DICT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POSSIBLY_AMBIGUOUS_DICT</span></code></a></p></td>
+<td><p>Instance dict provided without type name - which in the case of records with identical fields there is no way to determine which is which (example: union of classes A and B where each has identical fields)</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jlab_jaws.entities.UnionEncoding.DICT_WITH_TYPE">
+<span class="sig-name descname"><span class="pre">DICT_WITH_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#jlab_jaws.entities.UnionEncoding.DICT_WITH_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instance is a dict with one entry of key type name str and value dict; this serializes to JSON as AVRO expects
+(except for logical types and bytes) - See:  <a class="reference external" href="http://avro.apache.org/docs/current/spec.html#json_encoding">http://avro.apache.org/docs/current/spec.html#json_encoding</a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jlab_jaws.entities.UnionEncoding.POSSIBLY_AMBIGUOUS_DICT">
+<span class="sig-name descname"><span class="pre">POSSIBLY_AMBIGUOUS_DICT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#jlab_jaws.entities.UnionEncoding.POSSIBLY_AMBIGUOUS_DICT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instance dict provided without type name - which in the case of records with identical fields there is no way
+to determine which is which (example: union of classes A and B where each has identical fields)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jlab_jaws.entities.UnionEncoding.TUPLE">
+<span class="sig-name descname"><span class="pre">TUPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#jlab_jaws.entities.UnionEncoding.TUPLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instance is a two-tuple of (str - type name, dict); this is how fastavro works
+(<a class="reference external" href="https://fastavro.readthedocs.io/en/latest/writer.html#using-the-tuple-notation-to-specify-which-branch-of-a-union-to-take">https://fastavro.readthedocs.io/en/latest/writer.html#using-the-tuple-notation-to-specify-which-branch-of-a-union-to-take</a>)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="jlab_jaws.eventsource.html" class="btn btn-neutral float-right" title="jlab_jaws.eventsource" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="jlab_jaws.entities.SimpleProducer.html" class="btn btn-neutral float-left" title="jlab_jaws.entities.SimpleProducer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jefferson Lab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true)
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

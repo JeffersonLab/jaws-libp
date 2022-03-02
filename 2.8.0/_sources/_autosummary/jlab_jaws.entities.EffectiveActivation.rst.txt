@@ -1,0 +1,33 @@
+jlab\_jaws.entities.EffectiveActivation
+=======================================
+
+.. currentmodule:: jlab_jaws.entities
+
+.. autoclass:: EffectiveActivation
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EffectiveActivation.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EffectiveActivation.actual
+      ~EffectiveActivation.overrides
+      ~EffectiveActivation.state
+   
+   

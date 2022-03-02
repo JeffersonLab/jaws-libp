@@ -1,0 +1,31 @@
+jlab\_jaws.entities.AlarmOverrideUnion
+======================================
+
+.. currentmodule:: jlab_jaws.entities
+
+.. autoclass:: AlarmOverrideUnion
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AlarmOverrideUnion.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AlarmOverrideUnion.msg
+   
+   

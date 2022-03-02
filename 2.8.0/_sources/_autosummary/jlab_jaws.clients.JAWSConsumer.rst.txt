@@ -1,0 +1,39 @@
+jlab\_jaws.clients.JAWSConsumer
+===============================
+
+.. currentmodule:: jlab_jaws.clients
+
+.. autoclass:: JAWSConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~JAWSConsumer.__init__
+      ~JAWSConsumer.add_cache_listener
+      ~JAWSConsumer.add_listener
+      ~JAWSConsumer.await_highwater
+      ~JAWSConsumer.await_highwater_get
+      ~JAWSConsumer.consume_then_done
+      ~JAWSConsumer.export_records
+      ~JAWSConsumer.get
+      ~JAWSConsumer.get_keys_then_done
+      ~JAWSConsumer.highwater_reached
+      ~JAWSConsumer.print_table
+      ~JAWSConsumer.remove_cache_listener
+      ~JAWSConsumer.remove_listener
+      ~JAWSConsumer.start
+      ~JAWSConsumer.stop
+   
+   
+
+   
+   
+   

@@ -1,0 +1,32 @@
+jlab\_jaws.avro.serde.LocationSerde
+===================================
+
+.. currentmodule:: jlab_jaws.avro.serde
+
+.. autoclass:: LocationSerde
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LocationSerde.__init__
+      ~LocationSerde.deserializer
+      ~LocationSerde.from_dict
+      ~LocationSerde.from_json
+      ~LocationSerde.get_schema
+      ~LocationSerde.serializer
+      ~LocationSerde.to_dict
+      ~LocationSerde.to_json
+   
+   
+
+   
+   
+   
