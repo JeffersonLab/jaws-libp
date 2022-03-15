@@ -9,6 +9,8 @@ Reusable Python Classes for [JAWS](https://github.com/JeffersonLab/jaws).
 ---
 
 ## Install
+Requires [Python 3.9+](https://www.python.org/)
+
 ```
 pip install jaws-libp
 ```
