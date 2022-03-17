@@ -1,0 +1,34 @@
+{
+    "type": "record",
+    "name": "OverriddenAlarmKey",
+    "namespace": "org.jlab.jaws.entity",
+    "doc": "Key of an overridden alarm; contains both name and type since any given alarm name can be overridden by multiple types simultaneously",
+    "fields": [
+        {
+            "name": "name",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
+            "doc": "The unique name of the alarm"
+        },
+        {
+            "name": "type",
+            "type": {
+                "type": "enum",
+                "name": "OverriddenAlarmType",
+                "doc": "Enumeration of possible message types",
+                "symbols": [
+                    "Disabled",
+                    "Filtered",
+                    "Masked",
+                    "OnDelayed",
+                    "OffDelayed",
+                    "Shelved",
+                    "Latched"
+                ]
+            },
+            "doc": "The type of override"
+        }
+    ]
+}

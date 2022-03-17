@@ -1,0 +1,86 @@
+[
+  {"file": "avro/schemas/AlarmLocation.avsc", "subject": "alarm-locations-value", "references": []},
+  {"file": "avro/schemas/AlarmPriority.avsc", "subject": "alarm-priority", "references": []},
+  {"file": "avro/schemas/DisabledOverride.avsc", "subject": "disabled-override", "references": []},
+  {"file": "avro/schemas/FilteredOverride.avsc", "subject": "filtered-override", "references": []},
+  {"file": "avro/schemas/LatchedOverride.avsc", "subject": "latched-override", "references": []},
+  {"file": "avro/schemas/MaskedOverride.avsc", "subject": "masked-override", "references": []},
+  {"file": "avro/schemas/OffDelayedOverride.avsc", "subject": "off-delayed-override", "references": []},
+  {"file": "avro/schemas/OnDelayedOverride.avsc", "subject": "on-delayed-override", "references": []},
+  {"file": "avro/schemas/ShelvedOverride.avsc", "subject": "shelved-override", "references": []},
+  {"file": "avro/schemas/AlarmActivationUnion.avsc", "subject": "alarm-activations-value", "references": []},
+  {"file": "avro/schemas/AlarmClass.avsc", "subject": "alarm-classes-value", "references": [
+    {"name": "org.jlab.jaws.entity.AlarmPriority", "subject": "alarm-priority", "version": "1"}
+  ]},
+  {"file": "avro/schemas/AlarmInstance.avsc", "subject": "alarm-instances-value", "references": []},
+  {"file": "avro/schemas/AlarmOverrideUnion.avsc", "subject": "alarm-overrides-value", "references": [
+    {"name": "org.jlab.jaws.entity.DisabledOverride", "subject": "disabled-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.FilteredOverride", "subject": "filtered-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.LatcheddOverride", "subject": "latched-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.MaskedOverride", "subject": "masked-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.OffDelayedOverride", "subject": "off-delayed-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.OnDelayedOverride", "subject": "on-delayed-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.ShelvedOverride", "subject": "shelved-override", "version": "1"}
+  ]},
+  {"file": "avro/schemas/AlarmOverrideKey.avsc", "subject": "alarm-overrides-key", "references": []},
+  {"file": "avro/schemas/AlarmOverrideSet.avsc", "subject": "alarm-override-set", "references": [
+    {"name": "org.jlab.jaws.entity.DisabledOverride", "subject": "disabled-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.FilteredOverride", "subject": "filtered-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.LatcheddOverride", "subject": "latched-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.MaskedOverride", "subject": "masked-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.OffDelayedOverride", "subject": "off-delayed-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.OnDelayedOverride", "subject": "on-delayed-override", "version": "1"},
+    {"name": "org.jlab.jaws.entity.ShelvedOverride", "subject": "shelved-override", "version": "1"}
+  ]},
+  {"file": "avro/schemas/ProcessorTransitions.avsc", "subject": "processor-transitions", "references": []},
+  {"file": "avro/schemas/AlarmState.avsc", "subject": "alarm-state", "references": []},
+  {"file": "avro/schemas/EffectiveRegistration.avsc", "subject": "effective-registrations-value", "references": [
+    {"name": "org.jlab.jaws.entity.AlarmInstance", "subject": "alarm-instances-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmClass", "subject": "alarm-classes-value", "version": "1"}
+  ]},
+  {"file": "avro/schemas/EffectiveActivation.avsc", "subject": "effective-activations-value", "references": [
+    {"name": "org.jlab.jaws.entity.AlarmActivationUnion", "subject": "alarm-activations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmOverrideSet", "subject": "alarm-override-set", "version": "1"},
+    {"name": "org.jlab.jaws.entity.AlarmState", "subject": "alarm-state", "version": "1"}
+  ]},
+  {"file": "avro/schemas/EffectiveAlarm.avsc", "subject": "effective-alarms-value", "references": [
+    {"name": "org.jlab.jaws.entity.EffectiveRegistration", "subject": "effective-registrations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.EffectiveActivation", "subject": "effective-activations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.ProcessorTransitions", "subject": "processor-transitions", "version": "1"}
+  ]},
+  {"file": "avro/schemas/IntermediateMonolog.avsc", "subject": "intermediate-registration-value", "references": [
+    {"name": "org.jlab.jaws.entity.EffectiveRegistration", "subject": "effective-registrations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.EffectiveActivation", "subject": "effective-activations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.ProcessorTransitions", "subject": "processor-transitions", "version": "1"}
+  ]},
+  {"file": "avro/schemas/IntermediateMonolog.avsc", "subject": "intermediate-activation-value", "references": [
+    {"name": "org.jlab.jaws.entity.EffectiveRegistration", "subject": "effective-registrations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.EffectiveActivation", "subject": "effective-activations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.ProcessorTransitions", "subject": "processor-transitions", "version": "1"}
+  ]},
+  {"file": "avro/schemas/IntermediateMonolog.avsc", "subject": "intermediate-latch-value", "references": [
+    {"name": "org.jlab.jaws.entity.EffectiveRegistration", "subject": "effective-registrations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.EffectiveActivation", "subject": "effective-activations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.ProcessorTransitions", "subject": "processor-transitions", "version": "1"}
+  ]},
+  {"file": "avro/schemas/IntermediateMonolog.avsc", "subject": "intermediate-oneshot-value", "references": [
+    {"name": "org.jlab.jaws.entity.EffectiveRegistration", "subject": "effective-registrations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.EffectiveActivation", "subject": "effective-activations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.ProcessorTransitions", "subject": "processor-transitions", "version": "1"}
+  ]},
+  {"file": "avro/schemas/IntermediateMonolog.avsc", "subject": "intermediate-mask-value", "references": [
+    {"name": "org.jlab.jaws.entity.EffectiveRegistration", "subject": "effective-registrations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.EffectiveActivation", "subject": "effective-activations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.ProcessorTransitions", "subject": "processor-transitions", "version": "1"}
+  ]},
+  {"file": "avro/schemas/IntermediateMonolog.avsc", "subject": "intermediate-ondelay-value", "references": [
+    {"name": "org.jlab.jaws.entity.EffectiveRegistration", "subject": "effective-registrations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.EffectiveActivation", "subject": "effective-activations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.ProcessorTransitions", "subject": "processor-transitions", "version": "1"}
+  ]},
+  {"file": "avro/schemas/IntermediateMonolog.avsc", "subject": "intermediate-offdelay-value", "references": [
+    {"name": "org.jlab.jaws.entity.EffectiveRegistration", "subject": "effective-registrations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.EffectiveActivation", "subject": "effective-activations-value", "version": "1"},
+    {"name": "org.jlab.jaws.entity.ProcessorTransitions", "subject": "processor-transitions", "version": "1"}
+  ]}
+]

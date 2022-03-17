@@ -1,0 +1,27 @@
+jaws\_libp.clients.EffectiveActivationProducer
+==============================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: EffectiveActivationProducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EffectiveActivationProducer.__init__
+      ~EffectiveActivationProducer.import_records
+      ~EffectiveActivationProducer.send
+   
+   
+
+   
+   
+   
