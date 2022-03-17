@@ -8,7 +8,7 @@ API:
   :template: custom-module-template.rst
   :recursive:
 
-  jlab_jaws
+  jaws_libp
 
 
 * :ref:`genindex`
