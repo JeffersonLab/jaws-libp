@@ -266,7 +266,7 @@ class ClassSerde(RegistryAvroWithReferencesSerde):
 
             :param schema_registry_client: The SchemaRegistryClient
         """
-        priority_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmPriority.avsc")
+        priority_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmPriority.avsc")
         priority_schema_str = priority_bytes.decode('utf-8')
 
         named_schemas = {}
@@ -277,7 +277,7 @@ class ClassSerde(RegistryAvroWithReferencesSerde):
         priority_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmPriority", "alarm-priority", 1)
         references = [priority_schema_ref]
 
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmClass.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", references)
@@ -335,7 +335,7 @@ class LocationSerde(RegistryAvroSerde):
 
             :param schema_registry_client: The SchemaRegistryClient
         """
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmLocation.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmLocation.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
@@ -376,7 +376,7 @@ class ActivationSerde(RegistryAvroSerde):
             :param schema_registry_client: The SchemaRegistryClient
             :param union_encoding: The union encoding to use
         """
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmActivationUnion.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmActivationUnion.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
@@ -452,7 +452,7 @@ class InstanceSerde(RegistryAvroSerde):
             :param schema_registry_client: The SchemaRegistryClient
             :param union_encoding: The union encoding to use
         """
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmInstance.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmInstance.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
@@ -527,25 +527,25 @@ class OverrideSetSerde(RegistryAvroWithReferencesSerde):
             :param schema_registry_client: The SchemaRegistryClient
         """
 
-        disabled_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/DisabledOverride.avsc")
+        disabled_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/DisabledOverride.avsc")
         disabled_schema_str = disabled_bytes.decode('utf-8')
 
-        filtered_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/FilteredOverride.avsc")
+        filtered_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/FilteredOverride.avsc")
         filtered_schema_str = filtered_bytes.decode('utf-8')
 
-        latched_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/LatchedOverride.avsc")
+        latched_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/LatchedOverride.avsc")
         latched_schema_str = latched_bytes.decode('utf-8')
 
-        masked_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/MaskedOverride.avsc")
+        masked_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/MaskedOverride.avsc")
         masked_schema_str = masked_bytes.decode('utf-8')
 
-        off_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OffDelayedOverride.avsc")
+        off_delayed_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/OffDelayedOverride.avsc")
         off_delayed_schema_str = off_delayed_bytes.decode('utf-8')
 
-        on_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OnDelayedOverride.avsc")
+        on_delayed_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/OnDelayedOverride.avsc")
         on_delayed_schema_str = on_delayed_bytes.decode('utf-8')
 
-        shelved_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ShelvedOverride.avsc")
+        shelved_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/ShelvedOverride.avsc")
         shelved_schema_str = shelved_bytes.decode('utf-8')
 
         named_schemas = {}
@@ -581,7 +581,7 @@ class OverrideSetSerde(RegistryAvroWithReferencesSerde):
                       on_delayed_schema_ref,
                       shelved_schema_ref]
 
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideSet.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmOverrideSet.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", references)
@@ -654,10 +654,10 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
 
         references = [classes_schema_ref, registration_schema_ref]
 
-        classes_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmClass.avsc")
+        classes_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmClass.avsc")
         classes_schema_str = classes_bytes.decode('utf-8')
 
-        instance_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmInstance.avsc")
+        instance_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmInstance.avsc")
         instance_schema_str = instance_bytes.decode('utf-8')
 
         named_schemas = self._class_serde.named_schemas()
@@ -667,7 +667,7 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
         ref_dict = json.loads(instance_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveRegistration.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveRegistration.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", references)
@@ -721,13 +721,13 @@ class EffectiveActivationSerde(RegistryAvroWithReferencesSerde):
 
         references = [activation_schema_ref, overrides_schema_ref, state_schema_ref]
 
-        activation_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmActivationUnion.avsc")
+        activation_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmActivationUnion.avsc")
         activation_schema_str = activation_bytes.decode('utf-8')
 
-        overrides_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideSet.avsc")
+        overrides_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmOverrideSet.avsc")
         overrides_schema_str = overrides_bytes.decode('utf-8')
 
-        state_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmState.avsc")
+        state_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmState.avsc")
         state_schema_str = state_bytes.decode('utf-8')
 
         named_schemas = self._override_serde.named_schemas()
@@ -739,7 +739,7 @@ class EffectiveActivationSerde(RegistryAvroWithReferencesSerde):
         ref_dict = json.loads(state_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveActivation.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveActivation.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", references)
@@ -794,10 +794,10 @@ class EffectiveAlarmSerde(RegistryAvroWithReferencesSerde):
 
         references = [registration_schema_ref, activation_schema_ref]
 
-        registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveRegistration.avsc")
+        registrations_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveRegistration.avsc")
         registrations_schema_str = registrations_bytes.decode('utf-8')
 
-        activation_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveActivation.avsc")
+        activation_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveActivation.avsc")
         activation_schema_str = activation_bytes.decode('utf-8')
 
         named_schemas = self._effective_registration_serde.named_schemas()
@@ -809,7 +809,7 @@ class EffectiveAlarmSerde(RegistryAvroWithReferencesSerde):
         ref_dict = json.loads(activation_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveAlarm.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveAlarm.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", references)
@@ -850,7 +850,7 @@ class OverrideKeySerde(RegistryAvroSerde):
 
             :param schema_registry_client: The SchemaRegistryClient
         """
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideKey.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmOverrideKey.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
@@ -895,25 +895,25 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
 
         self._union_encoding = union_encoding
 
-        disabled_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/DisabledOverride.avsc")
+        disabled_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/DisabledOverride.avsc")
         disabled_schema_str = disabled_bytes.decode('utf-8')
 
-        filtered_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/FilteredOverride.avsc")
+        filtered_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/FilteredOverride.avsc")
         filtered_schema_str = filtered_bytes.decode('utf-8')
 
-        latched_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/LatchedOverride.avsc")
+        latched_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/LatchedOverride.avsc")
         latched_schema_str = latched_bytes.decode('utf-8')
 
-        masked_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/MaskedOverride.avsc")
+        masked_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/MaskedOverride.avsc")
         masked_schema_str = masked_bytes.decode('utf-8')
 
-        off_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OffDelayedOverride.avsc")
+        off_delayed_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/OffDelayedOverride.avsc")
         off_delayed_schema_str = off_delayed_bytes.decode('utf-8')
 
-        on_delayed_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/OnDelayedOverride.avsc")
+        on_delayed_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/OnDelayedOverride.avsc")
         on_delayed_schema_str = on_delayed_bytes.decode('utf-8')
 
-        shelved_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ShelvedOverride.avsc")
+        shelved_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/ShelvedOverride.avsc")
         shelved_schema_str = shelved_bytes.decode('utf-8')
 
         named_schemas = {}
@@ -949,7 +949,7 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
                       on_delayed_schema_ref,
                       shelved_schema_ref]
 
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/AlarmOverrideUnion.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmOverrideUnion.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", references)
@@ -1045,7 +1045,7 @@ class ProcessorTransitionsSerde(RegistryAvroSerde):
 
             :param schema_registry_client: The SchemaRegistryClient
         """
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ProcessorTransition.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/ProcessorTransition.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
@@ -1114,13 +1114,13 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
 
         references = [registration_schema_ref, activation_schema_ref, transitions_schema_ref]
 
-        registrations_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveRegistration.avsc")
+        registrations_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveRegistration.avsc")
         registrations_schema_str = registrations_bytes.decode('utf-8')
 
-        activation_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/EffectiveActivation.avsc")
+        activation_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveActivation.avsc")
         activation_schema_str = activation_bytes.decode('utf-8')
 
-        transitions_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/ProcessorTransitions.avsc")
+        transitions_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/ProcessorTransitions.avsc")
         transitions_schema_str = transitions_bytes.decode('utf-8')
 
         named_schemas = self._effective_registration_serde.named_schemas()
@@ -1135,7 +1135,7 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
         ref_dict = json.loads(transitions_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
-        schema_bytes = pkgutil.get_data("jlab_jaws", "avro/schemas/IntermediateMonolog.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/IntermediateMonolog.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", references)
