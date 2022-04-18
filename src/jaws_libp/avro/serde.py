@@ -10,8 +10,7 @@ from typing import Any, Dict, List, Union, Tuple, Type
 import fastavro
 from confluent_kafka.schema_registry import SchemaReference, Schema, SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
-from confluent_kafka.serialization import StringSerializer, StringDeserializer, Serializer, Deserializer, \
-    SerializationContext
+from confluent_kafka.serialization import StringSerializer, StringDeserializer, Serializer, Deserializer
 
 from ..entities import AlarmLocation, AlarmPriority
 from ..entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
@@ -131,8 +130,9 @@ class RegistryAvroSerde(Serde):
             :return: An entity
         """
 
-    def _from_union(self, unionobj: Union[Tuple[str, Dict[str, Any]],
-                                          Dict[str, Dict[str, Any]]]) -> Tuple[str, Dict[str, Any]]:
+    @staticmethod
+    def _from_union(unionobj: Union[Tuple[str, Dict[str, Any]],
+                                    Dict[str, Dict[str, Any]]]) -> Tuple[str, Dict[str, Any]]:
         if isinstance(unionobj, tuple):
             uniontype = unionobj[0]
             uniondict = unionobj[1]
@@ -406,7 +406,7 @@ class ActivationSerde(RegistryAvroSerde):
             uniontype = "org.jlab.jaws.entity.NoteAlarming"
             uniondict = {"note": data.msg.note}
         else:
-            raise Exception("Unknown alarming union type: {}".format(data.msg))
+            raise Exception(f"Unknown alarming union type: {data.msg}")
 
         union = self._to_union(uniontype, uniondict)
 
@@ -476,7 +476,7 @@ class InstanceSerde(RegistryAvroSerde):
             uniontype = "org.jlab.jaws.entity.CALCProducer"
             uniondict = {"expression": data.producer.expression}
         else:
-            raise Exception("Unknown instance producer union type: {}".format(data.producer))
+            raise Exception(f"Unknown instance producer union type: {data.producer}")
 
         union = self._to_union(uniontype, uniondict)
 
@@ -986,7 +986,7 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
             uniondict = {"expiration": data.msg.expiration, "comments": data.msg.comments,
                          "reason": data.msg.reason.name, "oneshot": data.msg.oneshot}
         else:
-            print("Unknown alarming union type: {}".format(data.msg))
+            print(f"Unknown alarming union type: {data.msg}")
             uniontype = None
             uniondict = None
 
@@ -1028,7 +1028,7 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
             obj = ShelvedOverride(uniondict['expiration'], uniondict['comments'],
                                   _unwrap_enum(uniondict['reason'], ShelvedReason), uniondict['oneshot'])
         else:
-            print("Unknown alarming type: {}".format(data['msg']))
+            print(f"Unknown alarming type: {data['msg']}")
             obj = None
 
         return AlarmOverrideUnion(obj)
