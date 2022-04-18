@@ -131,9 +131,6 @@ class RegistryAvroSerde(Serde):
             :return: An entity
         """
 
-    def _from_dict_with_ctx(self, data: Dict, ctx: SerializationContext) -> Any:
-        return self.from_dict(data)
-
     def _from_union(self, unionobj: Union[Tuple[str, Dict[str, Any]],
                                           Dict[str, Dict[str, Any]]]) -> Tuple[str, Dict[str, Any]]:
         if isinstance(unionobj, tuple):
@@ -169,9 +166,6 @@ class RegistryAvroSerde(Serde):
             :return: A dict
         """
 
-    def _to_dict_with_ctx(self, data: Any, ctx: SerializationContext) -> Dict:
-        return self.to_dict(data)
-
     def from_json(self, data: str) -> Any:
         entity_dict = json.loads(data)
         entity = self.from_dict(entity_dict)
@@ -194,12 +188,12 @@ class RegistryAvroSerde(Serde):
     def serializer(self) -> Serializer:
         return AvroSerializer(self._schema_registry_client,
                               self._schema.schema_str,
-                              self._to_dict_with_ctx)
+                              self.to_dict)
 
     def deserializer(self) -> Deserializer:
         return AvroDeserializer(self._schema_registry_client,
                                 None,
-                                self._from_dict_with_ctx,
+                                self.from_dict,
                                 True)
 
 
@@ -250,13 +244,13 @@ class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
     def serializer(self):
         return AvroSerializerWithReferences(schema_registry_client=self._schema_registry_client,
                                             schema=self.get_schema(),
-                                            to_dict=self._to_dict_with_ctx,
+                                            to_dict=self.to_dict,
                                             named_schemas=self.named_schemas())
 
     def deserializer(self):
         return AvroDeserializerWithReferences(self._schema_registry_client,
                                               None,
-                                              self._from_dict_with_ctx,
+                                              self.from_dict,
                                               True,
                                               self.named_schemas())
 
