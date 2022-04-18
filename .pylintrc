@@ -2,7 +2,7 @@
 ignore=avro.py
 
 [BASIC]
-good-names=p,t,e
+good-names=p,t,e,pv
 
 [FORMAT]
 max-line-length=120

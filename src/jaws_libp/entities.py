@@ -362,9 +362,9 @@ class ProcessorTransitions:
     """
         Set of transition states as alarm data is joined and processed
     """
-    transitionToActive: bool
+    transition_to_active: bool
     """true when record is first one to indicate Active after being Normal"""
-    transitionToNormal: bool
+    transition_to_normal: bool
     """true when record is first one to indicate Normal after being Active"""
     latching: bool
     """true when record is in-process of latching, LatchOverride forthcoming"""

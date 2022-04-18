@@ -1060,8 +1060,8 @@ class ProcessorTransitionsSerde(RegistryAvroSerde):
             :return: A dict
         """
         return {
-            "transitionToActive": data.transitionToActive,
-            "transitionToNormal": data.transitionToNormal,
+            "transitionToActive": data.transition_to_active,
+            "transitionToNormal": data.transition_to_normal,
             "latching": data.latching,
             "unshelving": data.unshelving,
             "masking": data.masking,
