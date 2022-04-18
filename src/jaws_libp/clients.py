@@ -49,11 +49,13 @@ class _MonitorListener(EventSourceListener):
     """
 
     def on_highwater_timeout(self) -> None:
-        pass
+        """
+            Default callback for highwater timeout.
+        """
 
     def on_batch(self, msgs: List[Message]) -> None:
         for msg in msgs:
-            print("{}={}".format(msg.key(), msg.value()))
+            print("%s=%s", msg.key(), msg.value())
 
     def on_highwater(self) -> None:
         pass
