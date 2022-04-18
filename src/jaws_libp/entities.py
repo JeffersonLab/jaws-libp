@@ -22,8 +22,9 @@ class UnionEncoding(Enum):
         Enum of possible ways to encode an AVRO union instance in Python.
     """
     TUPLE = 1
-    """Instance is a two-tuple of (str - type name, dict); this is how fastavro works 
-    (https://fastavro.readthedocs.io/en/latest/writer.html#using-the-tuple-notation-to-specify-which-branch-of-a-union-to-take)"""
+    """Instance is a two-tuple of (str - type name, dict); this is how fastavro works (
+    https://fastavro.readthedocs.io/en/latest/writer.html#using-the-tuple-notation-to-specify-which-branch-of-a-union
+    -to-take) """
     DICT_WITH_TYPE = 2
     """Instance is a dict with one entry of key type name str and value dict; this serializes to JSON as AVRO expects 
     (except for logical types and bytes) - See:  http://avro.apache.org/docs/current/spec.html#json_encoding"""
