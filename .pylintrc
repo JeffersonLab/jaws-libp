@@ -1,6 +1,9 @@
 [MASTER]
 ignore=avro.py
 
+[MESSAGES CONTROL]
+disable=invalid-name
+
 [BASIC]
 good-names=p,t,e,pv
 
