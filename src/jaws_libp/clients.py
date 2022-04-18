@@ -4,6 +4,7 @@
 import logging
 import os
 import signal
+import socket
 import time
 from typing import Any, List, Callable, Tuple
 
@@ -352,7 +353,7 @@ class JAWSProducer:
     def __get_headers(self) -> List[Tuple[str, str]]:
         return [('user', Process().username()),
                 ('producer', self._client_name),
-                ('host', os.uname().nodename)]
+                ('host', socket.gethostname())]
 
     @staticmethod
     def __on_delivery(err: KafkaError) -> None:
