@@ -270,16 +270,16 @@ class EventSourceTable:
 
         if self._is_highwater_timeout:
             raise TimeoutException()
-        else:
-            for listener in self._listeners:
-                listener.on_highwater()
+
+        for listener in self._listeners:
+            listener.on_highwater()
 
     def __monitor_continue(self) -> None:
         logger.debug("__monitor_continue")
         while self._run:
             msg = self._consumer.poll(1)
 
-            logger.debug("__monitor_continue poll None: {}".format(msg is None))
+            logger.debug("__monitor_continue poll None: %s", {msg is None})
 
             msgs = [msg] if msg is not None else None
 
@@ -341,7 +341,7 @@ class CachedTable(EventSourceTable):
 
         super().__init__(config)
 
-        caching_enabled = config.get('caching.enabled') if False else True
+        caching_enabled = config.get('caching.enabled') if config.get('caching.enabled') is not None else True
 
         if caching_enabled:
             self._listener = _CacheEventSourceListener(self, self._cache, self._cache_listeners)
@@ -429,7 +429,9 @@ class _CacheEventSourceListener(EventSourceListener):
         self.__notify_load()
 
     def on_highwater_timeout(self) -> None:
-        pass
+        """
+            Default callback for highwater timeout.
+        """
 
     def on_batch(self, msgs: List[Message]) -> None:
         self.__update_cache(msgs)
