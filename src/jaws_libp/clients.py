@@ -164,6 +164,8 @@ class JAWSConsumer(CachedTable):
             if filter_if(key, value):
                 print(self.__to_line(key, value))
 
+    # pylint: disable=no-self-use
+    # check breaks inheritance
     def _get_table_headers(self) -> List[str]:
         """
             Get the printed table headers.
@@ -172,6 +174,8 @@ class JAWSConsumer(CachedTable):
         """
         return ["Key", "Value"]
 
+    # pylint: disable=no-self-use
+    # check breaks inheritance
     def _get_table_row(self, msg: Message) -> List[str]:
         """
             Function to convert Message to table row (List of strings).
