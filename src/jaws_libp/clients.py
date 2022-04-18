@@ -257,7 +257,7 @@ class JAWSConsumer(CachedTable):
 
         return [ts, user, host, producer]
 
-    def __signal_handler(self, sig, frame):
+    def __signal_handler(self):
         print('Stopping from Ctrl+C!')
         self.stop()
 
