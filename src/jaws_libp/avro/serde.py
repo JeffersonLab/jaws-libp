@@ -3,16 +3,16 @@
 """
 import json
 import pkgutil
+from abc import abstractmethod, ABC
 from enum import Enum
+from typing import Any, Dict, List, Union, Tuple, Type
 
 import fastavro
-
-from typing import Any, Dict, List, Union, Tuple, Type
-from abc import abstractmethod, ABC
 from confluent_kafka.schema_registry import SchemaReference, Schema, SchemaRegistryClient
 from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
 from confluent_kafka.serialization import StringSerializer, StringDeserializer, Serializer, Deserializer, \
     SerializationContext
+
 from ..entities import AlarmLocation, AlarmPriority
 from ..entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \

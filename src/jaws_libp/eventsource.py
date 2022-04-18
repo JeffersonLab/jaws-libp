@@ -8,9 +8,10 @@
 import logging
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
-from typing import List, Dict, Any, Callable
-from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING, Message
 from threading import Timer, Event
+from typing import List, Dict, Any, Callable
+
+from confluent_kafka import DeserializingConsumer, OFFSET_BEGINNING, Message
 
 logger = logging.getLogger(__name__)
 

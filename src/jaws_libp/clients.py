@@ -5,15 +5,16 @@ import logging
 import os
 import signal
 import time
+from typing import Any, List, Callable, Tuple
 
-from psutil import Process
-from typing import Dict, Any, List, Callable, Tuple
 from confluent_kafka import Message, SerializingProducer, KafkaError
 from confluent_kafka.schema_registry import SchemaRegistryClient
+from psutil import Process
 from tabulate import tabulate
-from .entities import UnionEncoding
+
 from .avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
     StringSerde, Serde, EffectiveAlarmSerde, EffectiveActivationSerde, ClassSerde, ActivationSerde, InstanceSerde
+from .entities import UnionEncoding
 from .eventsource import EventSourceListener, CachedTable
 
 logger = logging.getLogger(__name__)
