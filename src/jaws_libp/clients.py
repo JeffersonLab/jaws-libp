@@ -308,7 +308,7 @@ class JAWSProducer:
             :param key: The message key
             :param value: The message value
         """
-        logger.debug("{}={}".format(key, value))
+        logger.debug("%s=%s", key, value)
         self._producer.produce(topic=self._topic, headers=self._headers, key=key, value=value,
                                on_delivery=self.__on_delivery)
         self._producer.flush()
@@ -335,15 +335,15 @@ class JAWSProducer:
             :param file: Path to file to import
         """
         logger.debug("Loading file %s", file)
-        handle = open(file, 'r')
-        lines = handle.readlines()
+        with open(file, "r", encoding="utf8") as handle:
+            lines = handle.readlines()
 
-        for line in lines:
-            key, value = self.__from_line(line)
+            for line in lines:
+                key, value = self.__from_line(line)
 
-            logger.debug("{}={}".format(key, value))
-            self._producer.produce(topic=self._topic, headers=self._headers, key=key, value=value,
-                                   on_delivery=self.__on_delivery)
+                logger.debug("%s=%s", key, value)
+                self._producer.produce(topic=self._topic, headers=self._headers, key=key, value=value,
+                                       on_delivery=self.__on_delivery)
 
         self._producer.flush()
 
@@ -353,9 +353,9 @@ class JAWSProducer:
                 ('host', os.uname().nodename)]
 
     @staticmethod
-    def __on_delivery(err: KafkaError, msg: Message) -> None:
+    def __on_delivery(err: KafkaError) -> None:
         if err is not None:
-            logger.error('Failed: {}'.format(err))
+            logger.error('Failed: %s', err)
         else:
             logger.debug('Delivered')
 
