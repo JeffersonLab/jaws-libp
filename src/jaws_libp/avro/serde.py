@@ -124,7 +124,12 @@ class RegistryAvroSerde(Serde):
 
     @abstractmethod
     def from_dict(self, data: Dict) -> Any:
-        pass
+        """
+            Convert a dict to an entity.
+
+            :param data: A dict
+            :return: An entity
+        """
 
     def _from_dict_with_ctx(self, data: Dict, ctx: SerializationContext) -> Any:
         return self.from_dict(data)
@@ -157,7 +162,12 @@ class RegistryAvroSerde(Serde):
 
     @abstractmethod
     def to_dict(self, data: Any) -> Dict:
-        pass
+        """
+            Convert an entity to a dict.
+
+            :param data: An entity
+            :return: A dict
+        """
 
     def _to_dict_with_ctx(self, data: Any, ctx: SerializationContext) -> Dict:
         return self.to_dict(data)
