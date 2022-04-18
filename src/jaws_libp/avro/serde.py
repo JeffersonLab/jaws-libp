@@ -136,10 +136,10 @@ class RegistryAvroSerde(Serde):
 
     def _from_union(self, unionobj: Union[Tuple[str, Dict[str, Any]],
                                           Dict[str, Dict[str, Any]]]) -> Tuple[str, Dict[str, Any]]:
-        if type(unionobj) is tuple:
+        if isinstance(unionobj, tuple):
             uniontype = unionobj[0]
             uniondict = unionobj[1]
-        elif type(unionobj is dict):
+        elif isinstance(unionobj, dict):
             value = next(iter(unionobj.items()))
             uniontype = value[0]
             uniondict = value[1]

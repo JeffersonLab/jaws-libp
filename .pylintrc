@@ -4,3 +4,7 @@ ignore=avro.py
 [FORMAT]
 max-line-length=120
 max-module-lines=1500
+
+[DESIGN]
+max-args=6
+max-locals=30
