@@ -62,7 +62,6 @@ class Serde(ABC):
             :param data: A JSON string
             :return: An entity class or string
         """
-        pass
 
     @abstractmethod
     def to_json(self, data: Any) -> str:
@@ -72,7 +71,6 @@ class Serde(ABC):
             :param data: An entity class or string
             :return: A JSON string
         """
-        pass
 
     @abstractmethod
     def serializer(self) -> Serializer:
@@ -81,7 +79,6 @@ class Serde(ABC):
 
             :return: The Serializer
         """
-        pass
 
     @abstractmethod
     def deserializer(self) -> Deserializer:
@@ -90,7 +87,6 @@ class Serde(ABC):
 
             :return: The Deserializer
         """
-        pass
 
 
 class StringSerde(Serde):
