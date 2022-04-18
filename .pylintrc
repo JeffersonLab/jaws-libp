@@ -11,3 +11,7 @@ max-module-lines=1500
 [DESIGN]
 max-args=6
 max-locals=30
+max-attributes=12
+
+[EXCEPTIIONS]
+overgeneral-exceptions=

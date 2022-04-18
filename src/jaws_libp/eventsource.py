@@ -25,7 +25,6 @@ class EventSourceListener(ABC):
         """
             Callback for notification of highwater reached.
         """
-        pass
 
     @abstractmethod
     def on_batch(self, msgs: List[Message]) -> None:
@@ -36,7 +35,6 @@ class EventSourceListener(ABC):
 
             :param msgs: Batch of one or more ordered messages
         """
-        pass
 
 
 class CacheListener(ABC):
@@ -49,7 +47,6 @@ class CacheListener(ABC):
         """
             Callback for notification of initial cache load.
         """
-        pass
 
     @abstractmethod
     def on_update(self, msgs: List[Message]) -> None:
@@ -62,7 +59,6 @@ class CacheListener(ABC):
 
             :param msgs: Batch of one or more ordered messages
         """
-        pass
 
 
 def log_exception(e: Exception) -> None:
@@ -78,7 +74,6 @@ class TimeoutException(Exception):
     """
         Thrown on asynchronous task timeout
     """
-    pass
 
 
 class EventSourceTable:
@@ -199,7 +194,7 @@ class EventSourceTable:
 
         self._executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix='TableThread')
 
-        future = self._executor.submit(self.__monitor)
+        self._executor.submit(self.__monitor)
 
     def highwater_reached(self) -> bool:
         """
@@ -252,7 +247,7 @@ class EventSourceTable:
         while not (self._highwater_reached or self._is_highwater_timeout):
             msg = self._consumer.poll(1)
 
-            logger.debug("__monitor_initial poll None: {}".format(msg is None))
+            logger.debug("__monitor_initial poll None: %s", msg is None)
 
             msgs = [msg] if msg is not None else None
 
@@ -279,7 +274,7 @@ class EventSourceTable:
         while self._run:
             msg = self._consumer.poll(1)
 
-            logger.debug("__monitor_continue poll None: %s", {msg is None})
+            logger.debug("__monitor_continue poll None: %s", msg is None)
 
             msgs = [msg] if msg is not None else None
 
