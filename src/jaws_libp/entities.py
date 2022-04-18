@@ -26,7 +26,7 @@ class UnionEncoding(Enum):
     https://fastavro.readthedocs.io/en/latest/writer.html#using-the-tuple-notation-to-specify-which-branch-of-a-union
     -to-take) """
     DICT_WITH_TYPE = 2
-    """Instance is a dict with one entry of key type name str and value dict; this serializes to JSON as AVRO expects 
+    """Instance is a dict with one entry of key type name str and value dict; this serializes to JSON as AVRO expects
     (except for logical types and bytes) - See:  http://avro.apache.org/docs/current/spec.html#json_encoding"""
     POSSIBLY_AMBIGUOUS_DICT = 3
     """Instance dict provided without type name - which in the case of records with identical fields there is no way
@@ -70,7 +70,7 @@ class OverriddenAlarmType(Enum):
     current machine program. The Filter Processor helps operators filter multiple alarms with simple grouping
     commands (like by area)."""
     Masked = 3
-    """An alarm can be suppressed by a parent alarm to minimize confusion during an alarm flood and build an 
+    """An alarm can be suppressed by a parent alarm to minimize confusion during an alarm flood and build an
     alarm hierarchy"""
     OnDelayed = 4
     """An alarm with an on-delay is temporarily suppressed upon activation to minimize fleeting/chattering"""
@@ -79,8 +79,8 @@ class OverriddenAlarmType(Enum):
     Shelved = 6
     """An alarm can be temporarily suppressed via manual operator command"""
     Latched = 7
-    """A fleeting alarm (one that toggles between active and not active too quickly) can be configured to require 
-    acknowledgement by operators - the alarm is latched once active and won't clear to Normal (or Active) until 
+    """A fleeting alarm (one that toggles between active and not active too quickly) can be configured to require
+    acknowledgement by operators - the alarm is latched once active and won't clear to Normal (or Active) until
     acknowledged"""
 
 
@@ -259,7 +259,7 @@ class ShelvedOverride:
     reason: ShelvedReason
     """The general motivation for shelving the alarm"""
     oneshot: bool
-    """Indicates whether the override expires immediately upon next alarm deactivation 
+    """Indicates whether the override expires immediately upon next alarm deactivation
     (unless timestamp expiration occurs first)"""
 
 
