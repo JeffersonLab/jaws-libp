@@ -37,9 +37,9 @@ def _unwrap_enum(value: [None, Tuple[str, str], str], enum_class: Type[Enum]) ->
 
     if value is None:
         result = None
-    elif type(value) is tuple:
+    elif isinstance(value, tuple):
         result = enum_class[value[1]]
-    elif type(value) is str:
+    elif isinstance(value, str):
         result = enum_class[value]
     else:  # return as is (hopefully already an Enum)
         result = value
