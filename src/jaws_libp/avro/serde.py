@@ -401,7 +401,7 @@ class ActivationSerde(RegistryAvroSerde):
             uniondict = {}
         elif isinstance(data.msg, EPICSAlarming):
             uniontype = "org.jlab.jaws.entity.EPICSAlarming"
-            uniondict = {"sevr": data.msg.sevr.name, "stat": data.msg.stat.name}
+            uniondict = {"error": data.msg.error, "sevr": data.msg.sevr.name, "stat": data.msg.stat.name}
         elif isinstance(data.msg, NoteAlarming):
             uniontype = "org.jlab.jaws.entity.NoteAlarming"
             uniondict = {"note": data.msg.note}
@@ -431,8 +431,8 @@ class ActivationSerde(RegistryAvroSerde):
         if uniontype == "org.jlab.jaws.entity.NoteAlarming":
             obj = NoteAlarming(uniondict['note'])
         elif uniontype == "org.jlab.jaws.entity.EPICSAlarming":
-            obj = EPICSAlarming(_unwrap_enum(uniondict['sevr'], EPICSSEVR), _unwrap_enum(uniondict['stat'],
-                                                                                         EPICSSTAT))
+            obj = EPICSAlarming(uniondict.get('error'), _unwrap_enum(uniondict['sevr'], EPICSSEVR),
+                                _unwrap_enum(uniondict['stat'], EPICSSTAT))
         else:
             obj = SimpleAlarming()
 

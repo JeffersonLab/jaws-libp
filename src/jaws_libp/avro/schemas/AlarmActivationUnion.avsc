@@ -34,6 +34,17 @@
                     "doc": "EPICS alarming state",
                     "fields": [
                         {
+                            "name": "error",
+                            "type": [
+                                "null",
+                                {
+                                    "type": "string",
+                                    "avro.java.string": "String"
+                                }
+                            ],
+                            "doc": "CA Channel errors such as Never Connected and Disconnected"
+                        },
+                        {
                             "name": "sevr",
                             "type": {
                                 "type": "enum",

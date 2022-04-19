@@ -165,6 +165,8 @@ class EPICSAlarming:
     """
         An EPICS alarming record
     """
+    error: Optional[str]
+    """CA Channel errors such as Never Connected and Disconnected"""
     sevr: EPICSSEVR
     """The severity"""
     stat: EPICSSTAT
