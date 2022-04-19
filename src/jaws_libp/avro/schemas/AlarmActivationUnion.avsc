@@ -34,17 +34,6 @@
                     "doc": "EPICS alarming state",
                     "fields": [
                         {
-                            "name": "error",
-                            "type": [
-                                "null",
-                                {
-                                    "type": "string",
-                                    "avro.java.string": "String"
-                                }
-                            ],
-                            "doc": "CA Channel errors such as Never Connected and Disconnected"
-                        },
-                        {
                             "name": "sevr",
                             "type": {
                                 "type": "enum",
@@ -91,6 +80,24 @@
                                 ]
                             },
                             "doc": "Alarming status (EPICS .STAT field)"
+                        }
+                    ]
+                },
+                {
+                    "type": "record",
+                    "name": "ChannelError",
+                    "doc": "A channel error between JAWS and an alarm activation source",
+                    "fields": [
+                        {
+                            "name": "error",
+                            "type": [
+                                "null",
+                                {
+                                    "type": "string",
+                                    "avro.java.string": "String"
+                                }
+                            ],
+                            "doc": "Description of the error such as Never Connected or Disconnected"
                         }
                     ]
                 }

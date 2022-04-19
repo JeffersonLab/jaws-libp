@@ -13,8 +13,8 @@ from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserialize
 from confluent_kafka.serialization import StringSerializer, StringDeserializer, Serializer, Deserializer, \
     SerializationContext
 
-from ..entities import AlarmLocation, AlarmPriority
-from ..entities import SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
+from ..entities import AlarmLocation, AlarmPriority, ChannelError, \
+    SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
     OnDelayedOverride, OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, \
     ShelvedReason, EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, AlarmClass, \
@@ -410,10 +410,13 @@ class ActivationSerde(RegistryAvroSerde):
             uniondict = {}
         elif isinstance(data.msg, EPICSAlarming):
             uniontype = "org.jlab.jaws.entity.EPICSAlarming"
-            uniondict = {"error": data.msg.error, "sevr": data.msg.sevr.name, "stat": data.msg.stat.name}
+            uniondict = {"sevr": data.msg.sevr.name, "stat": data.msg.stat.name}
         elif isinstance(data.msg, NoteAlarming):
             uniontype = "org.jlab.jaws.entity.NoteAlarming"
             uniondict = {"note": data.msg.note}
+        elif isinstance(data.msg, ChannelError):
+            uniontype = "org.jlab.jaws.entity.ChannelError"
+            uniondict = {"error": data.msg.error}
         else:
             raise Exception(f"Unknown alarming union type: {data.msg}")
 
@@ -440,8 +443,10 @@ class ActivationSerde(RegistryAvroSerde):
         if uniontype == "org.jlab.jaws.entity.NoteAlarming":
             obj = NoteAlarming(uniondict['note'])
         elif uniontype == "org.jlab.jaws.entity.EPICSAlarming":
-            obj = EPICSAlarming(uniondict.get('error'), _unwrap_enum(uniondict['sevr'], EPICSSEVR),
+            obj = EPICSAlarming(_unwrap_enum(uniondict['sevr'], EPICSSEVR),
                                 _unwrap_enum(uniondict['stat'], EPICSSTAT))
+        elif uniontype == "org.jlab.jaws.entity.ChannelError":
+            obj = ChannelError(uniondict['error'])
         else:
             obj = SimpleAlarming()
 

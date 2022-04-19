@@ -165,12 +165,19 @@ class EPICSAlarming:
     """
         An EPICS alarming record
     """
-    error: Optional[str]
-    """CA Channel errors such as Never Connected and Disconnected"""
     sevr: EPICSSEVR
     """The severity"""
     stat: EPICSSTAT
     """The status"""
+
+
+@dataclass
+class ChannelError:
+    """
+        A channel error between JAWS and an alarm activation source
+    """
+    error: str
+    """Description of the error such as Never Connected or Disconnected"""
 
 
 @dataclass
