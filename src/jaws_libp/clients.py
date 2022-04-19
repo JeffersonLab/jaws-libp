@@ -264,7 +264,8 @@ class JAWSConsumer(CachedTable):
 
         return [ts, user, host, producer]
 
-    def __signal_handler(self):
+    # pylint: disable=unused-argument
+    def __signal_handler(self, sig, frame):
         print('Stopping from Ctrl+C!')
         self.stop()
 
@@ -359,8 +360,9 @@ class JAWSProducer:
                 ('producer', self._client_name),
                 ('host', socket.gethostname())]
 
+    # pylint: disable=unused-argument
     @staticmethod
-    def __on_delivery(err: KafkaError) -> None:
+    def __on_delivery(err: KafkaError, msg: Message) -> None:
         if err is not None:
             logger.error('Failed: %s', err)
         else:
