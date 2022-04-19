@@ -131,6 +131,7 @@ class RegistryAvroSerde(Serde):
             :return: An entity
         """
 
+    # pylint: disable=unused-argument
     def _from_dict_with_ctx(self, data: Dict, ctx: SerializationContext) -> Any:
         return self.from_dict(data)
 
@@ -170,6 +171,7 @@ class RegistryAvroSerde(Serde):
             :return: A dict
         """
 
+    # pylint: disable=unused-argument
     def _to_dict_with_ctx(self, data: Any, ctx: SerializationContext) -> Dict:
         return self.to_dict(data)
 
