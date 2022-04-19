@@ -1,0 +1,31 @@
+jaws\_libp.entities.ChannelError
+================================
+
+.. currentmodule:: jaws_libp.entities
+
+.. autoclass:: ChannelError
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ChannelError.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ChannelError.error
+   
+   

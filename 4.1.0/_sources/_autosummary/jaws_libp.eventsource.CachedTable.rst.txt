@@ -1,0 +1,35 @@
+jaws\_libp.eventsource.CachedTable
+==================================
+
+.. currentmodule:: jaws_libp.eventsource
+
+.. autoclass:: CachedTable
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CachedTable.__init__
+      ~CachedTable.add_cache_listener
+      ~CachedTable.add_listener
+      ~CachedTable.await_highwater
+      ~CachedTable.await_highwater_get
+      ~CachedTable.get
+      ~CachedTable.highwater_reached
+      ~CachedTable.remove_cache_listener
+      ~CachedTable.remove_listener
+      ~CachedTable.start
+      ~CachedTable.stop
+   
+   
+
+   
+   
+   

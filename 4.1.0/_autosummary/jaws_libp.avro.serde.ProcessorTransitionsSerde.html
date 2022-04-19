@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>jaws_libp.avro.serde.ProcessorTransitionsSerde &mdash; jlab-jaws 4.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jaws_libp.avro.serde.RegistryAvroSerde" href="jaws_libp.avro.serde.RegistryAvroSerde.html" />
+    <link rel="prev" title="jaws_libp.avro.serde.OverrideSetSerde" href="jaws_libp.avro.serde.OverrideSetSerde.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> jlab-jaws
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jaws_libp.html">jaws_libp</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="jaws_libp.avro.html">jaws_libp.avro</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.avro.schemas.html">jaws_libp.avro.schemas</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="jaws_libp.avro.serde.html">jaws_libp.avro.serde</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.ActivationSerde.html">jaws_libp.avro.serde.ActivationSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.ClassSerde.html">jaws_libp.avro.serde.ClassSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.EffectiveActivationSerde.html">jaws_libp.avro.serde.EffectiveActivationSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.EffectiveAlarmSerde.html">jaws_libp.avro.serde.EffectiveAlarmSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.EffectiveRegistrationSerde.html">jaws_libp.avro.serde.EffectiveRegistrationSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.InstanceSerde.html">jaws_libp.avro.serde.InstanceSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.IntermediateMonologSerde.html">jaws_libp.avro.serde.IntermediateMonologSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.LocationSerde.html">jaws_libp.avro.serde.LocationSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.OverrideKeySerde.html">jaws_libp.avro.serde.OverrideKeySerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.OverrideSerde.html">jaws_libp.avro.serde.OverrideSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.OverrideSetSerde.html">jaws_libp.avro.serde.OverrideSetSerde</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">jaws_libp.avro.serde.ProcessorTransitionsSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.RegistryAvroSerde.html">jaws_libp.avro.serde.RegistryAvroSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.RegistryAvroWithReferencesSerde.html">jaws_libp.avro.serde.RegistryAvroWithReferencesSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.Serde.html">jaws_libp.avro.serde.Serde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.StringSerde.html">jaws_libp.avro.serde.StringSerde</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.clients.html">jaws_libp.clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.entities.html">jaws_libp.entities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.eventsource.html">jaws_libp.eventsource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.references.html">jaws_libp.references</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jlab-jaws</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="jaws_libp.html">jaws_libp</a> &raquo;</li>
+        
+          <li><a href="jaws_libp.avro.html">jaws_libp.avro</a> &raquo;</li>
+        
+          <li><a href="jaws_libp.avro.serde.html">jaws_libp.avro.serde</a> &raquo;</li>
+        
+      <li>jaws_libp.avro.serde.ProcessorTransitionsSerde</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/_autosummary/jaws_libp.avro.serde.ProcessorTransitionsSerde.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="jaws-libp-avro-serde-processortransitionsserde">
+<h1>jaws_libp.avro.serde.ProcessorTransitionsSerde<a class="headerlink" href="#jaws-libp-avro-serde-processortransitionsserde" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.ProcessorTransitionsSerde">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">jaws_libp.avro.serde.</span></span><span class="sig-name descname"><span class="pre">ProcessorTransitionsSerde</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_registry_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/avro/serde.html#ProcessorTransitionsSerde"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="jaws_libp.avro.serde.RegistryAvroSerde.html#jaws_libp.avro.serde.RegistryAvroSerde" title="jaws_libp.avro.serde.RegistryAvroSerde"><code class="xref py py-class docutils literal notranslate"><span class="pre">jaws_libp.avro.serde.RegistryAvroSerde</span></code></a></p>
+<p>Provides ProcessorTransitions serde utilities</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.ProcessorTransitionsSerde.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_registry_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/avro/serde.html#ProcessorTransitionsSerde.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new ProcessorTransitionSerde.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>schema_registry_client</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">SchemaRegistryClient</span></code>) – The SchemaRegistryClient</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.__init__" title="jaws_libp.avro.serde.ProcessorTransitionsSerde.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(schema_registry_client)</p></td>
+<td><p>Create a new ProcessorTransitionSerde.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.deserializer" title="jaws_libp.avro.serde.ProcessorTransitionsSerde.deserializer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deserializer</span></code></a>()</p></td>
+<td><p>Get the deserializer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.from_dict" title="jaws_libp.avro.serde.ProcessorTransitionsSerde.from_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dict</span></code></a>(data)</p></td>
+<td><p>Converts a dict to ProcessorTransitions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.from_json" title="jaws_libp.avro.serde.ProcessorTransitionsSerde.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(data)</p></td>
+<td><p>Convert an entity to a JSON string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.get_schema" title="jaws_libp.avro.serde.ProcessorTransitionsSerde.get_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_schema</span></code></a>()</p></td>
+<td><p>Get Schema.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.serializer" title="jaws_libp.avro.serde.ProcessorTransitionsSerde.serializer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serializer</span></code></a>()</p></td>
+<td><p>Get the serializer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.to_dict" title="jaws_libp.avro.serde.ProcessorTransitionsSerde.to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code></a>(data)</p></td>
+<td><p>Converts ProcessorTransitions to a dict</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.to_json" title="jaws_libp.avro.serde.ProcessorTransitionsSerde.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>(data)</p></td>
+<td><p>Convert a JSON string to an entity.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.ProcessorTransitionsSerde.deserializer">
+<span class="sig-name descname"><span class="pre">deserializer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.deserializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the deserializer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Deserializer</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Deserializer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.ProcessorTransitionsSerde.from_dict">
+<span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/avro/serde.html#ProcessorTransitionsSerde.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a dict to ProcessorTransitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]) – The dict</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="jaws_libp.entities.ProcessorTransitions.html#jaws_libp.entities.ProcessorTransitions" title="jaws_libp.entities.ProcessorTransitions"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessorTransitions</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The ProcessorTransitions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.ProcessorTransitionsSerde.from_json">
+<span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an entity to a JSON string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – A JSON string</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An entity class or string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.ProcessorTransitionsSerde.get_schema">
+<span class="sig-name descname"><span class="pre">get_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.get_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Schema</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Schema</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.ProcessorTransitionsSerde.serializer">
+<span class="sig-name descname"><span class="pre">serializer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.serializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the serializer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Serializer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.ProcessorTransitionsSerde.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/avro/serde.html#ProcessorTransitionsSerde.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts ProcessorTransitions to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference internal" href="jaws_libp.entities.ProcessorTransitions.html#jaws_libp.entities.ProcessorTransitions" title="jaws_libp.entities.ProcessorTransitions"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessorTransitions</span></code></a>) – The ProcessorTransitions</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.ProcessorTransitionsSerde.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.ProcessorTransitionsSerde.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a JSON string to an entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>) – An entity class or string</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A JSON string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="jaws_libp.avro.serde.RegistryAvroSerde.html" class="btn btn-neutral float-right" title="jaws_libp.avro.serde.RegistryAvroSerde" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="jaws_libp.avro.serde.OverrideSetSerde.html" class="btn btn-neutral float-left" title="jaws_libp.avro.serde.OverrideSetSerde" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jefferson Lab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

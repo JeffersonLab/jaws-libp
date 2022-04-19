@@ -1,0 +1,964 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>jaws_libp.clients &mdash; jlab-jaws 4.1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<link href="../../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> jlab-jaws
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/jaws_libp.html">jaws_libp</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">jlab-jaws</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>jaws_libp.clients</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for jaws_libp.clients</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   Clients for producing and consuming messages on the various Kafka topics in JAWS.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">signal</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">SerializingProducer</span><span class="p">,</span> <span class="n">KafkaError</span>
+<span class="kn">from</span> <span class="nn">confluent_kafka.schema_registry</span> <span class="kn">import</span> <span class="n">SchemaRegistryClient</span>
+<span class="kn">from</span> <span class="nn">psutil</span> <span class="kn">import</span> <span class="n">Process</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+
+<span class="kn">from</span> <span class="nn">.avro.serde</span> <span class="kn">import</span> <span class="n">LocationSerde</span><span class="p">,</span> <span class="n">OverrideKeySerde</span><span class="p">,</span> <span class="n">OverrideSerde</span><span class="p">,</span> <span class="n">EffectiveRegistrationSerde</span><span class="p">,</span> \
+    <span class="n">StringSerde</span><span class="p">,</span> <span class="n">Serde</span><span class="p">,</span> <span class="n">EffectiveAlarmSerde</span><span class="p">,</span> <span class="n">EffectiveActivationSerde</span><span class="p">,</span> <span class="n">ClassSerde</span><span class="p">,</span> <span class="n">ActivationSerde</span><span class="p">,</span> <span class="n">InstanceSerde</span>
+<span class="kn">from</span> <span class="nn">.entities</span> <span class="kn">import</span> <span class="n">UnionEncoding</span>
+<span class="kn">from</span> <span class="nn">.eventsource</span> <span class="kn">import</span> <span class="n">EventSourceListener</span><span class="p">,</span> <span class="n">CachedTable</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="set_log_level_from_env"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.set_log_level_from_env.html#jaws_libp.clients.set_log_level_from_env">[docs]</a><span class="k">def</span> <span class="nf">set_log_level_from_env</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simple utility for setting the loglevel via the environment variable LOGLEVEL, and also</span>
+<span class="sd">        setting a sensible logging format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;LOGLEVEL&#39;</span><span class="p">,</span> <span class="s1">&#39;WARNING&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+        <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> </span><span class="si">%(levelname)-8s</span><span class="s1"> </span><span class="si">%(threadName)-16s</span><span class="s1"> </span><span class="si">%(name)s</span><span class="s1"> </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span>
+        <span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_registry_client"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.get_registry_client.html#jaws_libp.clients.get_registry_client">[docs]</a><span class="k">def</span> <span class="nf">get_registry_client</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SchemaRegistryClient</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simple utility function for creating a SchemaRegistryClient using the environment</span>
+<span class="sd">        variable SCHEMA_REGISTRY to determine URL.</span>
+
+<span class="sd">        :return: A new SchemaRegistryClient</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sr_conf</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SCHEMA_REGISTRY&#39;</span><span class="p">,</span> <span class="s1">&#39;http://localhost:8081&#39;</span><span class="p">)}</span>
+    <span class="k">return</span> <span class="n">SchemaRegistryClient</span><span class="p">(</span><span class="n">sr_conf</span><span class="p">)</span></div>
+
+
+<span class="k">class</span> <span class="nc">_MonitorListener</span><span class="p">(</span><span class="n">EventSourceListener</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal listener implementation for the JAWSConsumer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">on_highwater_timeout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Default callback for highwater timeout.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">on_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msgs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Message</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">msgs</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">(),</span> <span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">on_highwater</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="JAWSConsumer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.JAWSConsumer.html#jaws_libp.clients.JAWSConsumer">[docs]</a><span class="k">class</span> <span class="nc">JAWSConsumer</span><span class="p">(</span><span class="n">CachedTable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This class consumes messages from JAWS.</span>
+
+<span class="sd">        Sensible defaults are used to determine BOOTSTRAP_SERVERS (look in env)</span>
+<span class="sd">        and to handle errors (log them).</span>
+
+<span class="sd">        This consumer also knows how to export records into a file using the JAWS expected file format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="JAWSConsumer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.JAWSConsumer.html#jaws_libp.clients.JAWSConsumer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">:</span> <span class="n">Serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">:</span> <span class="n">Serde</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new JAWSConsumer with the provided attributes.</span>
+
+<span class="sd">        :param topic: The Kafka topic name</span>
+<span class="sd">        :param client_name: The name of the client application</span>
+<span class="sd">        :param key_serde: The appropriate Kafka message key Serde for the given topic</span>
+<span class="sd">        :param value_serde: The appropriate Kafka message value Serde for the given topic</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_topic</span> <span class="o">=</span> <span class="n">topic</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_client_name</span> <span class="o">=</span> <span class="n">client_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_key_serde</span> <span class="o">=</span> <span class="n">key_serde</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value_serde</span> <span class="o">=</span> <span class="n">value_serde</span>
+
+        <span class="n">set_log_level_from_env</span><span class="p">()</span>
+
+        <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__signal_handler</span><span class="p">)</span>
+
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="n">bootstrap_servers</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;BOOTSTRAP_SERVERS&#39;</span><span class="p">,</span> <span class="s1">&#39;localhost:9092&#39;</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;topic&#39;</span><span class="p">:</span> <span class="n">topic</span><span class="p">,</span>
+                  <span class="s1">&#39;bootstrap.servers&#39;</span><span class="p">:</span> <span class="n">bootstrap_servers</span><span class="p">,</span>
+                  <span class="s1">&#39;key.deserializer&#39;</span><span class="p">:</span> <span class="n">key_serde</span><span class="o">.</span><span class="n">deserializer</span><span class="p">(),</span>
+                  <span class="s1">&#39;value.deserializer&#39;</span><span class="p">:</span> <span class="n">value_serde</span><span class="o">.</span><span class="n">deserializer</span><span class="p">(),</span>
+                  <span class="s1">&#39;group.id&#39;</span><span class="p">:</span> <span class="n">client_name</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ts</span><span class="p">)}</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="JAWSConsumer.print_table"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.JAWSConsumer.html#jaws_libp.clients.JAWSConsumer.print_table">[docs]</a>    <span class="k">def</span> <span class="nf">print_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nometa</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="n">filter_if</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Prints the compacted cache of records as a table to standard output.</span>
+
+<span class="sd">            Note: Blocks until the highwater mark has been reached.</span>
+
+<span class="sd">            :param nometa: If True, exclude timestamp, producer app name, host, and username from table</span>
+<span class="sd">            :param filter_if: Callback applied to each Message to indicate if Message should be included</span>
+<span class="sd">            :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_table_headers</span><span class="p">()</span>
+
+        <span class="n">records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">await_highwater_get</span><span class="p">()</span>
+
+        <span class="n">table</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">nometa</span><span class="p">:</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="s2">&quot;Host&quot;</span><span class="p">,</span> <span class="s2">&quot;Produced By&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">head</span>
+
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__filtered_row_with_header</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">filter_if</span><span class="p">,</span> <span class="n">nometa</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="c1"># Truncate long cells</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="p">[[(</span><span class="n">c</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">30</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)[:</span><span class="mi">27</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">row</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="p">]</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">head</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">__to_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Function to convert key and value pair to line for file.</span>
+
+<span class="sd">            :param key: The topic key entity</span>
+<span class="sd">            :param value: The topic value entity</span>
+<span class="sd">            :return: The line (string)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">key_json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key_serde</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">value_json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_serde</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">key_json</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">value_json</span>
+
+<div class="viewcode-block" id="JAWSConsumer.export_records"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.JAWSConsumer.html#jaws_libp.clients.JAWSConsumer.export_records">[docs]</a>    <span class="k">def</span> <span class="nf">export_records</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_if</span><span class="o">=</span><span class="k">lambda</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Prints the compacted cache of records in the JAWS file format to standard output.</span>
+
+<span class="sd">            Note: Blocks until the highwater mark has been reached.</span>
+
+<span class="sd">            :param filter_if: Callback applied to each Message to indicate if Message should be included</span>
+<span class="sd">            :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">await_highwater_get</span><span class="p">()</span>
+
+        <span class="n">sortedtuples</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">records</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sortedtuples</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">key</span><span class="p">()</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">filter_if</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__to_line</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div>
+
+    <span class="c1"># pylint: disable=no-self-use</span>
+    <span class="c1"># check breaks inheritance</span>
+    <span class="k">def</span> <span class="nf">_get_table_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Get the printed table headers.</span>
+
+<span class="sd">            :return: The list of table headers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;Key&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span>
+
+    <span class="c1"># pylint: disable=no-self-use</span>
+    <span class="c1"># check breaks inheritance</span>
+    <span class="k">def</span> <span class="nf">_get_table_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Function to convert Message to table row (List of strings).</span>
+
+<span class="sd">            Note: This function assumes the Message.value() is never None as</span>
+<span class="sd">            this function should be called against a compacted Dict of Messages.</span>
+
+<span class="sd">            :param msg: The Message</span>
+<span class="sd">            :return: The table row (List of strings)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">(),</span> <span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()]</span>
+
+<div class="viewcode-block" id="JAWSConsumer.get_keys_then_done"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.JAWSConsumer.html#jaws_libp.clients.JAWSConsumer.get_keys_then_done">[docs]</a>    <span class="k">def</span> <span class="nf">get_keys_then_done</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Convenience function to get the list of keys.  This function blocks until the highwater mark is reached.</span>
+
+<span class="sd">            WARNING: No other functions should be called on this JAWSConsumer afterwards as start() and stop() are</span>
+<span class="sd">            called.</span>
+
+<span class="sd">            :return: List of keys</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">msgs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">await_highwater_get</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">msgs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="JAWSConsumer.consume_then_done"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.JAWSConsumer.html#jaws_libp.clients.JAWSConsumer.consume_then_done">[docs]</a>    <span class="k">def</span> <span class="nf">consume_then_done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">monitor</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">nometa</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">export</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                          <span class="n">filter_if</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Convenience function for taking exactly one action given a set of hints.  If more than one action is</span>
+<span class="sd">            indicated the first one in parameter order wins.  If Neither monitor nor export is indicated then</span>
+<span class="sd">            print_table is called.</span>
+
+<span class="sd">            WARNING: No other functions should be called on this JAWSConsumer afterwards as start() and stop() are</span>
+<span class="sd">            called.</span>
+
+<span class="sd">            :param monitor: If True print records as they arrive (uncompressed) indefinitely (kill with Ctrl-C)</span>
+<span class="sd">            :param nometa: If True do not include timestamp, producer app, host, and username in output</span>
+<span class="sd">            :param export: If True call export_records()</span>
+<span class="sd">            :param filter_if: Callback applied to each Message to indicate if Message should be included</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">monitor</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_listener</span><span class="p">(</span><span class="n">_MonitorListener</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">export</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">export_records</span><span class="p">(</span><span class="n">filter_if</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_table</span><span class="p">(</span><span class="n">nometa</span><span class="p">,</span> <span class="n">filter_if</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__filtered_row_with_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">,</span> <span class="n">filter_if</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span> <span class="n">nometa</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">headers</span><span class="p">()</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_table_row</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">filter_if</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">(),</span> <span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">nometa</span><span class="p">:</span>
+                <span class="n">row_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_row_meta_header</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">)</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">row_header</span> <span class="o">+</span> <span class="n">row</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">row</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__get_row_meta_header</span><span class="p">(</span><span class="n">headers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="n">timestamp</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">(</span><span class="n">timestamp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+
+        <span class="n">user</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">producer</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="n">headers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lookup</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span>
+            <span class="n">bytez</span> <span class="o">=</span> <span class="n">lookup</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">bytez</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">bytez</span> <span class="o">=</span> <span class="n">lookup</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;producer&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">producer</span> <span class="o">=</span> <span class="n">bytez</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">bytez</span> <span class="o">=</span> <span class="n">lookup</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">host</span> <span class="o">=</span> <span class="n">bytez</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">ts</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">producer</span><span class="p">]</span>
+
+    <span class="c1"># pylint: disable=unused-argument</span>
+    <span class="k">def</span> <span class="nf">__signal_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Stopping from Ctrl+C!&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="JAWSProducer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.JAWSProducer.html#jaws_libp.clients.JAWSProducer">[docs]</a><span class="k">class</span> <span class="nc">JAWSProducer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This class produces messages to JAWS.</span>
+
+<span class="sd">        The JAWS expected header is included in all messages.</span>
+
+<span class="sd">        Sensible defaults are used to determine BOOTSTRAP_SERVERS (look in env)</span>
+<span class="sd">        and to handle errors (log them).</span>
+
+<span class="sd">        This producer also knows how to import records from a file using the JAWS expected file format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="JAWSProducer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.JAWSProducer.html#jaws_libp.clients.JAWSProducer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">:</span> <span class="n">Serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">:</span> <span class="n">Serde</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new JAWSProducer with the provided attributes.</span>
+
+<span class="sd">            :param topic: The Kafka topic name</span>
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">            :param key_serde: The appropriate Kafka message key Serde for the given topic</span>
+<span class="sd">            :param value_serde: The appropriate Kafka message value Serde for the given topic</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">set_log_level_from_env</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_topic</span> <span class="o">=</span> <span class="n">topic</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_client_name</span> <span class="o">=</span> <span class="n">client_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_key_serde</span> <span class="o">=</span> <span class="n">key_serde</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value_serde</span> <span class="o">=</span> <span class="n">value_serde</span>
+
+        <span class="n">key_serializer</span> <span class="o">=</span> <span class="n">key_serde</span><span class="o">.</span><span class="n">serializer</span><span class="p">()</span>
+        <span class="n">value_serializer</span> <span class="o">=</span> <span class="n">value_serde</span><span class="o">.</span><span class="n">serializer</span><span class="p">()</span>
+
+        <span class="n">bootstrap_servers</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;BOOTSTRAP_SERVERS&#39;</span><span class="p">,</span> <span class="s1">&#39;localhost:9092&#39;</span><span class="p">)</span>
+        <span class="n">producer_conf</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bootstrap.servers&#39;</span><span class="p">:</span> <span class="n">bootstrap_servers</span><span class="p">,</span>
+                         <span class="s1">&#39;key.serializer&#39;</span><span class="p">:</span> <span class="n">key_serializer</span><span class="p">,</span>
+                         <span class="s1">&#39;value.serializer&#39;</span><span class="p">:</span> <span class="n">value_serializer</span><span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="o">=</span> <span class="n">SerializingProducer</span><span class="p">(</span><span class="n">producer_conf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_headers</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="JAWSProducer.send"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.JAWSProducer.html#jaws_libp.clients.JAWSProducer.send">[docs]</a>    <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Send a single message to a Kafka topic.</span>
+
+<span class="sd">            :param key: The message key</span>
+<span class="sd">            :param value: The message value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_topic</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_headers</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+                               <span class="n">on_delivery</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__on_delivery</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__from_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Function to convert line from file to key and value pair</span>
+<span class="sd">            :param line: The line (string)</span>
+<span class="sd">            :return: A Tuple containing the key and value pair</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">key_str</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">value_str</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_key_serde</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">key_str</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_serde</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">value_str</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="JAWSProducer.import_records"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.JAWSProducer.html#jaws_libp.clients.JAWSProducer.import_records">[docs]</a>    <span class="k">def</span> <span class="nf">import_records</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Send a batch of messages stored in a JAWS formatted file to a Kafka topic.</span>
+
+<span class="sd">            :param file: Path to file to import</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Loading file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__from_line</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">produce</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_topic</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_headers</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+                                       <span class="n">on_delivery</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__on_delivery</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__get_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">Process</span><span class="p">()</span><span class="o">.</span><span class="n">username</span><span class="p">()),</span>
+                <span class="p">(</span><span class="s1">&#39;producer&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client_name</span><span class="p">),</span>
+                <span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">())]</span>
+
+    <span class="c1"># pylint: disable=unused-argument</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__on_delivery</span><span class="p">(</span><span class="n">err</span><span class="p">:</span> <span class="n">KafkaError</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Failed: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Delivered&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ActivationConsumer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.ActivationConsumer.html#jaws_libp.clients.ActivationConsumer">[docs]</a><span class="k">class</span> <span class="nc">ActivationConsumer</span><span class="p">(</span><span class="n">JAWSConsumer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Consumer for JAWS Activation messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ActivationConsumer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.ActivationConsumer.html#jaws_libp.clients.ActivationConsumer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Consumer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">ActivationSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-activations&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CategoryConsumer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.CategoryConsumer.html#jaws_libp.clients.CategoryConsumer">[docs]</a><span class="k">class</span> <span class="nc">CategoryConsumer</span><span class="p">(</span><span class="n">JAWSConsumer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Consumer for JAWS Category messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CategoryConsumer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.CategoryConsumer.html#jaws_libp.clients.CategoryConsumer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Consumer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-categories&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_table_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;Category&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_get_table_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">()]</span></div>
+
+
+<div class="viewcode-block" id="ClassConsumer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.ClassConsumer.html#jaws_libp.clients.ClassConsumer">[docs]</a><span class="k">class</span> <span class="nc">ClassConsumer</span><span class="p">(</span><span class="n">JAWSConsumer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Consumer for JAWS Class messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ClassConsumer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.ClassConsumer.html#jaws_libp.clients.ClassConsumer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Consumer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">ClassSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-classes&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_table_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;Class Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Category&quot;</span><span class="p">,</span> <span class="s2">&quot;Priority&quot;</span><span class="p">,</span> <span class="s2">&quot;Rationale&quot;</span><span class="p">,</span> <span class="s2">&quot;Corrective Action&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;P.O.C. Username&quot;</span><span class="p">,</span> <span class="s2">&quot;Latching&quot;</span><span class="p">,</span> <span class="s2">&quot;Filterable&quot;</span><span class="p">,</span> <span class="s2">&quot;On Delay&quot;</span><span class="p">,</span> <span class="s2">&quot;Off Delay&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_get_table_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">(),</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">category</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">priority</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">priority</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">rationale</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n &quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">rationale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">corrective_action</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">corrective_action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">point_of_contact_username</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">latching</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">filterable</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">on_delay_seconds</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">off_delay_seconds</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="EffectiveActivationConsumer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveActivationConsumer.html#jaws_libp.clients.EffectiveActivationConsumer">[docs]</a><span class="k">class</span> <span class="nc">EffectiveActivationConsumer</span><span class="p">(</span><span class="n">JAWSConsumer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Consumer for JAWS EffectiveActivation messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EffectiveActivationConsumer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveActivationConsumer.html#jaws_libp.clients.EffectiveActivationConsumer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Consumer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">EffectiveActivationSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;effective-activations&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_table_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;Alarm Name&quot;</span><span class="p">,</span> <span class="s2">&quot;State&quot;</span><span class="p">,</span> <span class="s2">&quot;Overrides&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_get_table_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">(),</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">overrides</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="EffectiveAlarmConsumer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveAlarmConsumer.html#jaws_libp.clients.EffectiveAlarmConsumer">[docs]</a><span class="k">class</span> <span class="nc">EffectiveAlarmConsumer</span><span class="p">(</span><span class="n">JAWSConsumer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Consumer for JAWS EffectiveAlarm messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EffectiveAlarmConsumer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveAlarmConsumer.html#jaws_libp.clients.EffectiveAlarmConsumer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Consumer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">EffectiveAlarmSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;effective-alarms&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_table_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;Alarm Name&quot;</span><span class="p">,</span> <span class="s2">&quot;State&quot;</span><span class="p">,</span> <span class="s2">&quot;Overrides&quot;</span><span class="p">,</span> <span class="s2">&quot;Instance&quot;</span><span class="p">,</span> <span class="s2">&quot;Class&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_get_table_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">(),</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">activation</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">activation</span><span class="o">.</span><span class="n">overrides</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">registration</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">registration</span><span class="o">.</span><span class="n">alarm_class</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="EffectiveRegistrationConsumer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveRegistrationConsumer.html#jaws_libp.clients.EffectiveRegistrationConsumer">[docs]</a><span class="k">class</span> <span class="nc">EffectiveRegistrationConsumer</span><span class="p">(</span><span class="n">JAWSConsumer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Consumer for JAWS EffectiveRegistration messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EffectiveRegistrationConsumer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveRegistrationConsumer.html#jaws_libp.clients.EffectiveRegistrationConsumer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Consumer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">EffectiveRegistrationSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;effective-registrations&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_table_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;Alarm Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Instance&quot;</span><span class="p">,</span> <span class="s2">&quot;Class&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_get_table_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">(),</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">alarm_class</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="InstanceConsumer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.InstanceConsumer.html#jaws_libp.clients.InstanceConsumer">[docs]</a><span class="k">class</span> <span class="nc">InstanceConsumer</span><span class="p">(</span><span class="n">JAWSConsumer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Consumer for JAWS Instance messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="InstanceConsumer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.InstanceConsumer.html#jaws_libp.clients.InstanceConsumer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Consumer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">InstanceSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">,</span> <span class="n">UnionEncoding</span><span class="o">.</span><span class="n">DICT_WITH_TYPE</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-instances&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_table_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;Alarm Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Class&quot;</span><span class="p">,</span> <span class="s2">&quot;Producer&quot;</span><span class="p">,</span> <span class="s2">&quot;Location&quot;</span><span class="p">,</span> <span class="s2">&quot;Masked By&quot;</span><span class="p">,</span> <span class="s2">&quot;Screen Command&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_get_table_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">(),</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">alarm_class</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">producer</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">masked_by</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">screen_command</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="LocationConsumer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.LocationConsumer.html#jaws_libp.clients.LocationConsumer">[docs]</a><span class="k">class</span> <span class="nc">LocationConsumer</span><span class="p">(</span><span class="n">JAWSConsumer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Consumer for JAWS Location messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LocationConsumer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.LocationConsumer.html#jaws_libp.clients.LocationConsumer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Consumer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">LocationSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-locations&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_table_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;Location Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Parent&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_get_table_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">(),</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">parent</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="OverrideConsumer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.OverrideConsumer.html#jaws_libp.clients.OverrideConsumer">[docs]</a><span class="k">class</span> <span class="nc">OverrideConsumer</span><span class="p">(</span><span class="n">JAWSConsumer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Consumer for JAWS Override messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="OverrideConsumer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.OverrideConsumer.html#jaws_libp.clients.OverrideConsumer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Consumer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">OverrideKeySerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">OverrideSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-overrides&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_table_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;Alarm Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Override Type&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_get_table_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">key</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">key</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()]</span></div>
+
+
+<div class="viewcode-block" id="ActivationProducer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.ActivationProducer.html#jaws_libp.clients.ActivationProducer">[docs]</a><span class="k">class</span> <span class="nc">ActivationProducer</span><span class="p">(</span><span class="n">JAWSProducer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producer for JAWS Activation messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ActivationProducer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.ActivationProducer.html#jaws_libp.clients.ActivationProducer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Producer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">ActivationSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-activations&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CategoryProducer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.CategoryProducer.html#jaws_libp.clients.CategoryProducer">[docs]</a><span class="k">class</span> <span class="nc">CategoryProducer</span><span class="p">(</span><span class="n">JAWSProducer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producer for JAWS Category messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CategoryProducer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.CategoryProducer.html#jaws_libp.clients.CategoryProducer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Producer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-categories&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ClassProducer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.ClassProducer.html#jaws_libp.clients.ClassProducer">[docs]</a><span class="k">class</span> <span class="nc">ClassProducer</span><span class="p">(</span><span class="n">JAWSProducer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producer for JAWS Class messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ClassProducer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.ClassProducer.html#jaws_libp.clients.ClassProducer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Producer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">ClassSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-classes&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="EffectiveActivationProducer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveActivationProducer.html#jaws_libp.clients.EffectiveActivationProducer">[docs]</a><span class="k">class</span> <span class="nc">EffectiveActivationProducer</span><span class="p">(</span><span class="n">JAWSProducer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producer for JAWS EffectiveActivation messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EffectiveActivationProducer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveActivationProducer.html#jaws_libp.clients.EffectiveActivationProducer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Producer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">EffectiveActivationSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;effective-activations&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="EffectiveAlarmProducer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveAlarmProducer.html#jaws_libp.clients.EffectiveAlarmProducer">[docs]</a><span class="k">class</span> <span class="nc">EffectiveAlarmProducer</span><span class="p">(</span><span class="n">JAWSProducer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producer for JAWS EffectiveAlarm messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EffectiveAlarmProducer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveAlarmProducer.html#jaws_libp.clients.EffectiveAlarmProducer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Producer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">EffectiveAlarmSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;effective-alarms&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="EffectiveRegistrationProducer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveRegistrationProducer.html#jaws_libp.clients.EffectiveRegistrationProducer">[docs]</a><span class="k">class</span> <span class="nc">EffectiveRegistrationProducer</span><span class="p">(</span><span class="n">JAWSProducer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producer for JAWS EffectiveRegistration messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EffectiveRegistrationProducer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.EffectiveRegistrationProducer.html#jaws_libp.clients.EffectiveRegistrationProducer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Producer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">EffectiveRegistrationSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;effective-registrations&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="InstanceProducer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.InstanceProducer.html#jaws_libp.clients.InstanceProducer">[docs]</a><span class="k">class</span> <span class="nc">InstanceProducer</span><span class="p">(</span><span class="n">JAWSProducer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producer for JAWS Instance messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="InstanceProducer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.InstanceProducer.html#jaws_libp.clients.InstanceProducer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Producer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">InstanceSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-instances&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LocationProducer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.LocationProducer.html#jaws_libp.clients.LocationProducer">[docs]</a><span class="k">class</span> <span class="nc">LocationProducer</span><span class="p">(</span><span class="n">JAWSProducer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producer for JAWS Location messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LocationProducer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.LocationProducer.html#jaws_libp.clients.LocationProducer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Producer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">StringSerde</span><span class="p">()</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">LocationSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-locations&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="OverrideProducer"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.OverrideProducer.html#jaws_libp.clients.OverrideProducer">[docs]</a><span class="k">class</span> <span class="nc">OverrideProducer</span><span class="p">(</span><span class="n">JAWSProducer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producer for JAWS Override messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="OverrideProducer.__init__"><a class="viewcode-back" href="../../_autosummary/jaws_libp.clients.OverrideProducer.html#jaws_libp.clients.OverrideProducer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create a new Producer.</span>
+
+<span class="sd">            :param client_name: The name of the client application</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">schema_registry_client</span> <span class="o">=</span> <span class="n">get_registry_client</span><span class="p">()</span>
+        <span class="n">key_serde</span> <span class="o">=</span> <span class="n">OverrideKeySerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+        <span class="n">value_serde</span> <span class="o">=</span> <span class="n">OverrideSerde</span><span class="p">(</span><span class="n">schema_registry_client</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;alarm-overrides&#39;</span><span class="p">,</span> <span class="n">client_name</span><span class="p">,</span> <span class="n">key_serde</span><span class="p">,</span> <span class="n">value_serde</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jefferson Lab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

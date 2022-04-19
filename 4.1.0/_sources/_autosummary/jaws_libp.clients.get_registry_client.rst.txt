@@ -1,0 +1,6 @@
+jaws\_libp.clients.get\_registry\_client
+========================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autofunction:: get_registry_client

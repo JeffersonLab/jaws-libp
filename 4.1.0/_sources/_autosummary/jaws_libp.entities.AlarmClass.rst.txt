@@ -1,0 +1,39 @@
+jaws\_libp.entities.AlarmClass
+==============================
+
+.. currentmodule:: jaws_libp.entities
+
+.. autoclass:: AlarmClass
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AlarmClass.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AlarmClass.category
+      ~AlarmClass.priority
+      ~AlarmClass.rationale
+      ~AlarmClass.corrective_action
+      ~AlarmClass.point_of_contact_username
+      ~AlarmClass.latching
+      ~AlarmClass.filterable
+      ~AlarmClass.on_delay_seconds
+      ~AlarmClass.off_delay_seconds
+   
+   

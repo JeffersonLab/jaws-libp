@@ -1,0 +1,39 @@
+jaws\_libp.clients.InstanceConsumer
+===================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: InstanceConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~InstanceConsumer.__init__
+      ~InstanceConsumer.add_cache_listener
+      ~InstanceConsumer.add_listener
+      ~InstanceConsumer.await_highwater
+      ~InstanceConsumer.await_highwater_get
+      ~InstanceConsumer.consume_then_done
+      ~InstanceConsumer.export_records
+      ~InstanceConsumer.get
+      ~InstanceConsumer.get_keys_then_done
+      ~InstanceConsumer.highwater_reached
+      ~InstanceConsumer.print_table
+      ~InstanceConsumer.remove_cache_listener
+      ~InstanceConsumer.remove_listener
+      ~InstanceConsumer.start
+      ~InstanceConsumer.stop
+   
+   
+
+   
+   
+   

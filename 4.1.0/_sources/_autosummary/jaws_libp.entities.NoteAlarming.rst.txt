@@ -1,0 +1,31 @@
+jaws\_libp.entities.NoteAlarming
+================================
+
+.. currentmodule:: jaws_libp.entities
+
+.. autoclass:: NoteAlarming
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NoteAlarming.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NoteAlarming.note
+   
+   
