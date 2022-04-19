@@ -320,7 +320,7 @@ class AlarmActivationUnion:
     """
         Alarm Activation (annunciation, alarming).
     """
-    msg: Union[SimpleAlarming, NoteAlarming, EPICSAlarming]
+    msg: Union[SimpleAlarming, NoteAlarming, EPICSAlarming, ChannelError]
     """The message payload is a union of possible alarming types"""
 
 
