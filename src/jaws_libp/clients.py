@@ -56,7 +56,7 @@ class _MonitorListener(EventSourceListener):
 
     def on_batch(self, msgs: List[Message]) -> None:
         for msg in msgs:
-            print("%s=%s", msg.key(), msg.value())
+            print(f"{msg.key()}={msg.value()}")
 
     def on_highwater(self) -> None:
         pass
