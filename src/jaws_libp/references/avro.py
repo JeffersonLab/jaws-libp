@@ -147,7 +147,7 @@ class AvroSerializerWithReferences(AvroSerializer):
     """  # noqa: E501
     __slots__ = ['_hash', '_auto_register', '_use_latest_version', '_known_subjects', '_parsed_schema',
                  '_registry', '_schema', '_schema_id', '_schema_name',
-                 '_subject_name_func', '_to_dict']
+                 '_subject_name_func', '_to_dict', '_named_schemas']
 
     # default configuration
     _default_conf = {'auto.register.schemas': True,
@@ -155,20 +155,21 @@ class AvroSerializerWithReferences(AvroSerializer):
                      'subject.name.strategy': topic_subject_name_strategy}
 
     @overload
-    def __init__(self, schema_registry_client, schema: str, to_dict=None, conf=None):
+    def __init__(self, schema_registry_client, schema: str, to_dict=None, conf=None, named_schemas=None):
         ...
 
     @overload
-    def __init__(self, schema_registry_client, schema: Schema, to_dict=None, conf=None):
+    def __init__(self, schema_registry_client, schema: Schema, to_dict=None, conf=None, named_schemas=None):
         ...
 
-    def __init__(self, schema_registry_client, schema, to_dict=None, conf=None):
+    def __init__(self, schema_registry_client, schema, to_dict=None, conf=None, named_schemas=None):
         if isinstance(schema, str):
             schema = _schema_loads(schema)
         else:
             if not isinstance(schema, Schema):
                 raise ValueError('You must pass either str or Schema')
 
+        self._named_schemas = named_schemas
         self._registry = schema_registry_client
         self._schema_id = None
         # Avoid calling registry if schema is known to be registered
@@ -205,7 +206,7 @@ class AvroSerializerWithReferences(AvroSerializer):
 
         # convert schema_str to Schema instance
         schema_dict = loads(schema.schema_str)
-        parsed_schema = parse_schema(schema_dict, named_schemas=schema.named_schemas)
+        parsed_schema = parse_schema(schema_dict, named_schemas=self._named_schemas)
 
         if isinstance(parsed_schema, list):
             # if parsed_schema is a list, we have an Avro union and there
@@ -316,29 +317,34 @@ class AvroDeserializerWithReferences(AvroDeserializer):
         `Apache Avro Schema Resolution <https://avro.apache.org/docs/1.8.2/spec.html#Schema+Resolution>`_
 
     """
-    __slots__ = ['_reader_schema', '_registry', '_from_dict', '_writer_schemas', '_return_record_name', '_schema']
+    __slots__ = ['_reader_schema', '_registry', '_from_dict', '_writer_schemas', '_return_record_name', '_schema',
+                 '_named_schemas']
 
     @overload
-    def __init__(self, schema_registry_client, schema: str, from_dict=None, return_record_name=False):
+    def __init__(self, schema_registry_client, schema: str, from_dict=None, return_record_name=False,
+                 named_schemas=None):
         ...
 
     @overload
-    def __init__(self, schema_registry_client, schema: Schema, from_dict=None, return_record_name=False):
+    def __init__(self, schema_registry_client, schema: Schema, from_dict=None, return_record_name=False,
+                 named_schemas=None):
         ...
 
-    def __init__(self, schema_registry_client, schema=None, from_dict=None, return_record_name=False):
+    def __init__(self, schema_registry_client, schema=None, from_dict=None, return_record_name=False,
+                 named_schemas=None):
         if isinstance(schema, str):
             schema = _schema_loads(schema)
         else:
             if schema is not None and not isinstance(schema, Schema):
                 raise ValueError('You must pass either str, Schema, or None')
 
+        self._named_schemas = named_schemas
         self._schema = schema
         self._registry = schema_registry_client
         self._writer_schemas = {}
 
         self._reader_schema = parse_schema(loads(schema.schema_str),
-                                           named_schemas=schema.named_schemas) if schema else None
+                                           named_schemas=self._named_schemas) if schema else None
 
         if from_dict is not None and not callable(from_dict):
             raise ValueError("from_dict must be callable with the signature"
