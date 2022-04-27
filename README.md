@@ -21,7 +21,7 @@ pip install jaws-libp
 [Sphinx Docs](https://jeffersonlab.github.io/jaws-libp/)
 
 ## Build
-This [Python 3.9+](https://www.python.org/) project is built with [setuptools](https://setuptools.pypa.io/en/latest/setuptools.html) and may be run using either the Python [virtual environment](https://docs.python.org/3/tutorial/venv.html) feature or a dedicated Docker container to isolate dependencies.   The [pip](https://pypi.org/project/pip/) tool can be used to download dependencies.
+This [Python 3.9+](https://www.python.org/) project is built with [setuptools](https://setuptools.pypa.io/en/latest/setuptools.html) and may be run using the Python [virtual environment](https://docs.python.org/3/tutorial/venv.html) feature to isolate dependencies.   The [pip](https://pypi.org/project/pip/) tool can be used to download dependencies.
 
 ```
 git clone https://github.com/JeffersonLab/jaws-libp
@@ -31,7 +31,7 @@ python -m build
 
 **Note for JLab On-Site Users**: Jefferson Lab has an intercepting [proxy](https://gist.github.com/slominskir/92c25a033db93a90184a5994e71d0b78)
 
-**See**: [Python Development Notes](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1) and [Docker Development Quick Reference](https://gist.github.com/slominskir/a7da801e8259f5974c978f9c3091d52c#development-quick-reference)
+**See**: [Python Development Notes](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1)
 
 ## See Also
  - [Developer Notes](https://github.com/JeffersonLab/jaws-libp/wiki/Developer-Notes)
