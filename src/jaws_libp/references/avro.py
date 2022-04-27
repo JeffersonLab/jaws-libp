@@ -391,14 +391,9 @@ class AvroDeserializerWithReferences(AvroDeserializer):
 
             if writer_schema is None:
                 registered_schema: Schema = self._registry.get_schema(schema_id)
-                named_schemas = {}
-                for ref in registered_schema.references:
-                    ref_reg_schema = self._registry.get_version(ref.subject, ref.version)
-                    ref_dict = loads(ref_reg_schema.schema.schema_str)
-                    parse_schema(ref_dict, named_schemas=named_schemas)
                 prepared_schema: Schema = _schema_loads(registered_schema.schema_str)
                 writer_schema: dict = parse_schema(loads(
-                    prepared_schema.schema_str), named_schemas=named_schemas)
+                    prepared_schema.schema_str), named_schemas=self._named_schemas)
                 self._writer_schemas[schema_id] = writer_schema
 
             obj_dict = schemaless_reader(payload,
