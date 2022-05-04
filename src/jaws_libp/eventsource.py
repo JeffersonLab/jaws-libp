@@ -306,7 +306,9 @@ class EventSourceTable:
 class CachedTable(EventSourceTable):
     """
         Adds an in-memory cache to an EventSourceTable.   Caller should be aware of size of topic being consumed and
-        this class should only be used for topics whose data will fit in caller's memory.
+        this class should only be used for topics whose data will fit in caller's memory.  Unlike the EventSourceTable,
+        the CachedTable compacts records (newer records of same key replace older records, potentially hiding
+        intermediate results).
 
         This class is great for clients that want to grab all data in a topic, use it immediately, then done.  For
         example a shell script to dump contents of topic.
@@ -326,7 +328,8 @@ class CachedTable(EventSourceTable):
             +-------------------------+---------------------+-----------------------------------------------------+
 
         The ability to disable caching is provided for subclasses that *usually* want an in-memory cache,
-        but not always.
+        but not always.  Might have been better to name this CashableTable or perhaps simply merged the optional
+        caching functionality into the parent EventSourceTable.
 
     """
 
