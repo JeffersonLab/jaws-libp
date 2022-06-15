@@ -6,8 +6,10 @@ import os
 import signal
 import socket
 import time
-import requests
+
 from typing import Any, List, Callable, Tuple
+
+import requests
 
 from confluent_kafka import Message, SerializingProducer, KafkaError
 from confluent_kafka.schema_registry import SchemaRegistryClient
@@ -373,6 +375,11 @@ class JAWSProducer:
             self.__import_lines(lines)
 
     def import_records(self, path: str) -> None:
+        """
+            Send a batch of messages stored in a JAWS formatted file/url to a Kafka topic.
+
+            :param path: Path to file/url to import
+        """
         if path.startswith("http"):
             self.import_from_url(path)
         else:
