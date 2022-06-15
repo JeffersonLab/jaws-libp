@@ -6,6 +6,7 @@ import os
 import signal
 import socket
 import time
+import requests
 from typing import Any, List, Callable, Tuple
 
 from confluent_kafka import Message, SerializingProducer, KafkaError
@@ -336,7 +337,31 @@ class JAWSProducer:
 
         return key, value
 
-    def import_records(self, file: str) -> None:
+    def __import_lines(self, lines):
+        for line in lines:
+            if line:  # url streaming may contain empty keep-alive lines
+                key, value = self.__from_line(line)
+
+                logger.debug("%s=%s", key, value)
+                self._producer.produce(topic=self._topic, headers=self._headers, key=key, value=value,
+                                       on_delivery=self.__on_delivery)
+
+        self._producer.flush()
+
+    def import_from_url(self, url: str) -> None:
+        """
+            Send a batch of messages stored in a JAWS formatted file at a URL to a Kafka topic.
+
+            :param url: URL path to a file to import
+        """
+        with requests.get(url, stream=True) as r:
+            if r.encoding is None:
+                r.encoding = 'utf-8'
+
+            lines = r.iter_lines(decode_unicode=True)
+            self.__import_lines(lines)
+
+    def import_from_file(self, file: str) -> None:
         """
             Send a batch of messages stored in a JAWS formatted file to a Kafka topic.
 
@@ -345,15 +370,13 @@ class JAWSProducer:
         logger.debug("Loading file %s", file)
         with open(file, "r", encoding="utf8") as handle:
             lines = handle.readlines()
+            self.__import_lines(lines)
 
-            for line in lines:
-                key, value = self.__from_line(line)
-
-                logger.debug("%s=%s", key, value)
-                self._producer.produce(topic=self._topic, headers=self._headers, key=key, value=value,
-                                       on_delivery=self.__on_delivery)
-
-        self._producer.flush()
+    def import_records(self, path: str) -> None:
+        if path.startswith("http"):
+            self.import_from_url(path)
+        else:
+            self.import_from_file(path)
 
     def __get_headers(self) -> List[Tuple[str, str]]:
         return [('user', Process().username()),
