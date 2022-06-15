@@ -1,0 +1,29 @@
+jaws\_libp.clients.CategoryProducer
+===================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: CategoryProducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CategoryProducer.__init__
+      ~CategoryProducer.import_from_file
+      ~CategoryProducer.import_from_url
+      ~CategoryProducer.import_records
+      ~CategoryProducer.send
+   
+   
+
+   
+   
+   

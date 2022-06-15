@@ -1,0 +1,33 @@
+jaws\_libp.entities.IntermediateMonolog
+=======================================
+
+.. currentmodule:: jaws_libp.entities
+
+.. autoclass:: IntermediateMonolog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~IntermediateMonolog.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~IntermediateMonolog.registration
+      ~IntermediateMonolog.activation
+      ~IntermediateMonolog.transitions
+   
+   

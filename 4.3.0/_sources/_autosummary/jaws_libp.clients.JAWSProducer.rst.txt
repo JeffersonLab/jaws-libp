@@ -1,0 +1,29 @@
+jaws\_libp.clients.JAWSProducer
+===============================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: JAWSProducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~JAWSProducer.__init__
+      ~JAWSProducer.import_from_file
+      ~JAWSProducer.import_from_url
+      ~JAWSProducer.import_records
+      ~JAWSProducer.send
+   
+   
+
+   
+   
+   

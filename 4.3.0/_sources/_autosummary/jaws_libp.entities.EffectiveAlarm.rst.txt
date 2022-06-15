@@ -1,0 +1,32 @@
+jaws\_libp.entities.EffectiveAlarm
+==================================
+
+.. currentmodule:: jaws_libp.entities
+
+.. autoclass:: EffectiveAlarm
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EffectiveAlarm.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EffectiveAlarm.registration
+      ~EffectiveAlarm.activation
+   
+   

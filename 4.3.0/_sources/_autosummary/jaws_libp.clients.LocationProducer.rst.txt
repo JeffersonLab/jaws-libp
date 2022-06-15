@@ -1,0 +1,29 @@
+jaws\_libp.clients.LocationProducer
+===================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: LocationProducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LocationProducer.__init__
+      ~LocationProducer.import_from_file
+      ~LocationProducer.import_from_url
+      ~LocationProducer.import_records
+      ~LocationProducer.send
+   
+   
+
+   
+   
+   

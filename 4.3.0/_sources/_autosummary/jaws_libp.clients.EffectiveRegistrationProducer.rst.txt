@@ -1,0 +1,29 @@
+jaws\_libp.clients.EffectiveRegistrationProducer
+================================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: EffectiveRegistrationProducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EffectiveRegistrationProducer.__init__
+      ~EffectiveRegistrationProducer.import_from_file
+      ~EffectiveRegistrationProducer.import_from_url
+      ~EffectiveRegistrationProducer.import_records
+      ~EffectiveRegistrationProducer.send
+   
+   
+
+   
+   
+   

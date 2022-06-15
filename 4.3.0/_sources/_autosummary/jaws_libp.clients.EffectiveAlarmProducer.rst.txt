@@ -1,0 +1,29 @@
+jaws\_libp.clients.EffectiveAlarmProducer
+=========================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: EffectiveAlarmProducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EffectiveAlarmProducer.__init__
+      ~EffectiveAlarmProducer.import_from_file
+      ~EffectiveAlarmProducer.import_from_url
+      ~EffectiveAlarmProducer.import_records
+      ~EffectiveAlarmProducer.send
+   
+   
+
+   
+   
+   

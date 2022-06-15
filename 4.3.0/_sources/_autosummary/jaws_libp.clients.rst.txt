@@ -1,0 +1,58 @@
+jaws\_libp.clients
+==================
+
+.. automodule:: jaws_libp.clients
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      get_registry_client
+      set_log_level_from_env
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ActivationConsumer
+      ActivationProducer
+      CategoryConsumer
+      CategoryProducer
+      ClassConsumer
+      ClassProducer
+      EffectiveActivationConsumer
+      EffectiveActivationProducer
+      EffectiveAlarmConsumer
+      EffectiveAlarmProducer
+      EffectiveRegistrationConsumer
+      EffectiveRegistrationProducer
+      InstanceConsumer
+      InstanceProducer
+      JAWSConsumer
+      JAWSProducer
+      LocationConsumer
+      LocationProducer
+      OverrideConsumer
+      OverrideProducer
+   
+   
+
+   
+   
+   
+
+
+

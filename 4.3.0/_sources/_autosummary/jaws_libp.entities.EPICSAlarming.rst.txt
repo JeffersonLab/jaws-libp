@@ -1,0 +1,32 @@
+jaws\_libp.entities.EPICSAlarming
+=================================
+
+.. currentmodule:: jaws_libp.entities
+
+.. autoclass:: EPICSAlarming
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EPICSAlarming.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EPICSAlarming.sevr
+      ~EPICSAlarming.stat
+   
+   
