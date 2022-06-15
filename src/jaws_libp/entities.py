@@ -85,8 +85,7 @@ class OverriddenAlarmType(Enum):
     acknowledged"""
 
     def __lt__(self, other):
-        if self.__class__ is other.__class__:
-            return self.value < other.value
+        return self.value < other.value
 
 class ShelvedReason(Enum):
     """
