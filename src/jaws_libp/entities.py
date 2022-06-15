@@ -5,7 +5,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import Union, Optional, List
-
+from functools import total_ordering
 
 class AlarmPriority(Enum):
     """
@@ -59,6 +59,7 @@ class AlarmState(Enum):
     """Effectively Normal, Actually Normal, no action required"""
 
 
+@total_ordering
 class OverriddenAlarmType(Enum):
     """
         Override Type
@@ -83,6 +84,9 @@ class OverriddenAlarmType(Enum):
     acknowledgement by operators - the alarm is latched once active and won't clear to Normal (or Active) until
     acknowledged"""
 
+    def __lt__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value < other.value
 
 class ShelvedReason(Enum):
     """
@@ -325,6 +329,7 @@ class AlarmActivationUnion:
 
 
 @dataclass(frozen=True)
+@total_ordering
 class AlarmOverrideKey:
     """
         alarm-overrides-key subject
@@ -334,6 +339,13 @@ class AlarmOverrideKey:
     type: OverriddenAlarmType
     """The override type"""
 
+    def __eq__(self, other):
+        return ((self.name, self.type.value) ==
+                (other.name, other.type.value))
+
+    def __lt__(self, other):
+        return ((self.name, self.type.value) <
+                (other.name, other.type.value))
 
 @dataclass
 class AlarmOverrideUnion:
