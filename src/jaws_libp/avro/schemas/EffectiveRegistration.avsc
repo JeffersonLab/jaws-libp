@@ -2,6 +2,7 @@
     "type": "record",
     "name": "EffectiveRegistration",
     "namespace": "org.jlab.jaws.entity",
+    "doc": "Processed registration (instance + class)",
     "fields": [
         {
             "name": "instance",

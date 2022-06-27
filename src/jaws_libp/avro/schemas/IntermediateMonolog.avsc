@@ -2,16 +2,17 @@
     "type": "record",
     "name": "IntermediateMonolog",
     "namespace": "org.jlab.jaws.entity",
+    "doc": "Internal processor alarm state record (registration, notification, transitions)",
     "fields": [
         {
             "name": "registration",
             "type": "EffectiveRegistration",
-            "doc": "The EffectiveRegistration considering class defaults"
+            "doc": "The effective registration considering class and instance"
         },
         {
             "name": "notification",
             "type": "EffectiveNotification",
-            "doc": "The EffectiveNotification considering overrides"
+            "doc": "The effective notification considering overrides and activation"
         },
         {
             "name": "transitions",

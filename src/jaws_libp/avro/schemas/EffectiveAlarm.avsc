@@ -2,16 +2,17 @@
     "type": "record",
     "name": "EffectiveAlarm",
     "namespace": "org.jlab.jaws.entity",
+    "doc": "Processed alarm (notification + registration)",
     "fields": [
         {
             "name": "registration",
             "type": "EffectiveRegistration",
-            "doc": "The effective AlarmRegistration considering class defaults"
+            "doc": "The effective registration considering class and instance"
         },
         {
-            "name": "activation",
-            "type": "EffectiveActivation",
-            "doc": "The effective AlarmActivation considering overrides"
+            "name": "notification",
+            "type": "EffectiveNotification",
+            "doc": "The effective notification considering overrides and activation"
         }
     ]
 }

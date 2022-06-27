@@ -2,6 +2,7 @@
     "type": "record",
     "name": "EffectiveNotification",
     "namespace": "org.jlab.jaws.entity",
+    "doc": "Processed notification (activation + overrides + state)",
     "fields": [
         {
             "name": "activation",
