@@ -100,7 +100,9 @@ class JAWSConsumer(CachedTable):
                   'bootstrap.servers': bootstrap_servers,
                   'key.deserializer': key_serde.deserializer(),
                   'value.deserializer': value_serde.deserializer(),
-                  'group.id': client_name + str(ts)}
+                  'group.id': client_name + str(ts),
+                  'enable.auto.commit': False,
+                  'auto.offset.reset': 'earliest'}
 
         super().__init__(config)
 
