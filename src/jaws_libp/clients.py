@@ -350,7 +350,7 @@ class JAWSProducer:
 
         self._producer.flush()
 
-    def import_from_url(self, url: str) -> None:
+    def __import_from_url(self, url: str) -> None:
         """
             Send a batch of messages stored in a JAWS formatted file at a URL to a Kafka topic.
 
@@ -363,7 +363,7 @@ class JAWSProducer:
             lines = r.iter_lines(decode_unicode=True)
             self.__import_lines(lines)
 
-    def import_from_file(self, file: str) -> None:
+    def __import_from_file(self, file: str) -> None:
         """
             Send a batch of messages stored in a JAWS formatted file to a Kafka topic.
 
@@ -381,9 +381,9 @@ class JAWSProducer:
             :param path: Path to file/url to import
         """
         if path.startswith("http"):
-            self.import_from_url(path)
+            self.__import_from_url(path)
         else:
-            self.import_from_file(path)
+            self.__import_from_file(path)
 
     def __get_headers(self) -> List[Tuple[str, str]]:
         return [('user', Process().username()),
