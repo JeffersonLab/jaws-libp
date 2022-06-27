@@ -680,7 +680,7 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
         instance_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmInstance.avsc")
         instance_schema_str = instance_bytes.decode('utf-8')
 
-        named_schemas = self._class_serde.named_schemas()
+        named_schemas = {}
 
         ref_dict = json.loads(classes_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
