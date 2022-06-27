@@ -1,6 +1,6 @@
 {
     "type": "record",
-    "name": "OverriddenAlarmKey",
+    "name": "AlarmOverrideKey",
     "namespace": "org.jlab.jaws.entity",
     "doc": "Key of an overridden alarm; contains both name and type since any given alarm name can be overridden by multiple types simultaneously",
     "fields": [
