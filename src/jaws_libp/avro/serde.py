@@ -1183,7 +1183,7 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
         """
         return {
             "registration": self._effective_registration_serde.to_dict(data.registration),
-            "activation": self._effective_notification_serde.to_dict(data.notification),
+            "notification": self._effective_notification_serde.to_dict(data.notification),
             "transitions": self._processor_transition_serde.to_dict(data.transitions)
         }
 
