@@ -689,7 +689,7 @@ class ClassProducer(JAWSProducer):
         super().__init__('alarm-classes', client_name, key_serde, value_serde)
 
 
-class EffectiveActivationProducer(JAWSProducer):
+class EffectiveNotificationProducer(JAWSProducer):
     """
         Producer for JAWS EffectiveNotification messages.
     """
