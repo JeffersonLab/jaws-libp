@@ -281,7 +281,7 @@ class ClassSerde(RegistryAvroSerde):
 
     def __init__(self, schema_registry_client: SchemaRegistryClient, avro_conf: Dict = None):
         """
-            Create a new LocationSerde.
+            Create a new ClassSerde.
 
             :param schema_registry_client: The SchemaRegistryClient
             :param avro_conf: configuration for avro serde
