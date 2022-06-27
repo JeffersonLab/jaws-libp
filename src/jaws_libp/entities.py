@@ -155,6 +155,13 @@ class SimpleAlarming:
 
 
 @dataclass
+class NoAlarm:
+    """
+        Marker for no alarm (no fields).  Unlike a Kafka tombstone, this marker can be aggressively compacted.
+    """
+
+
+@dataclass
 class NoteAlarming:
     """
         An alarming record with a note

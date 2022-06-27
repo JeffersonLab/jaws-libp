@@ -13,7 +13,7 @@ from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserialize
 from confluent_kafka.serialization import StringSerializer, StringDeserializer, Serializer, Deserializer, \
     SerializationContext
 
-from ..entities import AlarmLocation, AlarmPriority, ChannelError, \
+from ..entities import AlarmLocation, AlarmPriority, ChannelError, NoAlarm, \
     SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
     OnDelayedOverride, OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, \
@@ -400,33 +400,34 @@ class ActivationSerde(RegistryAvroSerde):
         """
             Converts an AlarmActivationUnion to a dict.
 
-            Note: The returned dict if not None is always keyed with "msg" and the value is either
+            Note: The returned dict if not None is either
             a (1) Tuple, (2) Dict, or (3) Dict with one key which is name of union entity and valued with Dict.  This
             is determined by union_encoding.
 
             :param data: The AlarmActivationUnion
             :return: A dict
         """
-        if isinstance(data.msg, SimpleAlarming):
+        if isinstance(data, SimpleAlarming):
             uniontype = "org.jlab.jaws.entity.SimpleAlarming"
             uniondict = {}
-        elif isinstance(data.msg, EPICSAlarming):
+        elif isinstance(data, EPICSAlarming):
             uniontype = "org.jlab.jaws.entity.EPICSAlarming"
-            uniondict = {"sevr": data.msg.sevr.name, "stat": data.msg.stat.name}
-        elif isinstance(data.msg, NoteAlarming):
+            uniondict = {"sevr": data.sevr.name, "stat": data.stat.name}
+        elif isinstance(data, NoteAlarming):
             uniontype = "org.jlab.jaws.entity.NoteAlarming"
-            uniondict = {"note": data.msg.note}
-        elif isinstance(data.msg, ChannelError):
+            uniondict = {"note": data.note}
+        elif isinstance(data, ChannelError):
             uniontype = "org.jlab.jaws.entity.ChannelError"
-            uniondict = {"error": data.msg.error}
+            uniondict = {"error": data.error}
+        elif isinstance(data, NoAlarm):
+            uniontype = "org.jlab.jaws.entity.NoAlarm"
+            uniondict = {}
         else:
-            raise Exception(f"Unknown alarming union type: {data.msg}")
+            raise Exception(f"Unknown alarming union type: {data}")
 
         union = self._to_union(uniontype, uniondict)
 
-        return {
-            "msg": union
-        }
+        return union
 
     def from_dict(self, data: Dict[str, Union[Tuple[str, Dict[str, str]],
                                               Dict[str, Dict[str, str]]]]) -> AlarmActivationUnion:
@@ -438,7 +439,7 @@ class ActivationSerde(RegistryAvroSerde):
             :param data: The dict
             :return: The AlarmActivationUnion
         """
-        unionobj = data['msg']
+        unionobj = data
 
         uniontype, uniondict = self._from_union(unionobj)
 
@@ -449,6 +450,8 @@ class ActivationSerde(RegistryAvroSerde):
                                 _unwrap_enum(uniondict['stat'], EPICSSTAT))
         elif uniontype == "org.jlab.jaws.entity.ChannelError":
             obj = ChannelError(uniondict['error'])
+        elif uniontype == "org.jlab.jaws.entity.NoAlarm":
+            obj = NoAlarm()
         else:
             obj = SimpleAlarming()
 
