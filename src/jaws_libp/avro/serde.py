@@ -307,7 +307,7 @@ class ClassSerde(RegistryAvroSerde):
             "rationale": data.rationale,
             "correctiveaction": data.corrective_action,
             "pointofcontactusername": data.point_of_contact_username,
-            "latching": data.latching,
+            "latchable": data.latchable,
             "filterable": data.filterable,
             "ondelayseconds": data.on_delay_seconds,
             "offdelayseconds": data.off_delay_seconds
@@ -327,7 +327,7 @@ class ClassSerde(RegistryAvroSerde):
                           data.get('rationale'),
                           data.get('correctiveaction'),
                           data.get('pointofcontactusername'),
-                          data.get('latching'),
+                          data.get('latchable'),
                           data.get('filterable'),
                           data.get('ondelayseconds'),
                           data.get('offdelayseconds'))

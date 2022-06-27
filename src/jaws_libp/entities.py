@@ -290,7 +290,7 @@ class AlarmClass:
     """The Corrective Action"""
     point_of_contact_username: str
     """The Point of Contact Username"""
-    latching: bool
+    latchable: bool
     """Indicates whether the alarm latches"""
     filterable: bool
     """Indicates whether the alarm can be filtered"""
