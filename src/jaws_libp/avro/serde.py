@@ -274,7 +274,7 @@ class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
                                               self.named_schemas())
 
 
-class ClassSerde(RegistryAvroWithReferencesSerde):
+class ClassSerde(RegistryAvroSerde):
     """
         Provides AlarmClass serde utilities
     """
@@ -286,24 +286,12 @@ class ClassSerde(RegistryAvroWithReferencesSerde):
             :param schema_registry_client: The SchemaRegistryClient
             :param avro_conf: configuration for avro serde
         """
-        priority_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmPriority.avsc")
-        priority_schema_str = priority_bytes.decode('utf-8')
-
-        named_schemas = {}
-
-        ref_dict = json.loads(priority_schema_str)
-        fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
-
-        priority_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmPriority", "alarm-priority", 1)
-        references = [priority_schema_ref]
-
         schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmClass.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
-        schema = Schema(schema_str, "AVRO", references)
+        schema = Schema(schema_str, "AVRO", [])
 
-        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, references, named_schemas,
-                         avro_conf)
+        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, avro_conf)
 
     def to_dict(self, data: AlarmClass) -> Dict[str, str]:
         """

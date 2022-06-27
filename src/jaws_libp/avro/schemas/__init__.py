@@ -9,7 +9,6 @@
     * :download:`AlarmOverrideKey.avsc </../../src/jaws_libp/avro/schemas/AlarmOverrideKey.avsc>`
     * :download:`AlarmOverrideSet.avsc </../../src/jaws_libp/avro/schemas/AlarmOverrideSet.avsc>`
     * :download:`AlarmOverrideUnion.avsc </../../src/jaws_libp/avro/schemas/AlarmOverrideUnion.avsc>`
-    * :download:`AlarmPriority.avsc </../../src/jaws_libp/avro/schemas/AlarmPriority.avsc>`
     * :download:`AlarmInstance.avsc </../../src/jaws_libp/avro/schemas/AlarmInstance.avsc>`
     * :download:`AlarmState.avsc </../../src/jaws_libp/avro/schemas/AlarmState.avsc>`
     * :download:`DisabledOverride.avsc </../../src/jaws_libp/avro/schemas/DisabledOverride.avsc>`

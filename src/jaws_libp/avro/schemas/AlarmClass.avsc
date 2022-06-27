@@ -14,7 +14,17 @@
         },
         {
             "name": "priority",
-            "type": "AlarmPriority",
+            "type": {
+                "type": "enum",
+                "name": "AlarmPriority",
+                "doc": "Enumeration of possible priorities; useful for operators to know which alarms to handle first",
+                "symbols": [
+                    "P1_CRITICAL",
+                    "P2_MAJOR",
+                    "P3_MINOR",
+                    "P4_INCIDENTAL"
+                ]
+            },
             "doc": "The alarm priority"
         },
         {
@@ -42,7 +52,7 @@
             "doc": "Username (identifier) of point of contact.  Full contact info should be obtained from user database (LDAP for example)"
         },
         {
-            "name": "latching",
+            "name": "latchable",
             "type": "boolean",
             "doc": "Indicates whether this alarm latches when activated and can only be cleared after an explicit acknowledgement",
             "default": false
