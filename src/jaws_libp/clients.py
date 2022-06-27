@@ -17,7 +17,7 @@ from psutil import Process
 from tabulate import tabulate
 
 from .avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
-    StringSerde, Serde, EffectiveAlarmSerde, EffectiveActivationSerde, ClassSerde, ActivationSerde, InstanceSerde
+    StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ClassSerde, ActivationSerde, InstanceSerde
 from .entities import UnionEncoding
 from .eventsource import EventSourceListener, CachedTable
 
@@ -473,9 +473,9 @@ class ClassConsumer(JAWSConsumer):
                 value.off_delay_seconds]
 
 
-class EffectiveActivationConsumer(JAWSConsumer):
+class EffectiveNotificationConsumer(JAWSConsumer):
     """
-        Consumer for JAWS EffectiveActivation messages.
+        Consumer for JAWS EffectiveNotification messages.
     """
     def __init__(self, client_name: str):
         """
@@ -485,9 +485,9 @@ class EffectiveActivationConsumer(JAWSConsumer):
         """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = EffectiveActivationSerde(schema_registry_client)
+        value_serde = EffectiveNotificationSerde(schema_registry_client)
 
-        super().__init__('effective-activations', client_name, key_serde, value_serde)
+        super().__init__('effective-notifications', client_name, key_serde, value_serde)
 
     def _get_table_headers(self) -> List[str]:
         return ["Alarm Name", "State", "Overrides"]
@@ -691,7 +691,7 @@ class ClassProducer(JAWSProducer):
 
 class EffectiveActivationProducer(JAWSProducer):
     """
-        Producer for JAWS EffectiveActivation messages.
+        Producer for JAWS EffectiveNotification messages.
     """
     def __init__(self, client_name: str):
         """
@@ -701,9 +701,9 @@ class EffectiveActivationProducer(JAWSProducer):
         """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = EffectiveActivationSerde(schema_registry_client)
+        value_serde = EffectiveNotificationSerde(schema_registry_client)
 
-        super().__init__('effective-activations', client_name, key_serde, value_serde)
+        super().__init__('effective-notifications', client_name, key_serde, value_serde)
 
 
 class EffectiveAlarmProducer(JAWSProducer):

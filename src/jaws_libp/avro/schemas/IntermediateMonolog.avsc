@@ -6,12 +6,12 @@
         {
             "name": "registration",
             "type": "EffectiveRegistration",
-            "doc": "The effective AlarmRegistration considering class defaults"
+            "doc": "The EffectiveRegistration considering class defaults"
         },
         {
-            "name": "activation",
-            "type": "EffectiveActivation",
-            "doc": "The effective AlarmActivation considering overrides"
+            "name": "notification",
+            "type": "EffectiveNotification",
+            "doc": "The EffectiveNotification considering overrides"
         },
         {
             "name": "transitions",

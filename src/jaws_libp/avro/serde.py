@@ -18,7 +18,7 @@ from ..entities import AlarmLocation, AlarmPriority, ChannelError, \
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
     OnDelayedOverride, OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, \
     ShelvedReason, EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, AlarmClass, \
-    EffectiveRegistration, EffectiveActivation, EffectiveAlarm, IntermediateMonolog, AlarmState, AlarmOverrideSet, \
+    EffectiveRegistration, EffectiveNotification, EffectiveAlarm, IntermediateMonolog, AlarmState, AlarmOverrideSet, \
     ProcessorTransitions
 from ..references.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
@@ -720,14 +720,14 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
             if data.get('instance') is not None else None)
 
 
-class EffectiveActivationSerde(RegistryAvroWithReferencesSerde):
+class EffectiveNotificationSerde(RegistryAvroWithReferencesSerde):
     """
-        Provides EffectiveActivation serde utilities
+        Provides EffectiveNotification serde utilities
     """
 
     def __init__(self, schema_registry_client: SchemaRegistryClient, avro_conf: Dict = None) -> None:
         """
-            Create a new EffectiveActivationSerde.
+            Create a new EffectiveNotificationSerde.
 
             :param schema_registry_client: The SchemaRegistryClient
             :param avro_conf: configuration for avro serde
@@ -761,7 +761,7 @@ class EffectiveActivationSerde(RegistryAvroWithReferencesSerde):
         ref_dict = json.loads(state_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
-        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveActivation.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveNotification.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", references)
@@ -769,29 +769,29 @@ class EffectiveActivationSerde(RegistryAvroWithReferencesSerde):
         super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, references, named_schemas,
                          avro_conf)
 
-    def to_dict(self, data: EffectiveActivation) -> Dict[str, Any]:
+    def to_dict(self, data: EffectiveNotification) -> Dict[str, Any]:
         """
-            Converts EffectiveActivation to a dict.
+            Converts EffectiveNotification to a dict.
 
-            :param data: The EffectiveActivation
+            :param data: The EffectiveNotification
             :return: A dict
         """
         return {
-            "actual": self._activation_serde.to_dict(data.actual) if data.actual is not None else None,
+            "activation": self._activation_serde.to_dict(data.activatio) if data.activation is not None else None,
             "overrides": self._override_serde.to_dict(data.overrides),
             "state": data.state.name
         }
 
-    def from_dict(self, data: Dict[str, Any]) -> EffectiveActivation:
+    def from_dict(self, data: Dict[str, Any]) -> EffectiveNotification:
         """
-            Converts a dict to EffectiveActivation.
+            Converts a dict to EffectiveNotification.
 
             :param data: The dict
-            :return: The EffectiveActivation
+            :return: The EffectiveNotification
         """
-        return EffectiveActivation(
-            self._activation_serde.from_dict(data['actual'][1])
-            if data.get('actual') is not None else None,
+        return EffectiveNotification(
+            self._activation_serde.from_dict(data['activation'][1])
+            if data.get('activation') is not None else None,
             self._override_serde.from_dict(data['overrides']),
             _unwrap_enum(data['state'], AlarmState))
 
@@ -809,28 +809,28 @@ class EffectiveAlarmSerde(RegistryAvroWithReferencesSerde):
             :param avro_conf: configuration for avro serde
         """
         self._effective_registration_serde = EffectiveRegistrationSerde(schema_registry_client)
-        self._effective_activation_serde = EffectiveActivationSerde(schema_registry_client)
+        self._effective_notification_serde = EffectiveNotificationSerde(schema_registry_client)
 
         registration_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveRegistration",
                                                   "effective-registrations-value", 1)
-        activation_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveActivation",
-                                                "effective-activations-value", 1)
+        notification_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveNotification",
+                                                "effective-notifications-value", 1)
 
-        references = [registration_schema_ref, activation_schema_ref]
+        references = [registration_schema_ref, notification_schema_ref]
 
         registrations_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveRegistration.avsc")
         registrations_schema_str = registrations_bytes.decode('utf-8')
 
-        activation_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveActivation.avsc")
-        activation_schema_str = activation_bytes.decode('utf-8')
+        notification_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveNotification.avsc")
+        notification_schema_str = notification_bytes.decode('utf-8')
 
         named_schemas = self._effective_registration_serde.named_schemas()
-        named_schemas.update(self._effective_activation_serde.named_schemas())
+        named_schemas.update(self._effective_notification_serde.named_schemas())
 
         ref_dict = json.loads(registrations_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
-        ref_dict = json.loads(activation_schema_str)
+        ref_dict = json.loads(notification_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
         schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveAlarm.avsc")
@@ -850,7 +850,7 @@ class EffectiveAlarmSerde(RegistryAvroWithReferencesSerde):
         """
         return {
             "registration": self._effective_registration_serde.to_dict(data.registration),
-            "activation": self._effective_activation_serde.to_dict(data.activation)
+            "notification": self._effective_notification_serde.to_dict(data.notification)
         }
 
     def from_dict(self, data: Dict[str, Any]) -> EffectiveAlarm:
@@ -861,7 +861,7 @@ class EffectiveAlarmSerde(RegistryAvroWithReferencesSerde):
             :return: The EffectiveAlarm
         """
         return EffectiveAlarm(self._effective_registration_serde.from_dict(data['registration']),
-                              self._effective_activation_serde.from_dict(data['activation']))
+                              self._effective_notification_serde.from_dict(data['notification']))
 
 
 class OverrideKeySerde(RegistryAvroSerde):
@@ -1131,13 +1131,13 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
         """
         self._union_encoding = union_encoding
         self._effective_registration_serde = EffectiveRegistrationSerde(schema_registry_client)
-        self._effective_activation_serde = EffectiveActivationSerde(schema_registry_client)
+        self._effective_notification_serde = EffectiveNotificationSerde(schema_registry_client)
         self._processor_transition_serde = ProcessorTransitionsSerde(schema_registry_client)
 
         registration_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveRegistration",
                                                   "effective-registrations-value", 1)
-        activation_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveActivation",
-                                                "effective-activations-value", 1)
+        activation_schema_ref = SchemaReference("org.jlab.jaws.entity.EffectiveNotification",
+                                                "effective-notifications-value", 1)
         transitions_schema_ref = SchemaReference("org.jlab.jaws.entity.ProcessorTransitions",
                                                  "processor-transitions", 1)
 
@@ -1146,19 +1146,19 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
         registrations_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveRegistration.avsc")
         registrations_schema_str = registrations_bytes.decode('utf-8')
 
-        activation_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveActivation.avsc")
-        activation_schema_str = activation_bytes.decode('utf-8')
+        notification_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveNotification.avsc")
+        notification_schema_str = notification_bytes.decode('utf-8')
 
         transitions_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/ProcessorTransitions.avsc")
         transitions_schema_str = transitions_bytes.decode('utf-8')
 
         named_schemas = self._effective_registration_serde.named_schemas()
-        named_schemas.update(self._effective_activation_serde.named_schemas())
+        named_schemas.update(self._effective_notification_serde.named_schemas())
 
         ref_dict = json.loads(registrations_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
-        ref_dict = json.loads(activation_schema_str)
+        ref_dict = json.loads(notification_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
         ref_dict = json.loads(transitions_schema_str)
@@ -1180,7 +1180,7 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
         """
         return {
             "registration": self._effective_registration_serde.to_dict(data.registration),
-            "activation": self._effective_activation_serde.to_dict(data.activation),
+            "activation": self._effective_notification_serde.to_dict(data.notification),
             "transitions": self._processor_transition_serde.to_dict(data.transitions)
         }
 
@@ -1192,5 +1192,5 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
             :return: The IntermediateMonolog
         """
         return IntermediateMonolog(self._effective_registration_serde.from_dict(data['registration']),
-                                   self._effective_activation_serde.from_dict(data['activation']),
+                                   self._effective_notification_serde.from_dict(data['notification']),
                                    self._processor_transition_serde.from_dict(data['transitions']))

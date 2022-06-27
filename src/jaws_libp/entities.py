@@ -413,11 +413,11 @@ class EffectiveRegistration:
 
 
 @dataclass
-class EffectiveActivation:
+class EffectiveNotification:
     """
-        Effective Activation (activation + overrides)
+        Effective Notification (activation + overrides + state)
     """
-    actual: AlarmActivationUnion
+    activation: AlarmActivationUnion
     """The Alarm Activation"""
 
     overrides: AlarmOverrideSet
@@ -433,21 +433,21 @@ class EffectiveAlarm:
         Effective Alarm (effective registration + effective activation)
     """
     registration: EffectiveRegistration
-    """The effective AlarmRegistration considering class defaults"""
+    """The EffectiveRegistration considering class defaults"""
 
-    activation: EffectiveActivation
-    """The effective AlarmActivation considering overrides"""
+    notification: EffectiveNotification
+    """The EffectiveNotification considering overrides"""
 
 
 @dataclass
 class IntermediateMonolog:
     """
-        IntermediateMonolog - used internally by the effective-state-processor.
+        IntermediateMonolog - used internally by the jaws-effective-processor.
     """
     registration: EffectiveRegistration
     """The effective AlarmRegistration considering class defaults"""
 
-    activation: EffectiveActivation
+    notification: EffectiveNotification
     """The effective AlarmActivation considering overrides"""
 
     transitions: ProcessorTransitions

@@ -1,10 +1,10 @@
 {
     "type": "record",
-    "name": "EffectiveActivation",
+    "name": "EffectiveNotification",
     "namespace": "org.jlab.jaws.entity",
     "fields": [
         {
-            "name": "actual",
+            "name": "activation",
             "type": [
                 "null",
                 "AlarmActivationUnion"
