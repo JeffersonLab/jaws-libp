@@ -4,9 +4,6 @@
     "namespace": "org.jlab.jaws.entity",
     "doc": "An alarm activation",
     "fields": [
-        {
-            "name": "msg",
-            "type": [
                 {
                     "type": "record",
                     "name": "SimpleAlarming",
@@ -40,7 +37,6 @@
                                 "name": "SevrEnum",
                                 "doc": "Enumeration of possible EPICS .SEVR values",
                                 "symbols": [
-                                    "NO_ALARM",
                                     "MINOR",
                                     "MAJOR",
                                     "INVALID"
@@ -100,9 +96,13 @@
                             "doc": "Description of the error such as Never Connected or Disconnected"
                         }
                     ]
+                },
+                {
+                    "type": "record",
+                    "name": "NoAlarm",
+                    "doc": "An explicit No alarm record can be aggressively compacted in Kafka (unlike a tombstone)",
+                    "fields": []
                 }
             ],
             "doc": "Union of active alarm implementations"
-        }
-    ]
 }
