@@ -14,18 +14,18 @@
             "default": "base"
         },
         {
-            "name": "producer",
+            "name": "source",
             "type": [
                 {
                     "type": "record",
-                    "name": "SimpleProducer",
-                    "doc": "Alarm producer which has no specific source",
+                    "name": "Source",
+                    "doc": "Base registration with no specific source info",
                     "fields": []
                 },
                 {
                     "type": "record",
-                    "name": "EPICSProducer",
-                    "doc": "Alarm producer which sources alarms from EPICS",
+                    "name": "EPICSSource",
+                    "doc": "EPICS source registration",
                     "fields": [
                         {
                             "name": "pv",
@@ -33,14 +33,14 @@
                                 "type": "string",
                                 "avro.java.string": "String"
                             },
-                            "doc": "The name of the EPICS CA PV, which can be correlated with the key of the epics-channels topic"
+                            "doc": "The name of the EPICS CA PV"
                         }
                     ]
                 },
                 {
                     "type": "record",
-                    "name": "CALCProducer",
-                    "doc": "Alarm producer which uses CALC-like expressions",
+                    "name": "CALCSource",
+                    "doc": "CALC Expression Alarm Generator source registration",
                     "fields": [
                         {
                             "name": "expression",
@@ -53,7 +53,7 @@
                     ]
                 }
             ],
-            "doc": "Indicates how this alarm is produced, useful for producers to monitor when new alarms are added/removed"
+            "doc": "Provides source specific information via a union."
         },
         {
             "name": "location",

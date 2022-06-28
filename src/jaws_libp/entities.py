@@ -191,25 +191,25 @@ class ChannelError:
 
 
 @dataclass
-class SimpleProducer:
+class Source:
     """
-        Simple alarm producer (no fields)
+        Base alarm source with no registered alarm-specific information.
     """
 
 
 @dataclass
-class EPICSProducer:
+class EPICSSource:
     """
-        EPICS alarm producer - An alarm producer that produces alarms from EPICS
+        EPICS source registration.
     """
     pv: str
     """The EPICS Process Variable name"""
 
 
 @dataclass
-class CALCProducer:
+class CALCSource:
     """
-        CALC expression alarm producer - An alarm producer that evaluates a CALC expression to produce alarms
+        CALC Expression Alarm Generator source registration.
     """
     expression: str
     """The CALC (calculate) expression"""
@@ -315,8 +315,8 @@ class AlarmInstance:
     """
     alarm_class: str
     """The Alarm Class"""
-    producer: Union[SimpleProducer, EPICSProducer, CALCProducer]
-    """The Alarm Producer"""
+    source: Union[Source, EPICSSource, CALCSource]
+    """The Alarm Source specific info"""
     location: List[str]
     """The Alarm Location"""
     masked_by: Optional[str]
