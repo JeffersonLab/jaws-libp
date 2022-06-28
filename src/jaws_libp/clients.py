@@ -458,7 +458,7 @@ class ClassConsumer(JAWSConsumer):
 
     def _get_table_headers(self) -> List[str]:
         return ["Class Name", "Category", "Priority", "Rationale", "Corrective Action",
-                "P.O.C. Username", "Latching", "Filterable", "On Delay", "Off Delay"]
+                "P.O.C. Username", "Latchable", "Filterable", "On Delay", "Off Delay"]
 
     def _get_table_row(self, msg: Message) -> List[str]:
         value = msg.value()
@@ -469,7 +469,7 @@ class ClassConsumer(JAWSConsumer):
                 value.rationale.replace("\n", "\\n ") if value.rationale is not None else None,
                 value.corrective_action.replace("\n", "\\n") if value.corrective_action is not None else None,
                 value.point_of_contact_username,
-                value.latching,
+                value.latchable,
                 value.filterable,
                 value.on_delay_seconds,
                 value.off_delay_seconds]
