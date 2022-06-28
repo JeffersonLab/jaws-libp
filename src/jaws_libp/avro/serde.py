@@ -14,10 +14,10 @@ from confluent_kafka.serialization import StringSerializer, StringDeserializer, 
     SerializationContext
 
 from ..entities import AlarmLocation, AlarmPriority, ChannelError, NoAlarm, \
-    SimpleProducer, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
+    Source, AlarmInstance, AlarmActivationUnion, SimpleAlarming, \
     EPICSAlarming, NoteAlarming, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
     OnDelayedOverride, OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, \
-    ShelvedReason, EPICSSEVR, EPICSSTAT, UnionEncoding, CALCProducer, EPICSProducer, AlarmClass, \
+    ShelvedReason, EPICSSEVR, EPICSSTAT, UnionEncoding, CALCSource, EPICSSource, AlarmClass, \
     EffectiveRegistration, EffectiveNotification, EffectiveAlarm, IntermediateMonolog, AlarmState, AlarmOverrideSet, \
     ProcessorTransitions
 from ..references.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
@@ -488,23 +488,23 @@ class InstanceSerde(RegistryAvroSerde):
             :param data: The AlarmInstance
             :return: A dict
         """
-        if isinstance(data.producer, SimpleProducer):
-            uniontype = "org.jlab.jaws.entity.SimpleProducer"
+        if isinstance(data.source, Source):
+            uniontype = "org.jlab.jaws.entity.Source"
             uniondict = {}
-        elif isinstance(data.producer, EPICSProducer):
-            uniontype = "org.jlab.jaws.entity.EPICSProducer"
-            uniondict = {"pv": data.producer.pv}
-        elif isinstance(data.producer, CALCProducer):
-            uniontype = "org.jlab.jaws.entity.CALCProducer"
-            uniondict = {"expression": data.producer.expression}
+        elif isinstance(data.source, EPICSSource):
+            uniontype = "org.jlab.jaws.entity.EPICSSource"
+            uniondict = {"pv": data.source.pv}
+        elif isinstance(data.source, CALCSource):
+            uniontype = "org.jlab.jaws.entity.CALCSource"
+            uniondict = {"expression": data.source.expression}
         else:
-            raise Exception(f"Unknown instance producer union type: {data.producer}")
+            raise Exception(f"Unknown instance source union type: {data.source}")
 
-        union = self._to_union(uniontype, uniondict)
+        source = self._to_union(uniontype, uniondict)
 
         return {
             "alarmclass": data.alarm_class,
-            "producer": union,
+            "source": source,
             "location": data.location,
             "maskedby": data.masked_by,
             "screencommand": data.screen_command
@@ -519,19 +519,19 @@ class InstanceSerde(RegistryAvroSerde):
             :param data: The dict
             :return: The AlarmInstance
         """
-        unionobj = data['producer']
+        unionobj = data['source']
 
         uniontype, uniondict = self._from_union(unionobj)
 
-        if uniontype == "org.jlab.jaws.entity.CalcProducer":
-            producer = CALCProducer(uniondict['expression'])
-        elif uniontype == "org.jlab.jaws.entity.EPICSProducer":
-            producer = EPICSProducer(uniondict['pv'])
+        if uniontype == "org.jlab.jaws.entity.CALCSource":
+            source = CALCSource(uniondict['expression'])
+        elif uniontype == "org.jlab.jaws.entity.EPICSSource":
+            source = EPICSSource(uniondict['pv'])
         else:
-            producer = SimpleProducer()
+            source = Source()
 
         return AlarmInstance(data.get('alarmclass'),
-                             producer,
+                             source,
                              data.get('location'),
                              data.get('maskedby'),
                              data.get('screencommand'))
