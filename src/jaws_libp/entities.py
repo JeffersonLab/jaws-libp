@@ -148,32 +148,32 @@ class AlarmLocation:
 
 
 @dataclass
-class SimpleAlarming:
+class Activation:
     """
-        Simple alarming record (no fields)
-    """
-
-
-@dataclass
-class NoAlarm:
-    """
-        Marker for no alarm (no fields).  Unlike a Kafka tombstone, this marker can be aggressively compacted.
+        Alarming state for a simple alarm, if record is present then alarming, but there are no additional fields.
     """
 
 
 @dataclass
-class NoteAlarming:
+class NoActivation:
     """
-        An alarming record with a note
+        An explicit no activation record can be aggressively compacted in Kafka (unlike a tombstone).
+    """
+
+
+@dataclass
+class NoteActivation:
+    """
+        Alarming state for an alarm with an extra information string.
     """
     note: str
     """A note containing extra information generated at the time of activation"""
 
 
 @dataclass
-class EPICSAlarming:
+class EPICSActivation:
     """
-        An EPICS alarming record
+        EPICS alarming state.
     """
     sevr: EPICSSEVR
     """The severity"""
@@ -182,9 +182,9 @@ class EPICSAlarming:
 
 
 @dataclass
-class ChannelError:
+class ChannelErrorActivation:
     """
-        A channel error between JAWS and an alarm activation source
+        A channel error between JAWS and an alarm activation source.
     """
     error: str
     """Description of the error such as Never Connected or Disconnected"""
@@ -200,7 +200,7 @@ class Source:
 @dataclass
 class EPICSSource:
     """
-        EPICS source registration.
+        EPICS source registration information.
     """
     pv: str
     """The EPICS Process Variable name"""
@@ -209,7 +209,7 @@ class EPICSSource:
 @dataclass
 class CALCSource:
     """
-        CALC Expression Alarm Generator source registration.
+        CALC Expression Alarm Generator source registration information.
     """
     expression: str
     """The CALC (calculate) expression"""
@@ -330,7 +330,7 @@ class AlarmActivationUnion:
     """
         Alarm Activation (annunciation, alarming).
     """
-    union: Union[SimpleAlarming, NoteAlarming, EPICSAlarming, ChannelError, NoAlarm]
+    union: Union[Activation, NoteActivation, EPICSActivation, ChannelErrorActivation, NoActivation]
     """The message payload is a union of possible alarming types"""
 
 

@@ -9,13 +9,13 @@
             "type": [
                 {
                     "type": "record",
-                    "name": "SimpleAlarming",
-                    "doc": "Alarming state for a simple alarm, if record is present then alarming, if missing/tombstone then not.  There are no fields.",
+                    "name": "Activation",
+                    "doc": "Alarming state for a simple alarm, if record is present then alarming, but there are no additional fields.",
                     "fields": []
                 },
                 {
                     "type": "record",
-                    "name": "NoteAlarming",
+                    "name": "NoteActivation",
                     "doc": "Alarming state for an alarm with an extra information string.",
                     "fields": [
                         {
@@ -30,8 +30,8 @@
                 },
                 {
                     "type": "record",
-                    "name": "EPICSAlarming",
-                    "doc": "EPICS alarming state",
+                    "name": "EPICSActivation",
+                    "doc": "EPICS alarming state.",
                     "fields": [
                         {
                             "name": "sevr",
@@ -84,8 +84,8 @@
                 },
                 {
                     "type": "record",
-                    "name": "ChannelError",
-                    "doc": "A channel error between JAWS and an alarm activation source",
+                    "name": "ChannelErrorActivation",
+                    "doc": "A channel error between JAWS and an alarm activation source.",
                     "fields": [
                         {
                             "name": "error",
@@ -102,12 +102,12 @@
                 },
                 {
                     "type": "record",
-                    "name": "NoAlarm",
-                    "doc": "An explicit No alarm record can be aggressively compacted in Kafka (unlike a tombstone)",
+                    "name": "NoActivation",
+                    "doc": "An explicit no activation record can be aggressively compacted in Kafka (unlike a tombstone)",
                     "fields": []
                 }
             ],
-            "doc": "Union of active alarm implementations"
+            "doc": "Union of possible alarm activations."
         }
     ]
 }
