@@ -5,12 +5,12 @@
     "doc": "Instance of an alarm class",
     "fields": [
         {
-            "name": "class",
+            "name": "alarmclass",
             "type": {
                 "type": "string",
                 "avro.java.string": "String"
             },
-            "doc": "The alarm class; provides inheritable shared field values, fields are only overridden if null, the producer field is required and cannot be overridden",
+            "doc": "The alarm class; provides inheritable shared values",
             "default": "base"
         },
         {
