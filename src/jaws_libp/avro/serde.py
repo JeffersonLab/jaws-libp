@@ -400,34 +400,36 @@ class ActivationSerde(RegistryAvroSerde):
         """
             Converts an AlarmActivationUnion to a dict.
 
-            Note: The returned dict if not None is either
+            Note: The returned dict if not None always contains a single field named "union", which is either
             a (1) Tuple, (2) Dict, or (3) Dict with one key which is name of union entity and valued with Dict.  This
             is determined by union_encoding.
 
             :param data: The AlarmActivationUnion
             :return: A dict
         """
-        if isinstance(data, SimpleAlarming):
+        if isinstance(data.union, SimpleAlarming):
             uniontype = "org.jlab.jaws.entity.SimpleAlarming"
             uniondict = {}
-        elif isinstance(data, EPICSAlarming):
+        elif isinstance(data.union, EPICSAlarming):
             uniontype = "org.jlab.jaws.entity.EPICSAlarming"
-            uniondict = {"sevr": data.sevr.name, "stat": data.stat.name}
-        elif isinstance(data, NoteAlarming):
+            uniondict = {"sevr": data.union.sevr.name, "stat": data.union.stat.name}
+        elif isinstance(data.union, NoteAlarming):
             uniontype = "org.jlab.jaws.entity.NoteAlarming"
-            uniondict = {"note": data.note}
-        elif isinstance(data, ChannelError):
+            uniondict = {"note": data.union.note}
+        elif isinstance(data.union, ChannelError):
             uniontype = "org.jlab.jaws.entity.ChannelError"
-            uniondict = {"error": data.error}
-        elif isinstance(data, NoAlarm):
+            uniondict = {"error": data.union.error}
+        elif isinstance(data.union, NoAlarm):
             uniontype = "org.jlab.jaws.entity.NoAlarm"
             uniondict = {}
         else:
-            raise Exception(f"Unknown alarming union type: {data}")
+            raise Exception(f"Unknown alarming union type: {data.union}")
 
         union = self._to_union(uniontype, uniondict)
 
-        return union
+        return {
+            "union": union
+        }
 
     def from_dict(self, data: Dict[str, Union[Tuple[str, Dict[str, str]],
                                               Dict[str, Dict[str, str]]]]) -> AlarmActivationUnion:
@@ -439,7 +441,7 @@ class ActivationSerde(RegistryAvroSerde):
             :param data: The dict
             :return: The AlarmActivationUnion
         """
-        unionobj = data
+        unionobj = data['union']
 
         uniontype, uniondict = self._from_union(unionobj)
 
