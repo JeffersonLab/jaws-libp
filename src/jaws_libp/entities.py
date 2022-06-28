@@ -358,9 +358,9 @@ class AlarmOverrideUnion:
     """
         Alarm Override (a single override modeled as a union of possible types, like an enum)
     """
-    msg: Union[DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride,
-               OffDelayedOverride, ShelvedOverride]
-    """The message payload is a union of possible override types"""
+    union: Union[DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride,
+                 OffDelayedOverride, ShelvedOverride]
+    """The message payload is a union of possible overrides"""
 
 
 @dataclass

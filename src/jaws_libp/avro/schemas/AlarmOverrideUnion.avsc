@@ -2,10 +2,10 @@
     "type": "record",
     "name": "AlarmOverrideUnion",
     "namespace": "org.jlab.jaws.entity",
-    "doc": "Wraps the union of suppressed alarm values",
+    "doc": "An alarm override.",
     "fields": [
         {
-            "name": "msg",
+            "name": "union",
             "type": [
                 "DisabledOverride",
                 "FilteredOverride",
@@ -15,7 +15,7 @@
                 "OffDelayedOverride",
                 "ShelvedOverride"
             ],
-            "doc": "Suppressed alarm value modeled as a nested union to avoid complications of union at root of schema."
+            "doc": "Union of possible alarm overrides."
         }
     ]
 }

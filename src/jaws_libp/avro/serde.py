@@ -995,37 +995,37 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
             :param data: The AlarmOverrideUnion
             :return: A dict
         """
-        if isinstance(data.msg, DisabledOverride):
+        if isinstance(data.union, DisabledOverride):
             uniontype = "org.jlab.jaws.entity.DisabledOverride"
-            uniondict = {"comments": data.msg.comments}
-        elif isinstance(data.msg, FilteredOverride):
+            uniondict = {"comments": data.union.comments}
+        elif isinstance(data.union, FilteredOverride):
             uniontype = "org.jlab.jaws.entity.FilteredOverride"
-            uniondict = {"filtername": data.msg.filtername}
-        elif isinstance(data.msg, LatchedOverride):
+            uniondict = {"filtername": data.union.filtername}
+        elif isinstance(data.union, LatchedOverride):
             uniontype = "org.jlab.jaws.entity.LatchedOverride"
             uniondict = {}
-        elif isinstance(data.msg, MaskedOverride):
+        elif isinstance(data.union, MaskedOverride):
             uniontype = "org.jlab.jaws.entity.MaskedOverride"
             uniondict = {}
-        elif isinstance(data.msg, OnDelayedOverride):
+        elif isinstance(data.union, OnDelayedOverride):
             uniontype = "org.jlab.jaws.entity.OnDelayedOverride"
-            uniondict = {"expiration": data.msg.expiration}
-        elif isinstance(data.msg, OffDelayedOverride):
+            uniondict = {"expiration": data.union.expiration}
+        elif isinstance(data.union, OffDelayedOverride):
             uniontype = "org.jlab.jaws.entity.OffDelayedOverride"
-            uniondict = {"expiration": data.msg.expiration}
-        elif isinstance(data.msg, ShelvedOverride):
+            uniondict = {"expiration": data.union.expiration}
+        elif isinstance(data.union, ShelvedOverride):
             uniontype = "org.jlab.jaws.entity.ShelvedOverride"
-            uniondict = {"expiration": data.msg.expiration, "comments": data.msg.comments,
-                         "reason": data.msg.reason.name, "oneshot": data.msg.oneshot}
+            uniondict = {"expiration": data.union.expiration, "comments": data.union.comments,
+                         "reason": data.union.reason.name, "oneshot": data.union.oneshot}
         else:
-            print(f"Unknown alarming union type: {data.msg}")
+            print(f"Unknown alarming union type: {data.union}")
             uniontype = None
             uniondict = None
 
         union = self._to_union(uniontype, uniondict)
 
         return {
-            "msg": union
+            "union": union
         }
 
     def from_dict(self, data: Dict[str, Any]) -> AlarmOverrideUnion:
@@ -1040,7 +1040,7 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
             :param data: The dict
             :return: The AlarmOverrideUnion
         """
-        unionobj = data['msg']
+        unionobj = data['union']
 
         uniontype, uniondict = self._from_union(unionobj)
 
@@ -1060,7 +1060,7 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
             obj = ShelvedOverride(uniondict['expiration'], uniondict['comments'],
                                   _unwrap_enum(uniondict['reason'], ShelvedReason), uniondict['oneshot'])
         else:
-            print(f"Unknown alarming type: {data['msg']}")
+            print(f"Unknown alarming type: {data['union']}")
             obj = None
 
         return AlarmOverrideUnion(obj)
