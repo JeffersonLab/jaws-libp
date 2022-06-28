@@ -503,7 +503,7 @@ class InstanceSerde(RegistryAvroSerde):
         union = self._to_union(uniontype, uniondict)
 
         return {
-            "class": data.alarm_class,
+            "alarmclass": data.alarm_class,
             "producer": union,
             "location": data.location,
             "maskedby": data.masked_by,
@@ -530,7 +530,7 @@ class InstanceSerde(RegistryAvroSerde):
         else:
             producer = SimpleProducer()
 
-        return AlarmInstance(data.get('class'),
+        return AlarmInstance(data.get('alarmclass'),
                              producer,
                              data.get('location'),
                              data.get('maskedby'),
