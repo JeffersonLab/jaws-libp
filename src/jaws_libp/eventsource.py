@@ -109,7 +109,7 @@ class EventSourceTable:
             | ``topic``               | str                 |                                                     |
             |                         |                     |                                                     |
             +-------------------------+---------------------+-----------------------------------------------------+
-            |                         |                     | Number of seconds to wait for highwater             |
+            |                         |                     | Number of seconds to wait for highwater. Default 30.|
             | ``highwater.timeout``   | float               |                                                     |
             |                         |                     |                                                     |
             +-------------------------+---------------------+-----------------------------------------------------+
@@ -120,7 +120,17 @@ class EventSourceTable:
                 Keys must be hashable so your key deserializer generally must generate immutable types.
 
          """
-        self._config: Dict[str, Any] = config
+        # Apply defaults
+        defaults = {'highwater.timeout': 30,
+                    'compacted.cache': True}
+
+        conf_copy = defaults.copy()
+        conf_copy.update(config)
+
+        if conf_copy.get('topic') is None:
+            raise KeyError('"topic" is required in config Dict')
+
+        self._config: Dict[str, Any] = conf_copy
         self._on_exception = on_exception
         self._consumer: DeserializingConsumer = None
         self._listeners: List[EventSourceListener] = []
@@ -218,13 +228,12 @@ class EventSourceTable:
         self._consumer = DeserializingConsumer(conf_copy)
         self._consumer.subscribe([self._config['topic']], on_assign=self.__on_assign)
 
-        timeout_seconds = self._config.get('highwater.timeout') if not None else 30
+        timeout_seconds = self._config['highwater.timeout']
 
         t = Timer(timeout_seconds, self.__do_highwater_timeout)
         t.start()
 
-        caching_enabled = self._config.get('compacted.cache') \
-            if self._config.get('compacted.cache') is not None else True
+        caching_enabled = self._config['compacted.cache']
         cache = []
 
         while not (self._highwater_reached or self._is_highwater_timeout):

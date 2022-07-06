@@ -85,12 +85,12 @@ class JAWSConsumer(EventSourceTable):
         signal.signal(signal.SIGINT, self.__signal_handler)
 
         ts = time.time()
-        client_name = config['client.name'] if config['client.name'] is not None else 'JAWSConsumer'
+        config['client.name'] = config['client.name'] if config['client.name'] is not None else 'JAWSConsumer'
         self._key_serde = config['key.serde']
         self._value_serde = config['value.serde']
         bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', 'localhost:9092')
         defaults = {'bootstrap.servers': bootstrap_servers,
-                    'group.id': client_name + str(ts),
+                    'group.id': config['client.name'] + str(ts),
                     'key.deserializer': self._key_serde.deserializer(),
                     'value.deserializer': self._value_serde.deserializer(),
                     'enable.auto.commit': False,
