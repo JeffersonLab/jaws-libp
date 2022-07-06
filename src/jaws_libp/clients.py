@@ -7,14 +7,13 @@ import signal
 import socket
 import time
 
-from typing import Any, List, Callable, Tuple, Dict
+from typing import Any, List, Tuple, Dict
 
 import requests
 
 from confluent_kafka import Message, SerializingProducer, KafkaError
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from psutil import Process
-from tabulate import tabulate
 
 from .avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
     StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ClassSerde, ActivationSerde, InstanceSerde
@@ -125,36 +124,6 @@ class JAWSConsumer(EventSourceTable):
         self.await_highwater()
         return self._cache_listener.get_cache()
 
-    def print_table(self, nometa: bool = False,
-                    filter_if: Callable[[Any, Any], bool] = lambda key, value: True) -> None:
-        """
-            Prints the compacted cache of records as a table to standard output.
-
-            Note: Blocks until the highwater mark has been reached.
-
-            :param nometa: If True, exclude timestamp, producer app name, host, and username from table
-            :param filter_if: Callback applied to each Message to indicate if Message should be included
-            :raises: TimeoutException if unable to obtain initial list of records up to highwater before timeout
-        """
-        head = self._get_table_headers()
-
-        records = self.await_highwater_get()
-
-        table = []
-
-        if not nometa:
-            head = ["Timestamp", "User", "Host", "Produced By"] + head
-
-        for record in records.values():
-            row = self.__filtered_row_with_header(record, filter_if, nometa)
-            if row is not None:
-                table.append(row)
-
-        # Truncate long cells
-        table = [[(c if len(str(c)) < 30 else str(c)[:27] + "...") for c in row] for row in table]
-
-        print(tabulate(table, head))
-
     def __to_line(self, key: Any, value: Any) -> str:
         """
             Function to convert key and value pair to line for file.
@@ -188,124 +157,10 @@ class JAWSConsumer(EventSourceTable):
             if filter_if(key, value):
                 print(self.__to_line(key, value))
 
-    # pylint: disable=no-self-use
-    # check breaks inheritance
-    def _get_table_headers(self) -> List[str]:
-        """
-            Get the printed table headers.
-
-            :return: The list of table headers
-        """
-        return ["Key", "Value"]
-
-    # pylint: disable=no-self-use
-    # check breaks inheritance
-    def _get_table_row(self, msg: Message) -> List[str]:
-        """
-            Function to convert Message to table row (List of strings).
-
-            Note: This function assumes the Message.value() is never None as
-            this function should be called against a compacted Dict of Messages.
-
-            :param msg: The Message
-            :return: The table row (List of strings)
-        """
-        return [msg.key(), msg.value()]
-
-    def get_keys_then_done(self) -> List[Any]:
-        """
-            Convenience function to get the list of keys.  This function blocks until the highwater mark is reached.
-
-            WARNING: No other functions should be called on this JAWSConsumer afterwards as start() and stop() are
-            called.
-
-            :return: List of keys
-        """
-        self.start()
-        msgs = self.await_highwater_get()
-        self.stop()
-
-        return msgs.keys()
-
-    def consume_then_done(self, monitor: bool = False, nometa: bool = False, export: bool = False,
-                          filter_if: Callable[[Any, Any], bool] = lambda key, value: True) -> None:
-        """
-            Convenience function for taking exactly one action given a set of hints.  If more than one action is
-            indicated the first one in parameter order wins.  If Neither monitor nor export is indicated then
-            print_table is called.
-
-            WARNING: No other functions should be called on this JAWSConsumer afterwards as start() and stop() are
-            called.
-
-            :param monitor: If True print records as they arrive (uncompressed) indefinitely (kill with Ctrl-C)
-            :param nometa: If True do not include timestamp, producer app, host, and username in output
-            :param export: If True call export_records()
-            :param filter_if: Callback applied to each Message to indicate if Message should be included
-        """
-        if monitor:
-            self._config['compacted.cache'] = False
-            self.add_listener(_MonitorListener())
-            self.start()
-        elif export:
-            self.start()
-            self.export_records(filter_if)
-            self.stop()
-        else:
-            self.start()
-            self.print_table(nometa, filter_if)
-            self.stop()
-
-    def __filtered_row_with_header(self, msg: Message, filter_if: Callable[[Any, Any], bool], nometa: bool):
-        timestamp = msg.timestamp()
-        headers = msg.headers()
-
-        row = self._get_table_row(msg)
-
-        if filter_if(msg.key(), msg.value()):
-            if not nometa:
-                row_header = self.__get_row_meta_header(headers, timestamp)
-                row = row_header + row
-        else:
-            row = None
-
-        return row
-
-    @staticmethod
-    def __get_row_meta_header(headers: List[Tuple[str, str]], timestamp: Tuple[int, int]) -> List[str]:
-        ts = time.ctime(timestamp[1] / 1000)
-
-        user = ''
-        producer = ''
-        host = ''
-
-        if headers is not None:
-            lookup = dict(headers)
-            bytez = lookup.get('user', b'')
-            user = bytez.decode()
-            bytez = lookup.get('producer', b'')
-            producer = bytez.decode()
-            bytez = lookup.get('host', b'')
-            host = bytez.decode()
-
-        return [ts, user, host, producer]
-
     # pylint: disable=unused-argument
     def __signal_handler(self, sig, frame):
         print('Stopping from Ctrl+C!')
         self.stop()
-
-
-class _MonitorListener(EventSourceListener):
-    """
-        Internal listener implementation for the JAWSConsumer monitor feature.
-    """
-
-    def on_batch(self, msgs: List[Message], highwater_reached: bool) -> None:
-        for msg in msgs:
-            print(f"{msg.key()}={msg.value()}")
-
-    def on_highwater(self, cache: Dict[Any, Message]) -> None:
-        pass
 
 
 class _CacheListener(EventSourceListener):
@@ -503,12 +358,6 @@ class CategoryConsumer(JAWSConsumer):
 
         super().__init__(config)
 
-    def _get_table_headers(self) -> List[str]:
-        return ['Category']
-
-    def _get_table_row(self, msg: Message) -> List[str]:
-        return [msg.key()]
-
 
 class ClassConsumer(JAWSConsumer):
     """
@@ -532,24 +381,6 @@ class ClassConsumer(JAWSConsumer):
         }
 
         super().__init__(config)
-
-    def _get_table_headers(self) -> List[str]:
-        return ["Class Name", "Category", "Priority", "Rationale", "Corrective Action",
-                "P.O.C. Username", "Latchable", "Filterable", "On Delay", "Off Delay"]
-
-    def _get_table_row(self, msg: Message) -> List[str]:
-        value = msg.value()
-
-        return [msg.key(),
-                value.category,
-                value.priority.name if value.priority is not None else None,
-                value.rationale.replace("\n", "\\n ") if value.rationale is not None else None,
-                value.corrective_action.replace("\n", "\\n") if value.corrective_action is not None else None,
-                value.point_of_contact_username,
-                value.latchable,
-                value.filterable,
-                value.on_delay_seconds,
-                value.off_delay_seconds]
 
 
 class EffectiveNotificationConsumer(JAWSConsumer):
@@ -575,16 +406,6 @@ class EffectiveNotificationConsumer(JAWSConsumer):
 
         super().__init__(config)
 
-    def _get_table_headers(self) -> List[str]:
-        return ["Alarm Name", "State", "Overrides"]
-
-    def _get_table_row(self, msg: Message) -> List[str]:
-        value = msg.value()
-
-        return [msg.key(),
-                value.state.name,
-                value.overrides]
-
 
 class EffectiveAlarmConsumer(JAWSConsumer):
     """
@@ -608,18 +429,6 @@ class EffectiveAlarmConsumer(JAWSConsumer):
         }
 
         super().__init__(config)
-
-    def _get_table_headers(self) -> List[str]:
-        return ["Alarm Name", "State", "Overrides", "Instance", "Class"]
-
-    def _get_table_row(self, msg: Message) -> List[str]:
-        value = msg.value()
-
-        return [msg.key(),
-                value.activation.state.name,
-                value.activation.overrides,
-                value.registration.instance,
-                value.registration.alarm_class]
 
 
 class EffectiveRegistrationConsumer(JAWSConsumer):
@@ -645,16 +454,6 @@ class EffectiveRegistrationConsumer(JAWSConsumer):
 
         super().__init__(config)
 
-    def _get_table_headers(self) -> List[str]:
-        return ["Alarm Name", "Instance", "Class"]
-
-    def _get_table_row(self, msg: Message) -> List[str]:
-        value = msg.value()
-
-        return [msg.key(),
-                value.instance,
-                value.alarm_class]
-
 
 class InstanceConsumer(JAWSConsumer):
     """
@@ -678,19 +477,6 @@ class InstanceConsumer(JAWSConsumer):
         }
 
         super().__init__(config)
-
-    def _get_table_headers(self) -> List[str]:
-        return ["Alarm Name", "Class", "Source", "Location", "Masked By", "Screen Command"]
-
-    def _get_table_row(self, msg: Message) -> List[str]:
-        value = msg.value()
-
-        return [msg.key(),
-                value.alarm_class,
-                value.source,
-                value.location,
-                value.masked_by,
-                value.screen_command]
 
 
 class LocationConsumer(JAWSConsumer):
@@ -716,15 +502,6 @@ class LocationConsumer(JAWSConsumer):
 
         super().__init__(config)
 
-    def _get_table_headers(self) -> List[str]:
-        return ["Location Name", "Parent"]
-
-    def _get_table_row(self, msg: Message) -> List[str]:
-        value = msg.value()
-
-        return [msg.key(),
-                value.parent]
-
 
 class OverrideConsumer(JAWSConsumer):
     """
@@ -748,16 +525,6 @@ class OverrideConsumer(JAWSConsumer):
         }
 
         super().__init__(config)
-
-    def _get_table_headers(self) -> List[str]:
-        return ["Alarm Name", "Override Type", "Value"]
-
-    def _get_table_row(self, msg: Message) -> List[str]:
-        key = msg.key()
-
-        return [key.name,
-                key.type.name,
-                msg.value()]
 
 
 class ActivationProducer(JAWSProducer):
