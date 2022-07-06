@@ -687,7 +687,7 @@ class InstanceConsumer(JAWSConsumer):
 
         return [msg.key(),
                 value.alarm_class,
-                value.producer,
+                value.source,
                 value.location,
                 value.masked_by,
                 value.screen_command]
