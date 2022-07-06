@@ -209,7 +209,13 @@ class EventSourceTable:
     def __monitor_initial(self) -> None:
         logger.debug("__monitor_initial")
 
-        self._consumer = DeserializingConsumer(self._config)
+        # Remove all EventSourceTable specific configs as Consumer will complain if unrecognized configs found
+        conf_copy = self._config.copy()
+        del conf_copy['topic']
+        del conf_copy['highwater.timeout']
+        del conf_copy['compacted.cache']
+
+        self._consumer = DeserializingConsumer(conf_copy)
         self._consumer.subscribe([self._config['topic']], on_assign=self.__on_assign)
 
         timeout_seconds = self._config.get('highwater.timeout') if not None else 30

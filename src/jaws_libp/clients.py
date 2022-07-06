@@ -61,6 +61,23 @@ class JAWSConsumer(EventSourceTable):
         """
             Create a new JAWSConsumer with the provided attributes.
 
+         Note:
+             The configuration options include all those for EventSourceTable and DeserializingConsumer plus:
+
+            +-------------------------+---------------------+-----------------------------------------------------+
+            | Property Name           | Type                | Description                                         |
+            +=========================+=====================+=====================================================+
+            | ``client.name``         | str                 | Name of client app                                  |
+            +-------------------------+---------------------+-----------------------------------------------------+
+            |                         |                     | Key Serde                                           |
+            | ``key.serde``           | Serde               |                                                     |
+            |                         |                     |                                                     |
+            +-------------------------+---------------------+-----------------------------------------------------+
+            |                         |                     | Value Serde                                         |
+            | ``value.serde``         | Serde               |                                                     |
+            |                         |                     |                                                     |
+            +-------------------------+---------------------+-----------------------------------------------------+
+
             :param config: The Consumer config
         """
         set_log_level_from_env()
@@ -68,7 +85,7 @@ class JAWSConsumer(EventSourceTable):
         signal.signal(signal.SIGINT, self.__signal_handler)
 
         ts = time.time()
-        client_name = config['client_name'] if config['client_name'] is not None else 'JAWSConsumer'
+        client_name = config['client.name'] if config['client.name'] is not None else 'JAWSConsumer'
         self._key_serde = config['key.serde']
         self._value_serde = config['value.serde']
         bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', 'localhost:9092')
@@ -79,10 +96,15 @@ class JAWSConsumer(EventSourceTable):
                     'enable.auto.commit': False,
                     'auto.offset.reset': 'earliest'}
 
-        config_with_defaults = defaults.copy()
-        config_with_defaults.update(config)
+        conf_copy = defaults.copy()
+        conf_copy.update(config)
 
-        super().__init__(config_with_defaults)
+        # Remove all JAWSConsumer specific configs as Consumer will complain if unrecognized configs found
+        del conf_copy['client.name']
+        del conf_copy['key.serde']
+        del conf_copy['value.serde']
+
+        super().__init__(conf_copy)
 
         caching_enabled = self._config.get('compacted.cache') \
             if self._config.get('compacted.cache') is not None else True
@@ -451,7 +473,7 @@ class ActivationConsumer(JAWSConsumer):
 
         config = {
             'topic': 'alarm-activations',
-            'client_name': client_name,
+            'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
         }
@@ -474,7 +496,7 @@ class CategoryConsumer(JAWSConsumer):
 
         config = {
             'topic': 'alarm-categories',
-            'client_name': client_name,
+            'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
         }
@@ -504,7 +526,7 @@ class ClassConsumer(JAWSConsumer):
 
         config = {
             'topic': 'alarm-classes',
-            'client_name': client_name,
+            'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
         }
@@ -546,7 +568,7 @@ class EffectiveNotificationConsumer(JAWSConsumer):
 
         config = {
             'topic': 'effective-notifications',
-            'client_name': client_name,
+            'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
         }
@@ -580,7 +602,7 @@ class EffectiveAlarmConsumer(JAWSConsumer):
 
         config = {
             'topic': 'effective-alarms',
-            'client_name': client_name,
+            'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
         }
@@ -616,7 +638,7 @@ class EffectiveRegistrationConsumer(JAWSConsumer):
 
         config = {
             'topic': 'effective-notifications',
-            'client_name': client_name,
+            'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
         }
@@ -650,7 +672,7 @@ class InstanceConsumer(JAWSConsumer):
 
         config = {
             'topic': 'alarm-instances',
-            'client_name': client_name,
+            'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
         }
@@ -687,7 +709,7 @@ class LocationConsumer(JAWSConsumer):
 
         config = {
             'topic': 'alarm-locations',
-            'client_name': client_name,
+            'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
         }
@@ -720,7 +742,7 @@ class OverrideConsumer(JAWSConsumer):
 
         config = {
             'topic': 'alarm-overrides',
-            'client_name': client_name,
+            'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
         }
