@@ -234,7 +234,7 @@ class EventSourceTable:
         t.start()
 
         caching_enabled = self._config['compacted.cache']
-        cache = []
+        cache = {}
 
         while not (self._highwater_reached or self._is_highwater_timeout):
             msg = self._consumer.poll(1)
