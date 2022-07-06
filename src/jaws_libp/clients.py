@@ -680,7 +680,7 @@ class InstanceConsumer(JAWSConsumer):
         super().__init__(config)
 
     def _get_table_headers(self) -> List[str]:
-        return ["Alarm Name", "Class", "Producer", "Location", "Masked By", "Screen Command"]
+        return ["Alarm Name", "Class", "Source", "Location", "Masked By", "Screen Command"]
 
     def _get_table_row(self, msg: Message) -> List[str]:
         value = msg.value()
