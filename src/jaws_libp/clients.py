@@ -7,7 +7,7 @@ import signal
 import socket
 import time
 
-from typing import Any, List, Callable, Tuple
+from typing import Any, List, Callable, Tuple, Dict
 
 import requests
 
@@ -19,7 +19,7 @@ from tabulate import tabulate
 from .avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
     StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ClassSerde, ActivationSerde, InstanceSerde
 from .entities import UnionEncoding
-from .eventsource import EventSourceListener, CachedTable
+from .eventsource import EventSourceListener, EventSourceTable
 
 logger = logging.getLogger(__name__)
 
@@ -47,25 +47,7 @@ def get_registry_client() -> SchemaRegistryClient:
     return SchemaRegistryClient(sr_conf)
 
 
-class _MonitorListener(EventSourceListener):
-    """
-        Internal listener implementation for the JAWSConsumer.
-    """
-
-    def on_highwater_timeout(self) -> None:
-        """
-            Default callback for highwater timeout.
-        """
-
-    def on_batch(self, msgs: List[Message]) -> None:
-        for msg in msgs:
-            print(f"{msg.key()}={msg.value()}")
-
-    def on_highwater(self) -> None:
-        pass
-
-
-class JAWSConsumer(CachedTable):
+class JAWSConsumer(EventSourceTable):
     """
         This class consumes messages from JAWS.
 
@@ -75,36 +57,51 @@ class JAWSConsumer(CachedTable):
         This consumer also knows how to export records into a file using the JAWS expected file format.
     """
 
-    def __init__(self, topic: str, client_name: str, key_serde: Serde, value_serde: Serde):
+    def __init__(self, config):
         """
             Create a new JAWSConsumer with the provided attributes.
 
-        :param topic: The Kafka topic name
-        :param client_name: The name of the client application
-        :param key_serde: The appropriate Kafka message key Serde for the given topic
-        :param value_serde: The appropriate Kafka message value Serde for the given topic
+            :param config: The Consumer config
         """
-        self._topic = topic
-        self._client_name = client_name
-        self._key_serde = key_serde
-        self._value_serde = value_serde
-
         set_log_level_from_env()
 
         signal.signal(signal.SIGINT, self.__signal_handler)
 
         ts = time.time()
-
+        client_name = config['client_name'] if config['client_name'] is not None else 'JAWSConsumer'
+        self._key_serde = config['key.serde']
+        self._value_serde = config['value.serde']
         bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', 'localhost:9092')
-        config = {'topic': topic,
-                  'bootstrap.servers': bootstrap_servers,
-                  'key.deserializer': key_serde.deserializer(),
-                  'value.deserializer': value_serde.deserializer(),
-                  'group.id': client_name + str(ts),
-                  'enable.auto.commit': False,
-                  'auto.offset.reset': 'earliest'}
+        defaults = {'bootstrap.servers': bootstrap_servers,
+                    'group.id': client_name + str(ts),
+                    'key.deserializer': self._key_serde.deserializer(),
+                    'value.deserializer': self._value_serde.deserializer(),
+                    'enable.auto.commit': False,
+                    'auto.offset.reset': 'earliest'}
 
-        super().__init__(config)
+        config_with_defaults = defaults.copy()
+        config_with_defaults.update(config)
+
+        super().__init__(config_with_defaults)
+
+        caching_enabled = self._config.get('compacted.cache') \
+            if self._config.get('compacted.cache') is not None else True
+        if caching_enabled:
+            self._cache_listener = _CacheListener()
+            self.add_listener(self._cache_listener)
+
+    def await_highwater_get(self) -> Dict[Any, Message]:
+        """
+            Block the calling thread and wait for topic highwater to be reached, then return cache of compacted
+            messages.
+
+            See: The 'highwater.timeout' option passed to the config Dict in constructor
+
+            :return: The cache of compacted messages
+            :raises TimeoutException: If highwater is not reached before timeout
+        """
+        self.await_highwater()
+        return self._cache_listener.get_cache()
 
     def print_table(self, nometa: bool = False,
                     filter_if: Callable[[Any, Any], bool] = lambda key, value: True) -> None:
@@ -224,6 +221,7 @@ class JAWSConsumer(CachedTable):
             :param filter_if: Callback applied to each Message to indicate if Message should be included
         """
         if monitor:
+            self._config['compacted.cache'] = False
             self.add_listener(_MonitorListener())
             self.start()
         elif export:
@@ -273,6 +271,42 @@ class JAWSConsumer(CachedTable):
     def __signal_handler(self, sig, frame):
         print('Stopping from Ctrl+C!')
         self.stop()
+
+
+class _MonitorListener(EventSourceListener):
+    """
+        Internal listener implementation for the JAWSConsumer monitor feature.
+    """
+
+    def on_batch(self, msgs: List[Message], highwater_reached: bool) -> None:
+        for msg in msgs:
+            print(f"{msg.key()}={msg.value()}")
+
+    def on_highwater(self, cache: Dict[Any, Message]) -> None:
+        pass
+
+
+class _CacheListener(EventSourceListener):
+    """
+        Internal listener implementation for the JAWSConsumer await highwater feature.
+    """
+
+    def __init__(self):
+        self._cache = {}
+
+    def on_batch(self, msgs: List[Message], highwater_reached: bool) -> None:
+        pass
+
+    def on_highwater(self, cache: Dict[Any, Message]) -> None:
+        self._cache = cache
+
+    def get_cache(self):
+        """
+            Get the cache.  Assumes caller waited on the EventSourceTable.awaitHighwater() first.
+
+            :return: The cached messages Dict
+        """
+        return self._cache
 
 
 class JAWSProducer:
@@ -415,7 +449,14 @@ class ActivationConsumer(JAWSConsumer):
         key_serde = StringSerde()
         value_serde = ActivationSerde(schema_registry_client)
 
-        super().__init__('alarm-activations', client_name, key_serde, value_serde)
+        config = {
+            'topic': 'alarm-activations',
+            'client_name': client_name,
+            'key.serde': key_serde,
+            'value.serde': value_serde
+        }
+
+        super().__init__(config)
 
 
 class CategoryConsumer(JAWSConsumer):
@@ -431,7 +472,14 @@ class CategoryConsumer(JAWSConsumer):
         key_serde = StringSerde()
         value_serde = StringSerde()
 
-        super().__init__('alarm-categories', client_name, key_serde, value_serde)
+        config = {
+            'topic': 'alarm-categories',
+            'client_name': client_name,
+            'key.serde': key_serde,
+            'value.serde': value_serde
+        }
+
+        super().__init__(config)
 
     def _get_table_headers(self) -> List[str]:
         return ['Category']
@@ -454,7 +502,14 @@ class ClassConsumer(JAWSConsumer):
         key_serde = StringSerde()
         value_serde = ClassSerde(schema_registry_client)
 
-        super().__init__('alarm-classes', client_name, key_serde, value_serde)
+        config = {
+            'topic': 'alarm-classes',
+            'client_name': client_name,
+            'key.serde': key_serde,
+            'value.serde': value_serde
+        }
+
+        super().__init__(config)
 
     def _get_table_headers(self) -> List[str]:
         return ["Class Name", "Category", "Priority", "Rationale", "Corrective Action",
@@ -489,7 +544,14 @@ class EffectiveNotificationConsumer(JAWSConsumer):
         key_serde = StringSerde()
         value_serde = EffectiveNotificationSerde(schema_registry_client)
 
-        super().__init__('effective-notifications', client_name, key_serde, value_serde)
+        config = {
+            'topic': 'effective-notifications',
+            'client_name': client_name,
+            'key.serde': key_serde,
+            'value.serde': value_serde
+        }
+
+        super().__init__(config)
 
     def _get_table_headers(self) -> List[str]:
         return ["Alarm Name", "State", "Overrides"]
@@ -516,7 +578,14 @@ class EffectiveAlarmConsumer(JAWSConsumer):
         key_serde = StringSerde()
         value_serde = EffectiveAlarmSerde(schema_registry_client)
 
-        super().__init__('effective-alarms', client_name, key_serde, value_serde)
+        config = {
+            'topic': 'effective-alarms',
+            'client_name': client_name,
+            'key.serde': key_serde,
+            'value.serde': value_serde
+        }
+
+        super().__init__(config)
 
     def _get_table_headers(self) -> List[str]:
         return ["Alarm Name", "State", "Overrides", "Instance", "Class"]
@@ -545,7 +614,14 @@ class EffectiveRegistrationConsumer(JAWSConsumer):
         key_serde = StringSerde()
         value_serde = EffectiveRegistrationSerde(schema_registry_client)
 
-        super().__init__('effective-registrations', client_name, key_serde, value_serde)
+        config = {
+            'topic': 'effective-notifications',
+            'client_name': client_name,
+            'key.serde': key_serde,
+            'value.serde': value_serde
+        }
+
+        super().__init__(config)
 
     def _get_table_headers(self) -> List[str]:
         return ["Alarm Name", "Instance", "Class"]
@@ -572,7 +648,14 @@ class InstanceConsumer(JAWSConsumer):
         key_serde = StringSerde()
         value_serde = InstanceSerde(schema_registry_client, UnionEncoding.DICT_WITH_TYPE)
 
-        super().__init__('alarm-instances', client_name, key_serde, value_serde)
+        config = {
+            'topic': 'alarm-instances',
+            'client_name': client_name,
+            'key.serde': key_serde,
+            'value.serde': value_serde
+        }
+
+        super().__init__(config)
 
     def _get_table_headers(self) -> List[str]:
         return ["Alarm Name", "Class", "Producer", "Location", "Masked By", "Screen Command"]
@@ -602,7 +685,14 @@ class LocationConsumer(JAWSConsumer):
         key_serde = StringSerde()
         value_serde = LocationSerde(schema_registry_client)
 
-        super().__init__('alarm-locations', client_name, key_serde, value_serde)
+        config = {
+            'topic': 'alarm-locations',
+            'client_name': client_name,
+            'key.serde': key_serde,
+            'value.serde': value_serde
+        }
+
+        super().__init__(config)
 
     def _get_table_headers(self) -> List[str]:
         return ["Location Name", "Parent"]
@@ -628,7 +718,14 @@ class OverrideConsumer(JAWSConsumer):
         key_serde = OverrideKeySerde(schema_registry_client)
         value_serde = OverrideSerde(schema_registry_client)
 
-        super().__init__('alarm-overrides', client_name, key_serde, value_serde)
+        config = {
+            'topic': 'alarm-overrides',
+            'client_name': client_name,
+            'key.serde': key_serde,
+            'value.serde': value_serde
+        }
+
+        super().__init__(config)
 
     def _get_table_headers(self) -> List[str]:
         return ["Alarm Name", "Override Type", "Value"]

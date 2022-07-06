@@ -21,42 +21,21 @@ class EventSourceListener(ABC):
         Listener interface for EventSourceTable callbacks.
     """
     @abstractmethod
-    def on_highwater(self) -> None:
+    def on_highwater(self, cache: Dict[Any, Message]) -> None:
         """
             Callback for notification of highwater reached.
+
+            :param cache: The cache of initial messages, empty if compacted.cache = False
         """
 
     @abstractmethod
-    def on_batch(self, msgs: List[Message]) -> None:
+    def on_batch(self, msgs: List[Message], highwater_reached: bool) -> None:
         """
             Callback notification of a batch of messages received.
 
             This method is called regardless of highwater status.
 
-            :param msgs: Batch of one or more ordered messages
-        """
-
-
-class CacheListener(ABC):
-    """
-        Listener interface for CachedTable callbacks.
-    """
-
-    @abstractmethod
-    def on_load(self, cache: Dict[Any, Message]) -> None:
-        """
-            Callback for notification of initial cache load.
-        """
-
-    @abstractmethod
-    def on_update(self, msgs: List[Message]) -> None:
-        """
-            Callback notification of a batch of update messages.
-
-            This method is only called after highwater has been reached.
-
-            Note: The compacted cache has already been updated by the time this function is called.
-
+            :param highwater_reached: true if highwater has already been reached
             :param msgs: Batch of one or more ordered messages
         """
 
@@ -134,6 +113,8 @@ class EventSourceTable:
             | ``highwater.timeout``   | float               |                                                     |
             |                         |                     |                                                     |
             +-------------------------+---------------------+-----------------------------------------------------+
+            | ``compacted.cache``     | bool                | If False, disables on_highwater cache. Default True.|
+            +-------------------------+---------------------+-----------------------------------------------------+
 
         Warning:
                 Keys must be hashable so your key deserializer generally must generate immutable types.
@@ -209,13 +190,9 @@ class EventSourceTable:
         logger.debug("__do_highwater_timeout")
         self._is_highwater_timeout = True
 
-    def __update_state(self, msg: Message) -> None:
-        logger.debug("__update_state")
-        self._state.append(msg)
-
-    def __notify_changes(self) -> None:
+    def __notify_changes(self, highwater_reached) -> None:
         for listener in self._listeners:
-            listener.on_batch(self._state.copy())
+            listener.on_batch(self._state.copy(), highwater_reached)
 
         self._state.clear()
 
@@ -231,18 +208,18 @@ class EventSourceTable:
 
     def __monitor_initial(self) -> None:
         logger.debug("__monitor_initial")
-        consumer_conf = {'bootstrap.servers': self._config['bootstrap.servers'],
-                         'key.deserializer': self._config['key.deserializer'],
-                         'value.deserializer': self._config['value.deserializer'],
-                         'group.id': self._config['group.id']}
 
-        self._consumer = DeserializingConsumer(consumer_conf)
+        self._consumer = DeserializingConsumer(self._config)
         self._consumer.subscribe([self._config['topic']], on_assign=self.__on_assign)
 
         timeout_seconds = self._config.get('highwater.timeout') if not None else 30
 
         t = Timer(timeout_seconds, self.__do_highwater_timeout)
         t.start()
+
+        caching_enabled = self._config.get('compacted.cache') \
+            if self._config.get('compacted.cache') is not None else True
+        cache = []
 
         while not (self._highwater_reached or self._is_highwater_timeout):
             msg = self._consumer.poll(1)
@@ -253,21 +230,31 @@ class EventSourceTable:
 
             if msgs is not None:
                 for msg in msgs:
-                    self.__update_state(msg)
+
+                    if caching_enabled:
+                        if msg.value() is None:
+                            if msg.key() in cache:
+                                del cache[msg.key()]
+                        else:
+                            cache[msg.key()] = msg
+
+                    self._state.append(msg)
 
                     if msg.offset() + 1 == self._high:
                         self._highwater_reached = True
 
-                self.__notify_changes()
+                self.__notify_changes(False)
 
         t.cancel()
-        self._highwater_signal.set()
 
         if self._is_highwater_timeout:
+            self._highwater_signal.set()
             raise TimeoutException()
 
         for listener in self._listeners:
-            listener.on_highwater()
+            listener.on_highwater(cache)
+
+        self._highwater_signal.set()
 
     def __monitor_continue(self) -> None:
         logger.debug("__monitor_continue")
@@ -280,9 +267,9 @@ class EventSourceTable:
 
             if msgs is not None:
                 for msg in msgs:
-                    self.__update_state(msg)
+                    self._state.append(msg)
 
-                self.__notify_changes()
+                self.__notify_changes(True)
 
     def stop(self) -> None:
         """
@@ -302,134 +289,8 @@ class EventSourceTable:
 
         consumer.assign(partitions)
 
+    def __enter__(self):
+        self.start()
 
-class CachedTable(EventSourceTable):
-    """
-        Adds an in-memory cache to an EventSourceTable.   Caller should be aware of size of topic being consumed and
-        this class should only be used for topics whose data will fit in caller's memory.  Unlike the EventSourceTable,
-        the CachedTable compacts records (newer records of same key replace older records, potentially hiding
-        intermediate results).
-
-        This class is great for clients that want to grab all data in a topic, use it immediately, then done.  For
-        example a shell script to dump contents of topic.
-
-        This class can also be used by apps that want to do both: (1) grab all data up to highwater mark, and
-        (2) continue monitoring for changes.  To do both register a CacheListener.
-
-        The cached state is not copied, but shared via 'await_highwater_get()' and 'on_load()' to avoid wasting memory.
-
-         Note:
-             The configuration options above and beyond the ones in EventSourceTable include:
-
-            +-------------------------+---------------------+-----------------------------------------------------+
-            | Property Name           | Type                | Description                                         |
-            +=========================+=====================+=====================================================+
-            | ``caching.enabled``    | bool                 | If False, disables caching.  Default True.          |
-            +-------------------------+---------------------+-----------------------------------------------------+
-
-        The ability to disable caching is provided for subclasses that *usually* want an in-memory cache,
-        but not always.  Might have been better to name this CashableTable or perhaps simply merged the optional
-        caching functionality into the parent EventSourceTable.
-
-    """
-
-    def __init__(self, config: Dict[str, Any]) -> None:
-        self._cache: Dict[Any, Message] = {}
-        self._cache_listeners: List[CacheListener] = []
-
-        super().__init__(config)
-
-        caching_enabled = config.get('caching.enabled') if config.get('caching.enabled') is not None else True
-
-        if caching_enabled:
-            self._listener = _CacheEventSourceListener(self, self._cache, self._cache_listeners)
-            self.add_listener(self._listener)
-
-    def add_cache_listener(self, listener: CacheListener) -> None:
-        """
-            Add a CacheListener.
-
-            :param listener: The CacheListener to register
-        """
-
-        self._cache_listeners.append(listener)
-
-    def remove_cache_listener(self, listener: CacheListener) -> None:
-        """
-            Remove a CacheListener.
-
-            :param listener: The CacheListener to unregister
-        """
-        self._cache_listeners.remove(listener)
-
-    def get(self) -> Dict[Any, Message]:
-        """
-            Returns the cache of compacted messages.
-
-            See Also: 'await_highwater_get()' to block until highwater reached.
-
-            :return: The cache of compacted messages
-        """
-        return self._cache
-
-    def await_highwater_get(self) -> Dict[Any, Message]:
-        """
-            Block the calling thread and wait for topic highwater to be reached, then return cache of compacted
-            messages.
-
-            See: The 'highwater.timeout' option passed to the config Dict in constructor
-
-            :return: The cache of compacted messages
-            :raises TimeoutException: If highwater is not reached before timeout
-        """
-        self.await_highwater()
-        return self._cache
-
-
-class _CacheEventSourceListener(EventSourceListener):
-    """
-        Internal listener implementation for the CacheTable
-    """
-
-    def __init__(self, parent: CachedTable, cache: Dict[Any, Message], cache_listeners: List[CacheListener]) -> None:
-        """
-            Create a new _EventSourceCacheListener.
-
-            :param cache: The cache
-            :param cache_listeners: The cache listeners
-        """
-        self._parent = parent
-        self._cache = cache
-        self._cache_listeners = cache_listeners
-
-    def __notify_load(self):
-        for listener in self._cache_listeners:
-            listener.on_load(self._cache)
-
-    def __update_cache(self, msgs: List[Message]) -> None:
-        """
-            Merge (compact) updated set of unique messages with existing cache, replacing existing keys if any.
-
-            :param msgs: The new messages
-        """
-        for msg in msgs:
-            if msg.value() is None:
-                if msg.key() in self._cache:
-                    del self._cache[msg.key()]
-            else:
-                self._cache[msg.key()] = msg
-
-        if self._parent.highwater_reached():
-            for listener in self._cache_listeners:
-                listener.on_update(msgs)
-
-    def on_highwater(self) -> None:
-        self.__notify_load()
-
-    def on_highwater_timeout(self) -> None:
-        """
-            Default callback for highwater timeout.
-        """
-
-    def on_batch(self, msgs: List[Message]) -> None:
-        self.__update_cache(msgs)
+    def __exit__(self, exception_type, exception_value, traceback):
+        self.stop()

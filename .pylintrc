@@ -7,6 +7,9 @@ disable=invalid-name
 [BASIC]
 good-names=p,t,e,pv
 
+[ELIF]
+max-nested-blocks=6
+
 [FORMAT]
 max-line-length=120
 max-module-lines=1500
