@@ -5,6 +5,7 @@ Reusable Python Classes for [JAWS](https://github.com/JeffersonLab/jaws).
 - [Install](https://github.com/JeffersonLab/jaws-libp#install) 
 - [API](https://github.com/JeffersonLab/jaws-libp#api)
 - [Build](https://github.com/JeffersonLab/jaws-libp#build) 
+- [Release](https://github.com/JeffersonLab/jaws-libp#release) 
 - [See Also](https://github.com/JeffersonLab/jaws-libp#see-also)
 ---
 
@@ -32,6 +33,21 @@ python -m build
 **Note for JLab On-Site Users**: Jefferson Lab has an intercepting [proxy](https://gist.github.com/slominskir/92c25a033db93a90184a5994e71d0b78)
 
 **See**: [Python Development Notes](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1)
+
+## Release
+1. Bump the version number in setup.cfg and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).   
+1. Create a new release on the GitHub [Releases](https://github.com/JeffersonLab/kafka-common/releases) page corresponding to same version in setup.cfg (Enumerate changes and link issues)
+1. Clean build by removing `build`, `dist`, and `docsrc/source/_autosummary` directories
+1. Activate [virtual env](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1#activate-dev-virtual-environment)
+1. From venv build package, build docs, lint, test, and publish new artifact to PyPi with:
+```
+python -m build
+sphinx-build -b html docsrc/source build/docs
+pylint src/jaws_libp
+pytest
+python -m twine upload --repository pypi dist/*
+```
+4. Update Sphinx docs by copying them from build dir into gh-pages branch and updating index.html (commit, push).
 
 ## See Also
  - [jaws-libj (Java)](https://github.com/JeffersonLab/jaws-libj)
