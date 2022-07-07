@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>jaws_libp.clients.CategoryConsumer &mdash; jlab-jaws 4.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jaws_libp.clients.CategoryProducer" href="jaws_libp.clients.CategoryProducer.html" />
+    <link rel="prev" title="jaws_libp.clients.ActivationProducer" href="jaws_libp.clients.ActivationProducer.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> jlab-jaws
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jaws_libp.html">jaws_libp</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.avro.html">jaws_libp.avro</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jaws_libp.clients.html">jaws_libp.clients</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.get_registry_client.html">jaws_libp.clients.get_registry_client</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.set_log_level_from_env.html">jaws_libp.clients.set_log_level_from_env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.ActivationConsumer.html">jaws_libp.clients.ActivationConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.ActivationProducer.html">jaws_libp.clients.ActivationProducer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jaws_libp.clients.CategoryConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.CategoryProducer.html">jaws_libp.clients.CategoryProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.ClassConsumer.html">jaws_libp.clients.ClassConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.ClassProducer.html">jaws_libp.clients.ClassProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.EffectiveAlarmConsumer.html">jaws_libp.clients.EffectiveAlarmConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.EffectiveAlarmProducer.html">jaws_libp.clients.EffectiveAlarmProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.EffectiveNotificationConsumer.html">jaws_libp.clients.EffectiveNotificationConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.EffectiveNotificationProducer.html">jaws_libp.clients.EffectiveNotificationProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.EffectiveRegistrationConsumer.html">jaws_libp.clients.EffectiveRegistrationConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.EffectiveRegistrationProducer.html">jaws_libp.clients.EffectiveRegistrationProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.InstanceConsumer.html">jaws_libp.clients.InstanceConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.InstanceProducer.html">jaws_libp.clients.InstanceProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.JAWSConsumer.html">jaws_libp.clients.JAWSConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.JAWSProducer.html">jaws_libp.clients.JAWSProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.LocationConsumer.html">jaws_libp.clients.LocationConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.LocationProducer.html">jaws_libp.clients.LocationProducer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.OverrideConsumer.html">jaws_libp.clients.OverrideConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.clients.OverrideProducer.html">jaws_libp.clients.OverrideProducer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.console.html">jaws_libp.console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.entities.html">jaws_libp.entities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.eventsource.html">jaws_libp.eventsource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.references.html">jaws_libp.references</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jlab-jaws</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="jaws_libp.html">jaws_libp</a> &raquo;</li>
+        
+          <li><a href="jaws_libp.clients.html">jaws_libp.clients</a> &raquo;</li>
+        
+      <li>jaws_libp.clients.CategoryConsumer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/_autosummary/jaws_libp.clients.CategoryConsumer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="jaws-libp-clients-categoryconsumer">
+<h1>jaws_libp.clients.CategoryConsumer<a class="headerlink" href="#jaws-libp-clients-categoryconsumer" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="jaws_libp.clients.CategoryConsumer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">jaws_libp.clients.</span></span><span class="sig-name descname"><span class="pre">CategoryConsumer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/clients.html#CategoryConsumer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.clients.CategoryConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="jaws_libp.clients.JAWSConsumer.html#jaws_libp.clients.JAWSConsumer" title="jaws_libp.clients.JAWSConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">jaws_libp.clients.JAWSConsumer</span></code></a></p>
+<p>Consumer for JAWS Category messages.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.clients.CategoryConsumer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/clients.html#CategoryConsumer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.clients.CategoryConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new Consumer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>client_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The name of the client application</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.clients.CategoryConsumer.__init__" title="jaws_libp.clients.CategoryConsumer.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(client_name)</p></td>
+<td><p>Create a new Consumer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.clients.CategoryConsumer.add_listener" title="jaws_libp.clients.CategoryConsumer.add_listener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_listener</span></code></a>(listener)</p></td>
+<td><p>Add an EventSourceListener.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.clients.CategoryConsumer.await_highwater" title="jaws_libp.clients.CategoryConsumer.await_highwater"><code class="xref py py-obj docutils literal notranslate"><span class="pre">await_highwater</span></code></a>()</p></td>
+<td><p>Block the calling thread and wait for topic highwater to be reached.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.clients.CategoryConsumer.await_highwater_get" title="jaws_libp.clients.CategoryConsumer.await_highwater_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">await_highwater_get</span></code></a>()</p></td>
+<td><p>Block the calling thread and wait for topic highwater to be reached, then return cache of compacted messages.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.clients.CategoryConsumer.export_records" title="jaws_libp.clients.CategoryConsumer.export_records"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_records</span></code></a>([filter_if])</p></td>
+<td><p>Prints the compacted cache of records in the JAWS file format to standard output.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.clients.CategoryConsumer.highwater_reached" title="jaws_libp.clients.CategoryConsumer.highwater_reached"><code class="xref py py-obj docutils literal notranslate"><span class="pre">highwater_reached</span></code></a>()</p></td>
+<td><p>Check whether initial highwater has been reached.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.clients.CategoryConsumer.remove_listener" title="jaws_libp.clients.CategoryConsumer.remove_listener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_listener</span></code></a>(listener)</p></td>
+<td><p>Remove an EventSourceListener.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.clients.CategoryConsumer.start" title="jaws_libp.clients.CategoryConsumer.start"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code></a>()</p></td>
+<td><p>Start monitoring for state updates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.clients.CategoryConsumer.stop" title="jaws_libp.clients.CategoryConsumer.stop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stop</span></code></a>()</p></td>
+<td><p>Stop monitoring for state updates.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.clients.CategoryConsumer.add_listener">
+<span class="sig-name descname"><span class="pre">add_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.clients.CategoryConsumer.add_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an EventSourceListener.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>listener</strong> (<a class="reference internal" href="jaws_libp.eventsource.EventSourceListener.html#jaws_libp.eventsource.EventSourceListener" title="jaws_libp.eventsource.EventSourceListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">EventSourceListener</span></code></a>) – The EventSourceListener to register</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.clients.CategoryConsumer.await_highwater">
+<span class="sig-name descname"><span class="pre">await_highwater</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.clients.CategoryConsumer.await_highwater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Block the calling thread and wait for topic highwater to be reached.</p>
+<p>See: The ‘highwater.timeout’ option passed to the config Dict in constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jaws_libp.eventsource.TimeoutException.html#jaws_libp.eventsource.TimeoutException" title="jaws_libp.eventsource.TimeoutException"><strong>TimeoutException</strong></a> – If highwater is not reached before timeout</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.clients.CategoryConsumer.await_highwater_get">
+<span class="sig-name descname"><span class="pre">await_highwater_get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.clients.CategoryConsumer.await_highwater_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Block the calling thread and wait for topic highwater to be reached, then return cache of compacted
+messages.</p>
+<p>See: The ‘highwater.timeout’ option passed to the config Dict in constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Message</span></code>]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The cache of compacted messages</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jaws_libp.eventsource.TimeoutException.html#jaws_libp.eventsource.TimeoutException" title="jaws_libp.eventsource.TimeoutException"><strong>TimeoutException</strong></a> – If highwater is not reached before timeout</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.clients.CategoryConsumer.export_records">
+<span class="sig-name descname"><span class="pre">export_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_if=&lt;function</span> <span class="pre">JAWSConsumer.&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.clients.CategoryConsumer.export_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the compacted cache of records in the JAWS file format to standard output.</p>
+<p>Note: Blocks until the highwater mark has been reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filter_if</strong> – Callback applied to each Message to indicate if Message should be included</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>TimeoutException if unable to obtain initial list of records up to highwater before timeout</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.clients.CategoryConsumer.highwater_reached">
+<span class="sig-name descname"><span class="pre">highwater_reached</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.clients.CategoryConsumer.highwater_reached" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether initial highwater has been reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if highwater reached</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.clients.CategoryConsumer.remove_listener">
+<span class="sig-name descname"><span class="pre">remove_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.clients.CategoryConsumer.remove_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an EventSourceListener.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>listener</strong> (<a class="reference internal" href="jaws_libp.eventsource.EventSourceListener.html#jaws_libp.eventsource.EventSourceListener" title="jaws_libp.eventsource.EventSourceListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">EventSourceListener</span></code></a>) – The EventSourceListener to unregister</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.clients.CategoryConsumer.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.clients.CategoryConsumer.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start monitoring for state updates.</p>
+<p>Note: start() should only be called once.  I’m too lazy to come up with some thread-safe locking check
+to ensure it, so just like Python doesn’t actually have private members, I’m not actually going to stop you,
+but you’ve been warned.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.clients.CategoryConsumer.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.clients.CategoryConsumer.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop monitoring for state updates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="jaws_libp.clients.CategoryProducer.html" class="btn btn-neutral float-right" title="jaws_libp.clients.CategoryProducer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="jaws_libp.clients.ActivationProducer.html" class="btn btn-neutral float-left" title="jaws_libp.clients.ActivationProducer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jefferson Lab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

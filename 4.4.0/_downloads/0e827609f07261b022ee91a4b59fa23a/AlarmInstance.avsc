@@ -1,0 +1,90 @@
+{
+    "type": "record",
+    "name": "AlarmInstance",
+    "namespace": "org.jlab.jaws.entity",
+    "doc": "Instance of an alarm class",
+    "fields": [
+        {
+            "name": "alarmclass",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
+            "doc": "The alarm class; provides inheritable shared values",
+            "default": "base"
+        },
+        {
+            "name": "source",
+            "type": [
+                {
+                    "type": "record",
+                    "name": "Source",
+                    "doc": "Base registration with no specific source info",
+                    "fields": []
+                },
+                {
+                    "type": "record",
+                    "name": "EPICSSource",
+                    "doc": "EPICS source registration",
+                    "fields": [
+                        {
+                            "name": "pv",
+                            "type": {
+                                "type": "string",
+                                "avro.java.string": "String"
+                            },
+                            "doc": "The name of the EPICS CA PV"
+                        }
+                    ]
+                },
+                {
+                    "type": "record",
+                    "name": "CALCSource",
+                    "doc": "CALC Expression Alarm Generator source registration",
+                    "fields": [
+                        {
+                            "name": "expression",
+                            "type": {
+                                "type": "string",
+                                "avro.java.string": "String"
+                            },
+                            "doc": "The CALC expression used to generate alarms"
+                        }
+                    ]
+                }
+            ],
+            "doc": "Provides source specific information via a union."
+        },
+        {
+            "name": "location",
+            "type": {
+                "type": "array",
+                "items" : "string",
+                "default": []
+            },
+            "doc": "The locations associated with the alarm"
+        },
+        {
+            "name": "maskedby",
+            "type": [
+                "null",
+                {
+                    "type": "string",
+                    "avro.java.string": "String"
+                }
+            ],
+            "doc": "The name of the parent alarm, which if active, masks this alarm (flood suppression via logical hierarchy)"
+        },
+        {
+            "name": "screencommand",
+            "type": [
+                "null",
+                {
+                    "type": "string",
+                    "avro.java.string": "String"
+                }
+            ],
+            "doc": "The command to open the related control system screen"
+        }
+    ]
+}
