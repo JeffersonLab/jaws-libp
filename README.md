@@ -1,4 +1,4 @@
-# jaws-libp [![Python lint and test](https://github.com/JeffersonLab/jaws-libp/actions/workflows/python.yml/badge.svg)](https://github.com/JeffersonLab/jaws-libp/actions/workflows/python.yml) [![PyPI](https://img.shields.io/pypi/v/jaws-libp)](https://pypi.org/project/jaws-libp/)
+# jaws-libp [![CI](https://github.com/JeffersonLab/jaws-libp/actions/workflows/ci.yml/badge.svg)](https://github.com/JeffersonLab/jaws-libp/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/jaws-libp)](https://pypi.org/project/jaws-libp/)
 Reusable Python Classes for [JAWS](https://github.com/JeffersonLab/jaws).
 
 ---
