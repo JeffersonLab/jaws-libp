@@ -446,7 +446,7 @@ class EffectiveRegistrationConsumer(JAWSConsumer):
         value_serde = EffectiveRegistrationSerde(schema_registry_client)
 
         config = {
-            'topic': 'effective-notifications',
+            'topic': 'effective-registrations',
             'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
