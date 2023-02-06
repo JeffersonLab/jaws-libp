@@ -37,9 +37,10 @@ python -m build
 ## Release
 1. Bump the version number in setup.cfg and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).   
 1. Create a new release on the GitHub [Releases](https://github.com/JeffersonLab/jaws-libp/releases) page corresponding to same version in setup.cfg (Enumerate changes and link issues)
-1. Clean build by removing `build`, `dist`, and `docsrc/source/_autosummary` directories
-1. Activate [virtual env](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1#activate-dev-virtual-environment)
-1. From venv build package, build docs, lint, test, and publish new artifact to PyPi with:
+1. [Publish to PyPi](https://github.com/JeffersonLab/jaws-libp/actions/workflows/pypi-publish.yml) GitHub Action should run automatically.  Else:
+    1. Clean build by removing `build`, `dist`, and `docsrc/source/_autosummary` directories
+    1. Activate [virtual env](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1#activate-dev-virtual-environment)
+    1. From venv build package, build docs, lint, test, and publish new artifact to PyPi with:
 ```
 python -m build
 sphinx-build -b html docsrc/source build/docs
@@ -47,7 +48,7 @@ pylint src/jaws_libp
 pytest
 python -m twine upload --repository pypi dist/*
 ```
-4. Update Sphinx docs by copying them from build dir into gh-pages branch and updating index.html (commit, push).
+ 4. Update Sphinx docs by copying them from build dir into gh-pages branch and updating index.html (commit, push).
 
 ## See Also
  - [jaws-libj (Java)](https://github.com/JeffersonLab/jaws-libj)
