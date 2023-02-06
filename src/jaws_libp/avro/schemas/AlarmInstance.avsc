@@ -14,6 +14,17 @@
             "default": "base"
         },
         {
+            "name": "device",
+            "type": [
+                "null",
+                {
+                    "type": "string",
+                    "avro.java.string": "String"
+                }
+            ],
+            "doc": "The name of the associated device"
+        },
+        {
             "name": "source",
             "type": [
                 {
