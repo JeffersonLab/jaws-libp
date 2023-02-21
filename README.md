@@ -48,7 +48,7 @@ pylint src/jaws_libp
 pytest
 python -m twine upload --repository pypi dist/*
 ```
- 4. Update Sphinx docs by copying them from build dir into gh-pages branch and updating index.html (commit, push).
+ 4. Update Sphinx docs by copying them from build dir into gh-pages branch and updating index.html (commit, push).  This is automated by [Publish to gh-pages](https://github.com/JeffersonLab/jaws-libp/actions/workflows/gh-pages-publish.yml)
 
 ## See Also
  - [jaws-libj (Java)](https://github.com/JeffersonLab/jaws-libj)
