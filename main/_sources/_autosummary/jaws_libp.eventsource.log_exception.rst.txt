@@ -1,6 +1,0 @@
-jaws\_libp.eventsource.log\_exception
-=====================================
-
-.. currentmodule:: jaws_libp.eventsource
-
-.. autofunction:: log_exception

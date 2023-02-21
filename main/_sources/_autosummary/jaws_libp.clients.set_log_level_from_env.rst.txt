@@ -1,6 +1,0 @@
-jaws\_libp.clients.set\_log\_level\_from\_env
-=============================================
-
-.. currentmodule:: jaws_libp.clients
-
-.. autofunction:: set_log_level_from_env
