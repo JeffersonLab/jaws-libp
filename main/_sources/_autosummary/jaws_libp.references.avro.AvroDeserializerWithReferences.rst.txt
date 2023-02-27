@@ -1,0 +1,25 @@
+jaws\_libp.references.avro.AvroDeserializerWithReferences
+=========================================================
+
+.. currentmodule:: jaws_libp.references.avro
+
+.. autoclass:: AvroDeserializerWithReferences
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AvroDeserializerWithReferences.__init__
+   
+   
+
+   
+   
+   

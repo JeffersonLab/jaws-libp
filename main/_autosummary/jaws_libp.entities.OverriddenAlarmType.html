@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>jaws_libp.entities.OverriddenAlarmType &mdash; jlab-jaws 4.4.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jaws_libp.entities.ProcessorTransitions" href="jaws_libp.entities.ProcessorTransitions.html" />
+    <link rel="prev" title="jaws_libp.entities.OnDelayedOverride" href="jaws_libp.entities.OnDelayedOverride.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> jlab-jaws
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jaws_libp.html">jaws_libp</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.avro.html">jaws_libp.avro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.clients.html">jaws_libp.clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.console.html">jaws_libp.console</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jaws_libp.entities.html">jaws_libp.entities</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.Activation.html">jaws_libp.entities.Activation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmActivationUnion.html">jaws_libp.entities.AlarmActivationUnion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmClass.html">jaws_libp.entities.AlarmClass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmInstance.html">jaws_libp.entities.AlarmInstance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmLocation.html">jaws_libp.entities.AlarmLocation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmOverrideKey.html">jaws_libp.entities.AlarmOverrideKey</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmOverrideSet.html">jaws_libp.entities.AlarmOverrideSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmOverrideUnion.html">jaws_libp.entities.AlarmOverrideUnion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmPriority.html">jaws_libp.entities.AlarmPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmState.html">jaws_libp.entities.AlarmState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.CALCSource.html">jaws_libp.entities.CALCSource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ChannelErrorActivation.html">jaws_libp.entities.ChannelErrorActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.DisabledOverride.html">jaws_libp.entities.DisabledOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSActivation.html">jaws_libp.entities.EPICSActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSSEVR.html">jaws_libp.entities.EPICSSEVR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSSTAT.html">jaws_libp.entities.EPICSSTAT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSSource.html">jaws_libp.entities.EPICSSource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EffectiveAlarm.html">jaws_libp.entities.EffectiveAlarm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EffectiveNotification.html">jaws_libp.entities.EffectiveNotification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EffectiveRegistration.html">jaws_libp.entities.EffectiveRegistration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.FilteredOverride.html">jaws_libp.entities.FilteredOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.IntermediateMonolog.html">jaws_libp.entities.IntermediateMonolog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.LatchedOverride.html">jaws_libp.entities.LatchedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.MaskedOverride.html">jaws_libp.entities.MaskedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.NoActivation.html">jaws_libp.entities.NoActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.NoteActivation.html">jaws_libp.entities.NoteActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.OffDelayedOverride.html">jaws_libp.entities.OffDelayedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.OnDelayedOverride.html">jaws_libp.entities.OnDelayedOverride</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jaws_libp.entities.OverriddenAlarmType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ProcessorTransitions.html">jaws_libp.entities.ProcessorTransitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ShelvedOverride.html">jaws_libp.entities.ShelvedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ShelvedReason.html">jaws_libp.entities.ShelvedReason</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.Source.html">jaws_libp.entities.Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.UnionEncoding.html">jaws_libp.entities.UnionEncoding</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.eventsource.html">jaws_libp.eventsource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.references.html">jaws_libp.references</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jlab-jaws</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="jaws_libp.html">jaws_libp</a> &raquo;</li>
+        
+          <li><a href="jaws_libp.entities.html">jaws_libp.entities</a> &raquo;</li>
+        
+      <li>jaws_libp.entities.OverriddenAlarmType</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/_autosummary/jaws_libp.entities.OverriddenAlarmType.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="jaws-libp-entities-overriddenalarmtype">
+<h1>jaws_libp.entities.OverriddenAlarmType<a class="headerlink" href="#jaws-libp-entities-overriddenalarmtype" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="jaws_libp.entities.OverriddenAlarmType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">jaws_libp.entities.</span></span><span class="sig-name descname"><span class="pre">OverriddenAlarmType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/entities.html#OverriddenAlarmType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.entities.OverriddenAlarmType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Override Type</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.entities.OverriddenAlarmType.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.entities.OverriddenAlarmType.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.entities.OverriddenAlarmType.Disabled" title="jaws_libp.entities.OverriddenAlarmType.Disabled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Disabled</span></code></a></p></td>
+<td><p>A broken alarm can be flagged as out-of-service</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.entities.OverriddenAlarmType.Filtered" title="jaws_libp.entities.OverriddenAlarmType.Filtered"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Filtered</span></code></a></p></td>
+<td><p>An alarm can be &quot;suppressed by design&quot; - generally a group of alarms are filtered out when not needed for the current machine program.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.entities.OverriddenAlarmType.Masked" title="jaws_libp.entities.OverriddenAlarmType.Masked"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Masked</span></code></a></p></td>
+<td><p>An alarm can be suppressed by a parent alarm to minimize confusion during an alarm flood and build an alarm hierarchy</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.entities.OverriddenAlarmType.OnDelayed" title="jaws_libp.entities.OverriddenAlarmType.OnDelayed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnDelayed</span></code></a></p></td>
+<td><p>An alarm with an on-delay is temporarily suppressed upon activation to minimize fleeting/chattering</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.entities.OverriddenAlarmType.OffDelayed" title="jaws_libp.entities.OverriddenAlarmType.OffDelayed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OffDelayed</span></code></a></p></td>
+<td><p>An alarm with an off-delay is temporarily incited upon de-activation to minimize fleeting/chattering</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.entities.OverriddenAlarmType.Shelved" title="jaws_libp.entities.OverriddenAlarmType.Shelved"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Shelved</span></code></a></p></td>
+<td><p>An alarm can be temporarily suppressed via manual operator command</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.entities.OverriddenAlarmType.Latched" title="jaws_libp.entities.OverriddenAlarmType.Latched"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Latched</span></code></a></p></td>
+<td><p>A fleeting alarm (one that toggles between active and not active too quickly) can be configured to require acknowledgement by operators - the alarm is latched once active and won't clear to Normal (or Active) until acknowledged</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jaws_libp.entities.OverriddenAlarmType.Disabled">
+<span class="sig-name descname"><span class="pre">Disabled</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#jaws_libp.entities.OverriddenAlarmType.Disabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>A broken alarm can be flagged as out-of-service</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jaws_libp.entities.OverriddenAlarmType.Filtered">
+<span class="sig-name descname"><span class="pre">Filtered</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#jaws_libp.entities.OverriddenAlarmType.Filtered" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alarm can be “suppressed by design” - generally a group of alarms are filtered out when not needed for the
+current machine program. The Filter Processor helps operators filter multiple alarms with simple grouping
+commands (like by area).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jaws_libp.entities.OverriddenAlarmType.Latched">
+<span class="sig-name descname"><span class="pre">Latched</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#jaws_libp.entities.OverriddenAlarmType.Latched" title="Permalink to this definition">¶</a></dt>
+<dd><p>A fleeting alarm (one that toggles between active and not active too quickly) can be configured to require
+acknowledgement by operators - the alarm is latched once active and won’t clear to Normal (or Active) until
+acknowledged</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jaws_libp.entities.OverriddenAlarmType.Masked">
+<span class="sig-name descname"><span class="pre">Masked</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#jaws_libp.entities.OverriddenAlarmType.Masked" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alarm can be suppressed by a parent alarm to minimize confusion during an alarm flood and build an
+alarm hierarchy</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jaws_libp.entities.OverriddenAlarmType.OffDelayed">
+<span class="sig-name descname"><span class="pre">OffDelayed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#jaws_libp.entities.OverriddenAlarmType.OffDelayed" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alarm with an off-delay is temporarily incited upon de-activation to minimize fleeting/chattering</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jaws_libp.entities.OverriddenAlarmType.OnDelayed">
+<span class="sig-name descname"><span class="pre">OnDelayed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#jaws_libp.entities.OverriddenAlarmType.OnDelayed" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alarm with an on-delay is temporarily suppressed upon activation to minimize fleeting/chattering</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jaws_libp.entities.OverriddenAlarmType.Shelved">
+<span class="sig-name descname"><span class="pre">Shelved</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#jaws_libp.entities.OverriddenAlarmType.Shelved" title="Permalink to this definition">¶</a></dt>
+<dd><p>An alarm can be temporarily suppressed via manual operator command</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="jaws_libp.entities.ProcessorTransitions.html" class="btn btn-neutral float-right" title="jaws_libp.entities.ProcessorTransitions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="jaws_libp.entities.OnDelayedOverride.html" class="btn btn-neutral float-left" title="jaws_libp.entities.OnDelayedOverride" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jefferson Lab.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

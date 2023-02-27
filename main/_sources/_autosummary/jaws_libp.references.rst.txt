@@ -1,0 +1,32 @@
+jaws\_libp.references
+=====================
+
+.. automodule:: jaws_libp.references
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+
+   jaws_libp.references.avro
+

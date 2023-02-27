@@ -1,0 +1,31 @@
+jaws\_libp.eventsource.EventSourceTable
+=======================================
+
+.. currentmodule:: jaws_libp.eventsource
+
+.. autoclass:: EventSourceTable
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventSourceTable.__init__
+      ~EventSourceTable.add_listener
+      ~EventSourceTable.await_highwater
+      ~EventSourceTable.highwater_reached
+      ~EventSourceTable.remove_listener
+      ~EventSourceTable.start
+      ~EventSourceTable.stop
+   
+   
+
+   
+   
+   
