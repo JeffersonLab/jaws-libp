@@ -16,7 +16,7 @@ function addToList(name) {
 
   const li = document.createElement("li");
   const a = document.createElement("a");
-  a.href = name;
+  a.href = name + '/';
   a.innerText = name;
   li.appendChild(a);
   list.appendChild(li);
