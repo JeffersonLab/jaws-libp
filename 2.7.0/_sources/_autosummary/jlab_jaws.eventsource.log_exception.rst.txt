@@ -1,6 +1,0 @@
-jlab\_jaws.eventsource.log\_exception
-=====================================
-
-.. currentmodule:: jlab_jaws.eventsource
-
-.. autofunction:: log_exception
