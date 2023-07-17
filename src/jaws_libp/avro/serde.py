@@ -20,7 +20,6 @@ from ..entities import AlarmLocation, AlarmPriority, ChannelErrorActivation, NoA
     ShelvedReason, EPICSSEVR, EPICSSTAT, UnionEncoding, CALCSource, EPICSSource, AlarmClass, \
     EffectiveRegistration, EffectiveNotification, EffectiveAlarm, IntermediateMonolog, AlarmState, AlarmOverrideSet, \
     ProcessorTransitions
-from ..references.avro import AvroDeserializerWithReferences, AvroSerializerWithReferences
 
 
 def _unwrap_enum(value: [None, Tuple[str, str], str], enum_class: Type[Enum]) -> [None, Tuple[str, str], str]:
@@ -261,7 +260,7 @@ class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
 
     def serializer(self):
         return AvroSerializer(schema_registry_client=self._schema_registry_client,
-                              schema=self.get_schema(),
+                              schema_str=self.get_schema(),
                               to_dict=self._to_dict_with_ctx,
                               conf=self.avro_conf)
 
