@@ -269,7 +269,7 @@ class JAWSProducer:
 
             :param url: URL path to a file to import
         """
-        with requests.get(url, stream=True) as r:
+        with requests.get(url, stream=True, timeout=30) as r:
             if r.encoding is None:
                 r.encoding = 'utf-8'
 

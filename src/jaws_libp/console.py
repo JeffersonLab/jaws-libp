@@ -59,7 +59,6 @@ class ConsoleConsumer:
 
         print(tabulate(table, head))
 
-    # pylint: disable=no-self-use
     # check breaks inheritance
     @staticmethod
     def _default_torow(msg: Message) -> List[str]:
