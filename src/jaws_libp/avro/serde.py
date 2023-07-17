@@ -260,18 +260,16 @@ class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
         return self._named_schemas
 
     def serializer(self):
-        return AvroSerializerWithReferences(schema_registry_client=self._schema_registry_client,
-                                            schema=self.get_schema(),
-                                            to_dict=self._to_dict_with_ctx,
-                                            named_schemas=self.named_schemas(),
-                                            conf=self.avro_conf)
+        return AvroSerializer(schema_registry_client=self._schema_registry_client,
+                              schema=self.get_schema(),
+                              to_dict=self._to_dict_with_ctx,
+                              conf=self.avro_conf)
 
     def deserializer(self):
-        return AvroDeserializerWithReferences(self._schema_registry_client,
-                                              None,
-                                              self._from_dict_with_ctx,
-                                              True,
-                                              self.named_schemas())
+        return AvroDeserializer(self._schema_registry_client,
+                                None,
+                                self._from_dict_with_ctx,
+                                True)
 
 
 class ClassSerde(RegistryAvroSerde):
