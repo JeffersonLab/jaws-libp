@@ -1,0 +1,25 @@
+services:
+  zookeeper:
+    extends:
+      file: docker-compose.yml
+      service: zookeeper
+
+  kafka:
+    extends:
+      file: docker-compose.yml
+      service: kafka
+
+  registry:
+    extends:
+      file: docker-compose.yml
+      service: registry
+
+  jaws-libp:
+    extends:
+      file: docker-compose.yml
+      service: jaws-libp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      LOGLEVEL: "DEBUG"

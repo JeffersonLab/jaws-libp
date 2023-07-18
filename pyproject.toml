@@ -21,13 +21,15 @@ dependencies = [
     "confluent-kafka[schema-registry,avro]>=2.2.0",
     "psutil>=5.9.5",
     "tabulate>=0.9.0",
-    "requests>=2.31.0"
+    "requests>=2.31.0",
+    "click>=7.1.2"
 ]
 
 [project.optional-dependencies]
 dev = [
     "build>=0.10.0",
     "pytest>=7.4.0",
+    "pytest-env>=0.8.2",
     "pylint>=2.17.4",
     "Sphinx>=6.2.1",
     "sphinx_click>=4.4.0",
@@ -38,9 +40,43 @@ dev = [
 [project.urls]
 Repository = "https://github.com/jeffersonlab/jaws-libp.git"
 
+[project.scripts]
+create_topics = "jaws_libp.scripts.broker.create_topics:create_topics"
+delete_topics = "jaws_libp.scripts.broker.delete_topics:delete_topics"
+describe_topics = "jaws_libp.scripts.broker.describe_topics:describe_topics"
+list_topics = "jaws_libp.scripts.broker.list_topics:list_topics"
+show_consumer_groups = "jaws_libp.scripts.broker.show_consumer_groups:show_consumer_groups"
+list_activations = "jaws_libp.scripts.client.list_activations:list_activations"
+list_categories = "jaws_libp.scripts.client.list_categories:list_categories"
+list_classes = "jaws_libp.scripts.client.list_classes:click_main"
+list_effective_notifications = "jaws_libp.scripts.client.list_effective_notifications:list_effective_notifications"
+list_effective_alarms = "jaws_libp.scripts.client.list_effective_alarms:list_effective_alarms"
+list_effective_registrations = "jaws_libp.scripts.client.list_effective_registrations:list_effective_registrations"
+list_instances = "jaws_libp.scripts.client.list_instances:list_instances"
+list_locations = "jaws_libp.scripts.client.list_locations:list_locations"
+list_overrides = "jaws_libp.scripts.client.list_overrides:list_overrides"
+set_activation = "jaws_libp.scripts.client.set_activation:set_activation"
+set_category = "jaws_libp.scripts.client.set_category:set_category"
+set_class = "jaws_libp.scripts.client.set_class:click_main"
+set_effective_notification = "jaws_libp.scripts.client.set_effective_notification:set_effective_notification"
+set_effective_alarm = "jaws_libp.scripts.client.set_effective_alarm:set_effective_alarm"
+set_effective_registration = "jaws_libp.scripts.client.set_effective_registration:set_effective_registration"
+set_instance = "jaws_libp.scripts.client.set_instance:click_main"
+set_location = "jaws_libp.scripts.client.set_location:set_location"
+set_override = "jaws_libp.scripts.client.set_override:set_override"
+create_schemas = "jaws_libp.scripts.registry.create_schemas:create_schemas"
+delete_schemas = "jaws_libp.scripts.registry.delete_schemas:delete_schemas"
+describe_schemas = "jaws_libp.scripts.registry.describe_schemas:describe_schemas"
+describe_version = "jaws_libp.scripts.registry.describe_version:describe_version"
+list_schemas = "jaws_libp.scripts.registry.list_schemas:list_schemas"
+
 [tool.pytest.ini_options]
 pythonpath = [
     "./src"
+]
+env = [
+    "BOOTSTRAP_SERVERS=localhost:9094",
+    "SCHEMA_REGISTRY=http://localhost:8081",
 ]
 
 [tool.setuptools.packages.find]
