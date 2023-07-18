@@ -37,4 +37,4 @@ jobs:
         pytest
     - name: Stop containers
       if: always()
-      run: docker compose -f dep.yml down
+      run: docker compose -f deps.yml down
