@@ -28,6 +28,13 @@ jobs:
     - name: Lint
       run: |
         pylint src/jaws_libp
+    - name: Start containers
+      run: docker compose -f deps.yml up -d
+    - name: Wait for containers to settle
+      run: docker exec -i kafka bash -c "sleep 20"
     - name: Test
       run: |
         pytest
+    - name: Stop containers
+      if: always()
+      run: docker compose -f dep.yml down
