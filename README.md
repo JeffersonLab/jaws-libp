@@ -5,7 +5,8 @@ Reusable Python Classes for [JAWS](https://github.com/JeffersonLab/jaws).
 - [Install](https://github.com/JeffersonLab/jaws-libp#install) 
 - [API](https://github.com/JeffersonLab/jaws-libp#api)
 - [Configure](https://github.com/JeffersonLab/jaws-libp#configure) 
-- [Build](https://github.com/JeffersonLab/jaws-libp#build) 
+- [Build](https://github.com/JeffersonLab/jaws-libp#build)
+- [Test](https://github.com/JeffersonLab/jaws-libp#test)
 - [Release](https://github.com/JeffersonLab/jaws-libp#release) 
 - [See Also](https://github.com/JeffersonLab/jaws-libp#see-also)
 ---
@@ -51,6 +52,22 @@ python -m build
 **Note for JLab On-Site Users**: Jefferson Lab has an intercepting [proxy](https://gist.github.com/slominskir/92c25a033db93a90184a5994e71d0b78)
 
 **See**: [Python Development Notes](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1)
+
+## Test
+The integration tests depend on a running Kafka instance, generally in Docker.  The tests run automatically via the [CI](https://github.com/JeffersonLab/jaws-libp/actions/workflows/ci.yml) GitHub Action on every commit (unless `[no ci]` is included in the commit message).  The tests can be run locally during development with:
+
+1. Start Docker with jaws-libp dependencies
+```
+docker compose -f deps.yml up
+```
+2. Activate Python virtual environment   
+[Shell Specific Notes](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1#activate-dev-virtual-environment)   
+3. Execute Tests
+```
+pytest
+```
+**Note**: The environment variable defaults work in this scenario and are defined as:
+`BOOTSTRAP_SERVERS=localhost:9094` and `SCHEMA_REGISTRY=http://localhost:8081`
 
 ## Release
 1. Bump the version number in pyproject.toml and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).   
