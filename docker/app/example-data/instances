@@ -1,0 +1,3 @@
+alarm1={"source": {"org.jlab.jaws.entity.EPICSSource": {"pv": "channel1"}}, "alarmclass": "base", "location": ["INJ"], "screencommand": "/", "maskedby": null}
+alarm2={"source": {"org.jlab.jaws.entity.EPICSSource": {"pv": "channel2"}}, "alarmclass": "base", "location": ["INJ", "NL"], "screencommand": "/", "maskedby": null}
+alarm3={"source": {"org.jlab.jaws.entity.EPICSSource": {"pv": "channel3"}}, "alarmclass": "base", "location": ["INJ"], "screencommand": "/", "maskedby": null}
