@@ -38,7 +38,9 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY . /app
 RUN cd /app \
     && python -m venv $VIRTUAL_ENV \
+    && rm -rf build \
     && pip install .
+## Note: when running pip install . the local build dir is re-used if it exists so we remove it first to avoid contamination
 
 ################## Stage 1
 FROM ${RUN_IMAGE} as runner
