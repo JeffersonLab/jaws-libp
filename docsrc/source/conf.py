@@ -8,9 +8,6 @@ project = 'jaws-libp'
 copyright = '2021, Jefferson Lab'
 author = 'Ryan Slominski'
 
-# The full version, including alpha/beta/rc tags
-release = '4.4.1'
-
 
 # -- General configuration ---------------------------------------------------
 
