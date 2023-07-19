@@ -61,26 +61,21 @@ python -m build
 **See**: [Python Development Notes](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1)
 
 ## Develop
+Set up the build environment following the [Build](https://github.com/JeffersonLab/jaws-libp#build) instructions.
+
 In order to iterate rapidly when making changes it's often useful to run the Python scripts directly on the local workstation, perhaps leveraging an IDE.  In this scenario run the service dependencies with:
 ```
 docker compose -f deps.yml up
 ```
 
-## Test
-The integration tests depend on a running Kafka instance, generally in Docker.  The tests run automatically via the [CI](https://github.com/JeffersonLab/jaws-libp/actions/workflows/ci.yml) GitHub Action on every commit (unless `[no ci]` is included in the commit message).  The tests can be run locally during development with:
+**Note**: The environment variable defaults work in this scenario and are defined as:
+`BOOTSTRAP_SERVERS=localhost:9094` and `SCHEMA_REGISTRY=http://localhost:8081`
 
-1. Start Docker with jaws-libp dependencies
-```
-docker compose -f deps.yml up
-```
-2. Activate pre-configured Python virtual environment   
-[Shell Specific Notes](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1#activate-dev-virtual-environment)   
-3. Execute Tests
+## Test
+The integration tests depend on a running Kafka instance, generally in Docker.  The tests run automatically via the [CI](https://github.com/JeffersonLab/jaws-libp/actions/workflows/ci.yml) GitHub Action on every commit (unless `[no ci]` is included in the commit message).  The tests can be run locally during development.  Set up the development environment following the [Develop](https://github.com/JeffersonLab/jaws-libp#develop) instructions.  Then with the `deps.yml` Docker containers running and the build virtual environment activated run:
 ```
 pytest
 ```
-**Note**: The environment variable defaults work in this scenario and are defined as:
-`BOOTSTRAP_SERVERS=localhost:9094` and `SCHEMA_REGISTRY=http://localhost:8081`
 
 ## Release
 1. Bump the version number in pyproject.toml and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).   
