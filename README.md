@@ -4,6 +4,7 @@ Reusable Python Classes for [JAWS](https://github.com/JeffersonLab/jaws).
 ---
 - [Install](https://github.com/JeffersonLab/jaws-libp#install) 
 - [API](https://github.com/JeffersonLab/jaws-libp#api)
+- [Configure](https://github.com/JeffersonLab/jaws-libp#configure) 
 - [Build](https://github.com/JeffersonLab/jaws-libp#build) 
 - [Release](https://github.com/JeffersonLab/jaws-libp#release) 
 - [See Also](https://github.com/JeffersonLab/jaws-libp#see-also)
@@ -20,6 +21,23 @@ pip install jaws-libp
 
 ## API
 [Sphinx Docs](https://jeffersonlab.github.io/jaws-libp/)
+
+## Configure
+Environment variables are used to configure jaws-libp:
+
+| Name             | Description                                                                                                                |
+|------------------|----------------------------------------------------------------------------------------------------------------------------|
+| BOOTSTRAP_SERVER | Host and port pair pointing to a Kafka server to bootstrap the client connection to a Kafka Cluster; example: `kafka:9092` |
+| SCHEMA_REGISTRY  | URL to Confluent Schema Registry; example: `http://registry:8081`                                                          |
+
+The Docker container can optionally handle the following environment variables as well:
+
+| Name             | Description                                                                                                                                                                                                                                                                                                                                                                                                         |
+|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ALARM_LOCATIONS  | Path to an alarm locations file to import ([example file](https://github.com/JeffersonLab/jaws/blob/main/examples/data/locations)), else an https URL to a file, else a comma separated list of location definitions with fields separated by the pipe symbol.  Example Inline CSV: `name\|parent`                                                                                                                  |
+| ALARM_CATEGORIES | Path to an alarm categories file to import ([example file](https://github.com/JeffersonLab/jaws/blob/main/examples/data/categories)), else an https URL to a file, else a comma separated list of catgory definitions with fields.  Example Inline CSV: `name`                                                                                                                                                      |
+| ALARM_CLASSES    | Path to an alarm classes file to import ([example file](https://github.com/JeffersonLab/jaws/blob/main/examples/data/classes)), else an https URL to a file, else a comma separated list of class definitions with fields separated by the pipe symbol.  Example Inline CSV: `name\|category\|priority\|rationale\|correctiveaction\|pointofcontactusername\|latching\|filterable\|ondelayseconds\|offdelayseconds` |
+| ALARM_INSTANCES  | Path to an alarm instances file to import ([example file](https://github.com/JeffersonLab/jaws/blob/main/examples/data/instances)), else an https URL to a file, else a comma separated list of instance definitions with fields separated by the pipe symbol.  Leave epicspv field empty for SimpleProducer. Example Inline CSV: `name\|class\|epicspv\|location\|maskedby\|screencommand`                         |
 
 ## Build
 This [Python 3.9+](https://www.python.org/) project is built with [setuptools](https://setuptools.pypa.io/en/latest/setuptools.html) and may be run using the Python [virtual environment](https://docs.python.org/3/tutorial/venv.html) feature to isolate dependencies.   The [pip](https://pypi.org/project/pip/) tool can be used to download dependencies.
