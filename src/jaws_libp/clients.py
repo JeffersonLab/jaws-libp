@@ -19,6 +19,7 @@ from .avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, Effectiv
     StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ClassSerde, ActivationSerde, InstanceSerde
 from .entities import UnionEncoding
 from .eventsource import EventSourceListener, EventSourceTable
+from .scripts import DEFAULT_BOOTSTRAP_SERVERS
 
 logger = logging.getLogger(__name__)
 
@@ -87,7 +88,7 @@ class JAWSConsumer(EventSourceTable):
         config['client.name'] = config['client.name'] if config['client.name'] is not None else 'JAWSConsumer'
         self._key_serde = config['key.serde']
         self._value_serde = config['value.serde']
-        bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', 'localhost:9092')
+        bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', DEFAULT_BOOTSTRAP_SERVERS)
         defaults = {'bootstrap.servers': bootstrap_servers,
                     'group.id': config['client.name'] + str(ts),
                     'key.deserializer': self._key_serde.deserializer(),
@@ -217,7 +218,7 @@ class JAWSProducer:
         key_serializer = key_serde.serializer()
         value_serializer = value_serde.serializer()
 
-        bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', 'localhost:9092')
+        bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', DEFAULT_BOOTSTRAP_SERVERS)
         producer_conf = {'bootstrap.servers': bootstrap_servers,
                          'key.serializer': key_serializer,
                          'value.serializer': value_serializer}

@@ -11,12 +11,14 @@ import pkgutil
 from confluent_kafka import KafkaException
 from confluent_kafka.admin import AdminClient, ConfigResource
 
+from ...scripts import DEFAULT_BOOTSTRAP_SERVERS
+
 
 def describe_topics() -> None:
     """
         Describe Kafka topics
     """
-    bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', 'localhost:9092')
+    bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', DEFAULT_BOOTSTRAP_SERVERS)
 
     admin_client = AdminClient({'bootstrap.servers': bootstrap_servers})
 

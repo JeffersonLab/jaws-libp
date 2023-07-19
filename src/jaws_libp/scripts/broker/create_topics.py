@@ -9,12 +9,14 @@ import pkgutil
 
 from confluent_kafka.admin import AdminClient, NewTopic
 
+from ...scripts import DEFAULT_BOOTSTRAP_SERVERS
+
 
 def create_topics() -> None:
     """
         Create JAWS Kafka topics
     """
-    bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', 'localhost:9092')
+    bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', DEFAULT_BOOTSTRAP_SERVERS)
 
     admin_client = AdminClient({'bootstrap.servers': bootstrap_servers})
 

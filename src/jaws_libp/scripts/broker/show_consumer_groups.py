@@ -8,12 +8,14 @@ import os
 
 from confluent_kafka.admin import AdminClient
 
+from ...scripts import DEFAULT_BOOTSTRAP_SERVERS
+
 
 def show_consumer_groups() -> None:
     """
         Show Kafka consumer groups
     """
-    bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', 'localhost:9092')
+    bootstrap_servers = os.environ.get('BOOTSTRAP_SERVERS', DEFAULT_BOOTSTRAP_SERVERS)
 
     admin_client = AdminClient({'bootstrap.servers': bootstrap_servers})
 
