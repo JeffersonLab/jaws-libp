@@ -35,8 +35,6 @@ docker exec jaws-libp set_activation alarm1
 
 **See**: [Docker Compose Strategy](https://gist.github.com/slominskir/a7da801e8259f5974c978f9c3091d52c)
 
-**See**: More [Usage Examples](https://github.com/JeffersonLab/jaws/wiki/Usage-Examples)
-
 ## Install
 Requires [Python 3.9+](https://www.python.org/)
 
