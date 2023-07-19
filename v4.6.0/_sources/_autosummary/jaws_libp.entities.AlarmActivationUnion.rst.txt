@@ -1,0 +1,31 @@
+jaws\_libp.entities.AlarmActivationUnion
+========================================
+
+.. currentmodule:: jaws_libp.entities
+
+.. autoclass:: AlarmActivationUnion
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AlarmActivationUnion.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AlarmActivationUnion.union
+   
+   

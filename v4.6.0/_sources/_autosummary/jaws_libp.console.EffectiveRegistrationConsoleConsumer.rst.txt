@@ -1,0 +1,28 @@
+jaws\_libp.console.EffectiveRegistrationConsoleConsumer
+=======================================================
+
+.. currentmodule:: jaws_libp.console
+
+.. autoclass:: EffectiveRegistrationConsoleConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EffectiveRegistrationConsoleConsumer.__init__
+      ~EffectiveRegistrationConsoleConsumer.consume_then_done
+      ~EffectiveRegistrationConsoleConsumer.get_keys_then_done
+      ~EffectiveRegistrationConsoleConsumer.print_table
+   
+   
+
+   
+   
+   

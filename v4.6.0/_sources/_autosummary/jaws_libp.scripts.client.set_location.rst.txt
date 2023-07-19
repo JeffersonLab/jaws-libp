@@ -1,0 +1,34 @@
+jaws\_libp.scripts.client.set\_location
+=======================================
+
+.. automodule:: jaws_libp.scripts.client.set_location
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   .. click:: jaws_libp.scripts.client.set_location:set_location
+      :prog: set_location
+      :nested: full
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

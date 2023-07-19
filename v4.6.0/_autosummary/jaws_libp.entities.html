@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jaws_libp.entities &mdash; jaws-libp  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jaws_libp.entities.Activation" href="jaws_libp.entities.Activation.html" />
+    <link rel="prev" title="jaws_libp.console.OverrideConsoleConsumer" href="jaws_libp.console.OverrideConsoleConsumer.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            jaws-libp
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jaws_libp.html">jaws_libp</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.avro.html">jaws_libp.avro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.clients.html">jaws_libp.clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.console.html">jaws_libp.console</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">jaws_libp.entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.Activation.html">jaws_libp.entities.Activation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmActivationUnion.html">jaws_libp.entities.AlarmActivationUnion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmClass.html">jaws_libp.entities.AlarmClass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmInstance.html">jaws_libp.entities.AlarmInstance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmLocation.html">jaws_libp.entities.AlarmLocation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmOverrideKey.html">jaws_libp.entities.AlarmOverrideKey</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmOverrideSet.html">jaws_libp.entities.AlarmOverrideSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmOverrideUnion.html">jaws_libp.entities.AlarmOverrideUnion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmPriority.html">jaws_libp.entities.AlarmPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmState.html">jaws_libp.entities.AlarmState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.CALCSource.html">jaws_libp.entities.CALCSource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ChannelErrorActivation.html">jaws_libp.entities.ChannelErrorActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.DisabledOverride.html">jaws_libp.entities.DisabledOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSActivation.html">jaws_libp.entities.EPICSActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSSEVR.html">jaws_libp.entities.EPICSSEVR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSSTAT.html">jaws_libp.entities.EPICSSTAT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSSource.html">jaws_libp.entities.EPICSSource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EffectiveAlarm.html">jaws_libp.entities.EffectiveAlarm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EffectiveNotification.html">jaws_libp.entities.EffectiveNotification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EffectiveRegistration.html">jaws_libp.entities.EffectiveRegistration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.FilteredOverride.html">jaws_libp.entities.FilteredOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.IntermediateMonolog.html">jaws_libp.entities.IntermediateMonolog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.LatchedOverride.html">jaws_libp.entities.LatchedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.MaskedOverride.html">jaws_libp.entities.MaskedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.NoActivation.html">jaws_libp.entities.NoActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.NoteActivation.html">jaws_libp.entities.NoteActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.OffDelayedOverride.html">jaws_libp.entities.OffDelayedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.OnDelayedOverride.html">jaws_libp.entities.OnDelayedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.OverriddenAlarmType.html">jaws_libp.entities.OverriddenAlarmType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ProcessorTransitions.html">jaws_libp.entities.ProcessorTransitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ShelvedOverride.html">jaws_libp.entities.ShelvedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ShelvedReason.html">jaws_libp.entities.ShelvedReason</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.Source.html">jaws_libp.entities.Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.UnionEncoding.html">jaws_libp.entities.UnionEncoding</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.eventsource.html">jaws_libp.eventsource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.scripts.html">jaws_libp.scripts</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jaws-libp</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="jaws_libp.html">jaws_libp</a></li>
+      <li class="breadcrumb-item active">jaws_libp.entities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/jaws_libp.entities.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-jaws_libp.entities">
+<span id="jaws-libp-entities"></span><h1>jaws_libp.entities<a class="headerlink" href="#module-jaws_libp.entities" title="Permalink to this heading"></a></h1>
+<p>Entities corresponding to Kafka messages defined with AVRO schemas for JAWS.</p>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.Activation.html#jaws_libp.entities.Activation" title="jaws_libp.entities.Activation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Activation</span></code></a>()</p></td>
+<td><p>Alarming state for a simple alarm, if record is present then alarming, but there are no additional fields.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.AlarmActivationUnion.html#jaws_libp.entities.AlarmActivationUnion" title="jaws_libp.entities.AlarmActivationUnion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmActivationUnion</span></code></a>(union)</p></td>
+<td><p>Alarm Activation (annunciation, alarming).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.AlarmClass.html#jaws_libp.entities.AlarmClass" title="jaws_libp.entities.AlarmClass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmClass</span></code></a>(category, priority, rationale, ...)</p></td>
+<td><p>Alarm Class</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.AlarmInstance.html#jaws_libp.entities.AlarmInstance" title="jaws_libp.entities.AlarmInstance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmInstance</span></code></a>(alarm_class, source, location, ...)</p></td>
+<td><p>Alarm Instance (of an AlarmClass).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.AlarmLocation.html#jaws_libp.entities.AlarmLocation" title="jaws_libp.entities.AlarmLocation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmLocation</span></code></a>(parent)</p></td>
+<td><p>Alarm Location record</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.AlarmOverrideKey.html#jaws_libp.entities.AlarmOverrideKey" title="jaws_libp.entities.AlarmOverrideKey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmOverrideKey</span></code></a>(name, type)</p></td>
+<td><p>alarm-overrides-key subject</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.AlarmOverrideSet.html#jaws_libp.entities.AlarmOverrideSet" title="jaws_libp.entities.AlarmOverrideSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmOverrideSet</span></code></a>(disabled, filtered, ...)</p></td>
+<td><p>Set of all overrides for an alarm</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.AlarmOverrideUnion.html#jaws_libp.entities.AlarmOverrideUnion" title="jaws_libp.entities.AlarmOverrideUnion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmOverrideUnion</span></code></a>(union)</p></td>
+<td><p>Alarm Override (a single override modeled as a union of possible types, like an enum)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.AlarmPriority.html#jaws_libp.entities.AlarmPriority" title="jaws_libp.entities.AlarmPriority"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmPriority</span></code></a>(value)</p></td>
+<td><p>Alarm Priority</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.AlarmState.html#jaws_libp.entities.AlarmState" title="jaws_libp.entities.AlarmState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlarmState</span></code></a>(value)</p></td>
+<td><p>Alarm State</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.CALCSource.html#jaws_libp.entities.CALCSource" title="jaws_libp.entities.CALCSource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CALCSource</span></code></a>(expression)</p></td>
+<td><p>CALC Expression Alarm Generator source registration information.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.ChannelErrorActivation.html#jaws_libp.entities.ChannelErrorActivation" title="jaws_libp.entities.ChannelErrorActivation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChannelErrorActivation</span></code></a>(error)</p></td>
+<td><p>A channel error between JAWS and an alarm activation source.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.DisabledOverride.html#jaws_libp.entities.DisabledOverride" title="jaws_libp.entities.DisabledOverride"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DisabledOverride</span></code></a>(comments)</p></td>
+<td><p>Disabled override - Suppresses an alarm that is out-of-service (usually for maintenance)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.EPICSActivation.html#jaws_libp.entities.EPICSActivation" title="jaws_libp.entities.EPICSActivation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EPICSActivation</span></code></a>(sevr, stat)</p></td>
+<td><p>EPICS alarming state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.EPICSSEVR.html#jaws_libp.entities.EPICSSEVR" title="jaws_libp.entities.EPICSSEVR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EPICSSEVR</span></code></a>(value)</p></td>
+<td><p>EPICS Alarm Severity</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.EPICSSTAT.html#jaws_libp.entities.EPICSSTAT" title="jaws_libp.entities.EPICSSTAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EPICSSTAT</span></code></a>(value)</p></td>
+<td><p>EPICS Alarm Status</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.EPICSSource.html#jaws_libp.entities.EPICSSource" title="jaws_libp.entities.EPICSSource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EPICSSource</span></code></a>(pv)</p></td>
+<td><p>EPICS source registration information.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.EffectiveAlarm.html#jaws_libp.entities.EffectiveAlarm" title="jaws_libp.entities.EffectiveAlarm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffectiveAlarm</span></code></a>(registration, notification)</p></td>
+<td><p>Effective Alarm (effective registration + effective activation)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.EffectiveNotification.html#jaws_libp.entities.EffectiveNotification" title="jaws_libp.entities.EffectiveNotification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffectiveNotification</span></code></a>(activation, overrides, ...)</p></td>
+<td><p>Effective Notification (activation + overrides + state)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.EffectiveRegistration.html#jaws_libp.entities.EffectiveRegistration" title="jaws_libp.entities.EffectiveRegistration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffectiveRegistration</span></code></a>(alarm_class, instance)</p></td>
+<td><p>Effective Registration (class + instance)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.FilteredOverride.html#jaws_libp.entities.FilteredOverride" title="jaws_libp.entities.FilteredOverride"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FilteredOverride</span></code></a>(filtername)</p></td>
+<td><p>Filtered override - Suppresses an alarm via filter rule</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.IntermediateMonolog.html#jaws_libp.entities.IntermediateMonolog" title="jaws_libp.entities.IntermediateMonolog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntermediateMonolog</span></code></a>(registration, ...)</p></td>
+<td><p>IntermediateMonolog - used internally by the jaws-effective-processor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.LatchedOverride.html#jaws_libp.entities.LatchedOverride" title="jaws_libp.entities.LatchedOverride"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LatchedOverride</span></code></a>()</p></td>
+<td><p>Latched override - Incites an alarm until an operator acknowledgement</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.MaskedOverride.html#jaws_libp.entities.MaskedOverride" title="jaws_libp.entities.MaskedOverride"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MaskedOverride</span></code></a>()</p></td>
+<td><p>Masked override - Suppresses an alarm when a parent alarm is active (establishes a hierarchy and minimizes alarm flooding)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.NoActivation.html#jaws_libp.entities.NoActivation" title="jaws_libp.entities.NoActivation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoActivation</span></code></a>()</p></td>
+<td><p>An explicit no activation record can be aggressively compacted in Kafka (unlike a tombstone).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.NoteActivation.html#jaws_libp.entities.NoteActivation" title="jaws_libp.entities.NoteActivation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoteActivation</span></code></a>(note)</p></td>
+<td><p>Alarming state for an alarm with an extra information string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.OffDelayedOverride.html#jaws_libp.entities.OffDelayedOverride" title="jaws_libp.entities.OffDelayedOverride"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OffDelayedOverride</span></code></a>(expiration)</p></td>
+<td><p>Off-Delay override - Incites an alarm for a short duration upon deactivation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.OnDelayedOverride.html#jaws_libp.entities.OnDelayedOverride" title="jaws_libp.entities.OnDelayedOverride"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OnDelayedOverride</span></code></a>(expiration)</p></td>
+<td><p>On-Delay override - Suppresses an alarm for a short duration upon activation</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.OverriddenAlarmType.html#jaws_libp.entities.OverriddenAlarmType" title="jaws_libp.entities.OverriddenAlarmType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OverriddenAlarmType</span></code></a>(value)</p></td>
+<td><p>Override Type</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.ProcessorTransitions.html#jaws_libp.entities.ProcessorTransitions" title="jaws_libp.entities.ProcessorTransitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProcessorTransitions</span></code></a>(transition_to_active, ...)</p></td>
+<td><p>Set of transition states as alarm data is joined and processed</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.ShelvedOverride.html#jaws_libp.entities.ShelvedOverride" title="jaws_libp.entities.ShelvedOverride"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShelvedOverride</span></code></a>(expiration, comments, ...)</p></td>
+<td><p>Shelved override - a temporary override (expires)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.ShelvedReason.html#jaws_libp.entities.ShelvedReason" title="jaws_libp.entities.ShelvedReason"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShelvedReason</span></code></a>(value)</p></td>
+<td><p>Shelve Reason</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.entities.Source.html#jaws_libp.entities.Source" title="jaws_libp.entities.Source"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Source</span></code></a>()</p></td>
+<td><p>Base alarm source with no registered alarm-specific information.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.entities.UnionEncoding.html#jaws_libp.entities.UnionEncoding" title="jaws_libp.entities.UnionEncoding"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnionEncoding</span></code></a>(value)</p></td>
+<td><p>Enum of possible ways to encode an AVRO union instance in Python.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="jaws_libp.console.OverrideConsoleConsumer.html" class="btn btn-neutral float-left" title="jaws_libp.console.OverrideConsoleConsumer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="jaws_libp.entities.Activation.html" class="btn btn-neutral float-right" title="jaws_libp.entities.Activation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Jefferson Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
