@@ -17,13 +17,13 @@ done
 echo "------------------------"
 echo "Step 2: Creating Topics "
 echo "------------------------"
-/scripts/broker/create_topics.py
+create_topics
 
 
 echo "---------------------------------------"
 echo "Step 3: Adding Schemas to the registry "
 echo "---------------------------------------"
-/scripts/registry/create_schemas.py
+create_schemas
 
 
 echo "-------------------------"
