@@ -83,5 +83,4 @@ env = [
 where = ["src"]
 
 [tool.setuptools.package-data]
-"*" = ["*.avsc"]
-jaws_libp = ["*.json"]
+"*" = ["*.avsc","*.json"]
