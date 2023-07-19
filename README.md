@@ -16,7 +16,7 @@ Requires [Python 3.9+](https://www.python.org/)
 pip install jaws-libp
 ```
 
-**Note**: Using newer versions of Python may be problematic because the dependency `confluent-kafka` uses librdkafka, which often does not have a wheel file prepared for later versions of Python, meaning setuptools will attempt to compile it for you, and that often doesn't work (especially on Windows).   Python 3.9 DOES have a wheel file for confluent-kafka so that's your safest bet. 
+**Note**: Using newer versions of Python may be problematic because the dependency `confluent-kafka` uses librdkafka, which often does not have a wheel file prepared for later versions of Python, meaning setuptools will attempt to compile it for you, and that often doesn't work (especially on Windows).   Python 3.9 does have a wheel file for confluent-kafka so that's your safest bet.  Wheel files also generally only are prepared for Windows, MacOS, and Linux.  Plus only for architectures x86_64 and arm64, also only for glibc.  If you use with musl libc or linux-aarch64 then you'll likely have to compile librdkafka yourself from source.
 
 ## API
 [Sphinx Docs](https://jeffersonlab.github.io/jaws-libp/)
