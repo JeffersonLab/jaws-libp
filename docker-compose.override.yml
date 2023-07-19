@@ -1,0 +1,3 @@
+services:
+  jaws-libp:
+    image: jeffersonlab/jaws-libp:4.6.0
