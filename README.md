@@ -63,7 +63,7 @@ python -m build
 ## Develop
 Set up the build environment following the [Build](https://github.com/JeffersonLab/jaws-libp#build) instructions.
 
-In order to iterate rapidly when making changes it's often useful to run the Python scripts directly on the local workstation, perhaps leveraging an IDE.  In this scenario run the service dependencies with:
+In order to iterate rapidly when making changes it's often useful to run the Python scripts directly on the local workstation, perhaps leveraging an IDE.  In this scenario run the service dependencies with Docker Compose:
 ```
 docker compose -f deps.yml up
 ```
