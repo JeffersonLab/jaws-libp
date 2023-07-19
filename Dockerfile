@@ -62,7 +62,7 @@ RUN if [ -z "${CUSTOM_CRT_URL}" ] ; then echo "No custom cert needed"; else \
     && apk add --no-cache $RUN_DEPS \
     && usermod -d /tmp guest
 COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
-COPY --from=builder /usr/lib/librdkafka.so /usr/lib
+COPY --from=builder /usr/lib/librdkafka.so.1 /usr/lib
 ENV TZ=UTC
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 ENV PS1="\W \$ "
