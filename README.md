@@ -36,7 +36,7 @@ python -m build
 
 ## Release
 1. Bump the version number in pyproject.toml and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).   
-1. Create a new release on the GitHub [Releases](https://github.com/JeffersonLab/jaws-libp/releases) page corresponding to same version in setup.cfg (Enumerate changes and link issues)
+1. Create a new release on the GitHub [Releases](https://github.com/JeffersonLab/jaws-libp/releases) page corresponding to same version in pyproject.toml (Enumerate changes and link issues)
 1. [Publish to PyPi](https://github.com/JeffersonLab/jaws-libp/actions/workflows/pypi-publish.yml) GitHub Action should run automatically.  Else:
     1. Clean build by removing `build`, `dist`, and `docsrc/source/_autosummary` directories
     1. Activate [virtual env](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1#activate-dev-virtual-environment)
