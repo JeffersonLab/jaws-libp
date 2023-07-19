@@ -1,0 +1,36 @@
+jaws\_libp.scripts.registry.delete\_schemas
+===========================================
+
+.. automodule:: jaws_libp.scripts.registry.delete_schemas
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   ********************
+   delete_schemas
+   ********************
+   .. parsed-literal::
+      delete_schemas
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

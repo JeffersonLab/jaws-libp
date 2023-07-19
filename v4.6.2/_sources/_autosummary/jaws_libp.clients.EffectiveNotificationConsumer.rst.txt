@@ -1,0 +1,33 @@
+jaws\_libp.clients.EffectiveNotificationConsumer
+================================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: EffectiveNotificationConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EffectiveNotificationConsumer.__init__
+      ~EffectiveNotificationConsumer.add_listener
+      ~EffectiveNotificationConsumer.await_highwater
+      ~EffectiveNotificationConsumer.await_highwater_get
+      ~EffectiveNotificationConsumer.export_records
+      ~EffectiveNotificationConsumer.highwater_reached
+      ~EffectiveNotificationConsumer.remove_listener
+      ~EffectiveNotificationConsumer.start
+      ~EffectiveNotificationConsumer.stop
+   
+   
+
+   
+   
+   

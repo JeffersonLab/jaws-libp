@@ -1,0 +1,26 @@
+jaws\_libp.scripts.client.list\_instances.ClassFilter
+=====================================================
+
+.. currentmodule:: jaws_libp.scripts.client.list_instances
+
+.. autoclass:: ClassFilter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClassFilter.__init__
+      ~ClassFilter.filter_if
+   
+   
+
+   
+   
+   
