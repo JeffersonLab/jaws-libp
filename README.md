@@ -2,6 +2,7 @@
 Reusable Python Classes for [JAWS](https://github.com/JeffersonLab/jaws).
 
 ---
+- [Quick Start with Compose](https://github.com/JeffersonLab/jaws-libp#quick-start-with-compose)
 - [Install](https://github.com/JeffersonLab/jaws-libp#install) 
 - [API](https://github.com/JeffersonLab/jaws-libp#api)
 - [Configure](https://github.com/JeffersonLab/jaws-libp#configure) 
@@ -11,6 +12,30 @@ Reusable Python Classes for [JAWS](https://github.com/JeffersonLab/jaws).
 - [Release](https://github.com/JeffersonLab/jaws-libp#release) 
 - [See Also](https://github.com/JeffersonLab/jaws-libp#see-also)
 ---
+
+## Quick Start with Compose
+1. Grab project
+```
+git clone https://github.com/JeffersonLab/jaws-libp
+cd jaws-libp
+```
+2. Launch [Compose](https://github.com/docker/compose)
+```
+docker compose up
+```
+3. Monitor active alarms
+```
+docker exec -it jaws-libp list_activations --monitor
+```
+4. Trip an alarm
+```
+docker exec jaws-libp set_activation alarm1
+```
+**Note**: The docker-compose services require significant system resources - tested with 4 CPUs and 4GB memory.
+
+**See**: [Docker Compose Strategy](https://gist.github.com/slominskir/a7da801e8259f5974c978f9c3091d52c)
+
+**See**: More [Usage Examples](https://github.com/JeffersonLab/jaws/wiki/Usage-Examples)
 
 ## Install
 Requires [Python 3.9+](https://www.python.org/)
