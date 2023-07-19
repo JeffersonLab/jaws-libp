@@ -1,0 +1,36 @@
+jaws\_libp.scripts.registry
+===========================
+
+.. automodule:: jaws_libp.scripts.registry
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+
+   jaws_libp.scripts.registry.create_schemas
+   jaws_libp.scripts.registry.delete_schemas
+   jaws_libp.scripts.registry.describe_schemas
+   jaws_libp.scripts.registry.describe_version
+   jaws_libp.scripts.registry.list_schemas
+

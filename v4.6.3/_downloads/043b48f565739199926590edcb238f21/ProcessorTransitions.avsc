@@ -1,0 +1,56 @@
+{
+    "type": "record",
+    "name": "ProcessorTransitions",
+    "namespace": "org.jlab.jaws.entity",
+    "doc": "Set of alarm transitions",
+    "fields": [
+        {
+            "name": "transitionToActive",
+            "type": "boolean",
+            "doc": "true when record is first one to indicate Active after being Normal",
+            "default": false
+        },
+        {
+            "name": "transitionToNormal",
+            "type": "boolean",
+            "doc": "true when record is first one to indicate Normal after being Active",
+            "default": false
+        },
+        {
+            "name": "latching",
+            "type": "boolean",
+            "doc": "true when record is in-process of latching, LatchOverride forthcoming",
+            "default": false
+        },
+        {
+            "name": "unshelving",
+            "type": "boolean",
+            "doc": "true when record is in-process of being unshelved after one-shot, ShelvedOverride clearing",
+            "default": false
+        },
+        {
+            "name": "masking",
+            "type": "boolean",
+            "doc": "true when record is in-process of being masked, MaskedOverride forthcoming",
+            "default": false
+        },
+        {
+            "name": "unmasking",
+            "type": "boolean",
+            "doc": "true when record is in-process of being unmasked, MaskedOverride clearing",
+            "default": false
+        },
+        {
+            "name": "ondelaying",
+            "type": "boolean",
+            "doc": "true when record is in-process of being on-delayed, OnDelayedOverride forthcoming",
+            "default": false
+        },
+        {
+            "name": "offdelaying",
+            "type": "boolean",
+            "doc": "true when record is in-process of being off-delayed, OffDelayedOverride forthcoming",
+            "default": false
+        }
+    ]
+}

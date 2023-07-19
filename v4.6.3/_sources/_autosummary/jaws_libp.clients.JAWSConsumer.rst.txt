@@ -1,0 +1,33 @@
+jaws\_libp.clients.JAWSConsumer
+===============================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: JAWSConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~JAWSConsumer.__init__
+      ~JAWSConsumer.add_listener
+      ~JAWSConsumer.await_highwater
+      ~JAWSConsumer.await_highwater_get
+      ~JAWSConsumer.export_records
+      ~JAWSConsumer.highwater_reached
+      ~JAWSConsumer.remove_listener
+      ~JAWSConsumer.start
+      ~JAWSConsumer.stop
+   
+   
+
+   
+   
+   
