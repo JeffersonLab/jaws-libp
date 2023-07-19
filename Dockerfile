@@ -38,7 +38,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY . /app
 RUN cd /app \
     && python -m venv $VIRTUAL_ENV \
-    && pip install -e .[dev]
+    && pip install .
 
 ################## Stage 1
 FROM ${RUN_IMAGE} as runner
