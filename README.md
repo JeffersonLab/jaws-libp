@@ -82,6 +82,8 @@ pytest
 1. Create a new release on the GitHub [Releases](https://github.com/JeffersonLab/jaws-libp/releases) page corresponding to same version in pyproject.toml (Enumerate changes and link issues).
 1. [Publish to PyPi](https://github.com/JeffersonLab/jaws-libp/actions/workflows/pypi-publish.yml) GitHub Action should run automatically.
 1. [Publish to gh-pages](https://github.com/JeffersonLab/jaws-libp/actions/workflows/gh-pages-publish.yml) GitHub Action should run automatically.
+1. [Publish to DockerHub](https://github.com/JeffersonLab/jaws-libp/actions/workflows/docker-publish.yml) GitHub Action should run automatically.
+1. Bump and commit quick start [image version](https://github.com/JeffersonLab/jaws-libp/blob/main/docker-compose.override.yml) after confirming new image works
 
 ## See Also
  - [jaws-libj (Java)](https://github.com/JeffersonLab/jaws-libj)
