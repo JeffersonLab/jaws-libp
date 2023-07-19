@@ -1,0 +1,33 @@
+jaws\_libp.avro
+===============
+
+.. automodule:: jaws_libp.avro
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+
+   jaws_libp.avro.schemas
+   jaws_libp.avro.serde
+

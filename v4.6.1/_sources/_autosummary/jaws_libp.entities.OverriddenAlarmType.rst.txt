@@ -1,0 +1,31 @@
+jaws\_libp.entities.OverriddenAlarmType
+=======================================
+
+.. currentmodule:: jaws_libp.entities
+
+.. autoclass:: OverriddenAlarmType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OverriddenAlarmType.Disabled
+      ~OverriddenAlarmType.Filtered
+      ~OverriddenAlarmType.Masked
+      ~OverriddenAlarmType.OnDelayed
+      ~OverriddenAlarmType.OffDelayed
+      ~OverriddenAlarmType.Shelved
+      ~OverriddenAlarmType.Latched
+   
+   
