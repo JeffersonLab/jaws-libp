@@ -9,18 +9,18 @@ services:
       file: docker-compose.yml
       service: registry
 
-  jaws-libp:
+  jaws:
     extends:
       file: docker-compose.yml
-      service: jaws-libp
+      service: jaws
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      LOGLEVEL: "DEBUG"
-      ALARM_LOCATIONS: /data/locations
-      ALARM_CATEGORIES: /data/categories
-      ALARM_CLASSES: /data/classes
-      ALARM_INSTANCES: /data/instances
+      - LOGLEVEL=DEBUG
+      - ALARM_LOCATIONS=/data/locations
+      - ALARM_CATEGORIES=/data/categories
+      - ALARM_CLASSES=/data/classes
+      - ALARM_INSTANCES=/data/instances
     volumes:
       - ./docker/app/example-data:/data

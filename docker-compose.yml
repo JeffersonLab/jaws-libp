@@ -9,15 +9,15 @@ services:
       file: deps.yml
       service: registry
 
-  jaws-libp:
+  jaws:
     tty: true
     stdin_open: true
-    hostname: jaws-libp
-    container_name: jaws-libp
+    hostname: jaws
+    container_name: jaws
     depends_on:
       - kafka
       - registry
     environment:
-      TZ: "America/New_York"
-      BOOTSTRAP_SERVERS: "kafka:9092"
-      SCHEMA_REGISTRY: "http://registry:8081"
+      - TZ=America/New_York
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - SCHEMA_REGISTRY=http://registry:8081
