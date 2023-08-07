@@ -1,5 +1,5 @@
 # jaws-libp [![CI](https://github.com/JeffersonLab/jaws-libp/actions/workflows/ci.yml/badge.svg)](https://github.com/JeffersonLab/jaws-libp/actions/workflows/ci.yml) [![PyPI](https://img.shields.io/pypi/v/jaws-libp)](https://pypi.org/project/jaws-libp/) [![Docker](https://img.shields.io/docker/v/jeffersonlab/jaws-libp?sort=semver&label=DockerHub)](https://hub.docker.com/r/jeffersonlab/jaws-libp)
-Reusable Python Classes for [JAWS](https://github.com/JeffersonLab/jaws) plus admin scripts to setup and manage a deployment.
+Reusable Python classes for [JAWS](https://github.com/JeffersonLab/jaws) plus admin scripts to setup and manage a deployment.
 
 ---
 - [Quick Start with Compose](https://github.com/JeffersonLab/jaws-libp#quick-start-with-compose)
