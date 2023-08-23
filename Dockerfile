@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 ARG BUILD_IMAGE=python:3.11-alpine3.18
 ARG RUN_IMAGE=python:3.11-alpine3.18
 ARG VIRTUAL_ENV=/opt/venv
@@ -70,3 +71,4 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 ENV PS1="\W \$ "
 COPY --from=builder /app/docker/app/docker-entrypoint.sh /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
+HEALTHCHECK --interval=10s --timeout=10s --start-period=20s --start-interval=10s --retries=5 CMD test $(list_schemas | wc -l) -gt 20
