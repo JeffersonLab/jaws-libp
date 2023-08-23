@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jaws_libp.console &mdash; jaws-libp  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jaws_libp.console.ActivationConsoleConsumer" href="jaws_libp.console.ActivationConsoleConsumer.html" />
+    <link rel="prev" title="jaws_libp.clients.OverrideProducer" href="jaws_libp.clients.OverrideProducer.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            jaws-libp
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jaws_libp.html">jaws_libp</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.avro.html">jaws_libp.avro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.clients.html">jaws_libp.clients</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">jaws_libp.console</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.console.ActivationConsoleConsumer.html">jaws_libp.console.ActivationConsoleConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.console.CategoryConsoleConsumer.html">jaws_libp.console.CategoryConsoleConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.console.ClassConsoleConsumer.html">jaws_libp.console.ClassConsoleConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.console.ConsoleConsumer.html">jaws_libp.console.ConsoleConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.console.EffectiveAlarmConsoleConsumer.html">jaws_libp.console.EffectiveAlarmConsoleConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.console.EffectiveNotificationConsoleConsumer.html">jaws_libp.console.EffectiveNotificationConsoleConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.console.EffectiveRegistrationConsoleConsumer.html">jaws_libp.console.EffectiveRegistrationConsoleConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.console.InstanceConsoleConsumer.html">jaws_libp.console.InstanceConsoleConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.console.LocationConsoleConsumer.html">jaws_libp.console.LocationConsoleConsumer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.console.OverrideConsoleConsumer.html">jaws_libp.console.OverrideConsoleConsumer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.entities.html">jaws_libp.entities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.eventsource.html">jaws_libp.eventsource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.scripts.html">jaws_libp.scripts</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jaws-libp</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="jaws_libp.html">jaws_libp</a></li>
+      <li class="breadcrumb-item active">jaws_libp.console</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/jaws_libp.console.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="jaws-libp-console">
+<h1>jaws_libp.console<a class="headerlink" href="#jaws-libp-console" title="Link to this heading"></a></h1>
+<p id="module-jaws_libp.console">Console consumer clients.</p>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.console.ActivationConsoleConsumer.html#jaws_libp.console.ActivationConsoleConsumer" title="jaws_libp.console.ActivationConsoleConsumer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ActivationConsoleConsumer</span></code></a>(client_name)</p></td>
+<td><p>ConsoleConsumer for JAWS Activation messages.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.console.CategoryConsoleConsumer.html#jaws_libp.console.CategoryConsoleConsumer" title="jaws_libp.console.CategoryConsoleConsumer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CategoryConsoleConsumer</span></code></a>(client_name)</p></td>
+<td><p>ConsoleConsumer for JAWS Category messages.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.console.ClassConsoleConsumer.html#jaws_libp.console.ClassConsoleConsumer" title="jaws_libp.console.ClassConsoleConsumer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassConsoleConsumer</span></code></a>(client_name)</p></td>
+<td><p>ConsoleConsumer for JAWS Class messages.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.console.ConsoleConsumer.html#jaws_libp.console.ConsoleConsumer" title="jaws_libp.console.ConsoleConsumer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConsoleConsumer</span></code></a>(consumer, headers, torow)</p></td>
+<td><p>This class wraps a JAWSConsumer and provides utilities to output messages to the console.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.console.EffectiveAlarmConsoleConsumer.html#jaws_libp.console.EffectiveAlarmConsoleConsumer" title="jaws_libp.console.EffectiveAlarmConsoleConsumer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffectiveAlarmConsoleConsumer</span></code></a>(client_name)</p></td>
+<td><p>ConsoleConsumer for JAWS alarm messages.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.console.EffectiveNotificationConsoleConsumer.html#jaws_libp.console.EffectiveNotificationConsoleConsumer" title="jaws_libp.console.EffectiveNotificationConsoleConsumer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffectiveNotificationConsoleConsumer</span></code></a>(client_name)</p></td>
+<td><p>ConsoleConsumer for JAWS notification messages.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.console.EffectiveRegistrationConsoleConsumer.html#jaws_libp.console.EffectiveRegistrationConsoleConsumer" title="jaws_libp.console.EffectiveRegistrationConsoleConsumer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EffectiveRegistrationConsoleConsumer</span></code></a>(client_name)</p></td>
+<td><p>ConsoleConsumer for JAWS registration messages.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.console.InstanceConsoleConsumer.html#jaws_libp.console.InstanceConsoleConsumer" title="jaws_libp.console.InstanceConsoleConsumer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InstanceConsoleConsumer</span></code></a>(client_name)</p></td>
+<td><p>ConsoleConsumer for JAWS AlarmInstance messages.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.console.LocationConsoleConsumer.html#jaws_libp.console.LocationConsoleConsumer" title="jaws_libp.console.LocationConsoleConsumer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocationConsoleConsumer</span></code></a>(client_name)</p></td>
+<td><p>ConsoleConsumer for JAWS AlarmLocation messages.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.console.OverrideConsoleConsumer.html#jaws_libp.console.OverrideConsoleConsumer" title="jaws_libp.console.OverrideConsoleConsumer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OverrideConsoleConsumer</span></code></a>(client_name)</p></td>
+<td><p>ConsoleConsumer for JAWS AlarmOverride messages.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="jaws_libp.clients.OverrideProducer.html" class="btn btn-neutral float-left" title="jaws_libp.clients.OverrideProducer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="jaws_libp.console.ActivationConsoleConsumer.html" class="btn btn-neutral float-right" title="jaws_libp.console.ActivationConsoleConsumer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Jefferson Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
