@@ -71,4 +71,4 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 ENV PS1="\W \$ "
 COPY --from=builder /app/docker/app/docker-entrypoint.sh /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
-HEALTHCHECK --interval=10s --timeout=10s --start-period=20s --start-interval=10s --retries=5 CMD test $(list_schemas | wc -l) -gt 20
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --start-interval=5s --retries=5 CMD test $(list_schemas | wc -l) -gt 20
