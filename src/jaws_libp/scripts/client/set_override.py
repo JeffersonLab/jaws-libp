@@ -15,9 +15,12 @@ from ...entities import AlarmOverrideUnion, LatchedOverride, FilteredOverride, M
 
 # pylint: disable=missing-function-docstring,too-many-arguments,no-value-for-parameter,too-many-branches
 @click.command()
+@click.option('--file', is_flag=True,
+              help="Imports a file of key=value pairs (one per line) where the key is override name and value is JSON "
+                   "encoded AVRO formatted per the AlarmOverrideUnion schema")
+@click.option('--unset', is_flag=True, help="Remove the override")
 @click.option('--override', type=click.Choice(list(map(lambda c: c.name, OverriddenAlarmType))),
               help="The type of override")
-@click.option('--unset', is_flag=True, help="Remove the override")
 @click.option('--expirationseconds', type=int, help="The number of seconds until the override status expires")
 @click.option('--expirationts', type=int, help="UNIX timestamp (millis since epoch 1970) when the override status "
                                                "expires, Overridden by --expirationseconds "
@@ -28,55 +31,58 @@ from ...entities import AlarmOverrideUnion, LatchedOverride, FilteredOverride, M
 @click.option('--comments', help="Operator explanation for why suppressed")
 @click.option('--filtername', help="Name of filter rule associated with this override")
 @click.argument('name')
-def set_override(override, unset, expirationseconds, expirationts, reason, oneshot, comments, filtername, name) -> None:
+def set_override(file, unset, override, expirationseconds, expirationts, reason, oneshot, comments, filtername, name) -> None:
     producer = OverrideProducer('set_override.py')
 
-    if override is None:
-        raise click.ClickException("--override is required")
-
-    key = AlarmOverrideKey(name, OverriddenAlarmType[override])
-
-    if expirationseconds is not None:
-        timestamp_seconds = time.time() + expirationseconds
-        expirationts = int(timestamp_seconds * 1000)
-
-    if unset:
-        value = None
+    if file:
+        producer.import_records(name)
     else:
-        if override == "Shelved":
-            if reason is None:
-                raise click.ClickException("--reason is required")
+        if override is None:
+            raise click.ClickException("--override is required")
 
-            if expirationts is None:
-                raise click.ClickException("--expirationseconds is required")
+        key = AlarmOverrideKey(name, OverriddenAlarmType[override])
 
-            msg = ShelvedOverride(expirationts, comments, ShelvedReason[reason], oneshot)
+        if expirationseconds is not None:
+            timestamp_seconds = time.time() + expirationseconds
+            expirationts = int(timestamp_seconds * 1000)
 
-        elif override == "OnDelayed":
-            if expirationts is None:
-                raise click.ClickException("--expirationseconds is required")
+        if unset:
+            value = None
+        else:
+            if override == "Shelved":
+                if reason is None:
+                    raise click.ClickException("--reason is required")
 
-            msg = OnDelayedOverride(expirationts)
-        elif override == "OffDelayed":
-            if expirationts is None:
-                raise click.ClickException("--expirationseconds is required")
+                if expirationts is None:
+                    raise click.ClickException("--expirationseconds is required")
 
-            msg = OffDelayedOverride(expirationts)
-        elif override == "Disabled":
-            msg = DisabledOverride(comments)
-        elif override == "Filtered":
-            if filtername is None:
-                raise click.ClickException("--filtername is required")
+                msg = ShelvedOverride(expirationts, comments, ShelvedReason[reason], oneshot)
 
-            msg = FilteredOverride(filtername)
-        elif override == "Masked":
-            msg = MaskedOverride()
-        else:  # assume Latched
-            msg = LatchedOverride()
+            elif override == "OnDelayed":
+                if expirationts is None:
+                    raise click.ClickException("--expirationseconds is required")
 
-        value = AlarmOverrideUnion(msg)
+                msg = OnDelayedOverride(expirationts)
+            elif override == "OffDelayed":
+                if expirationts is None:
+                    raise click.ClickException("--expirationseconds is required")
 
-    producer.send(key, value)
+                msg = OffDelayedOverride(expirationts)
+            elif override == "Disabled":
+                msg = DisabledOverride(comments)
+            elif override == "Filtered":
+                if filtername is None:
+                    raise click.ClickException("--filtername is required")
+
+                msg = FilteredOverride(filtername)
+            elif override == "Masked":
+                msg = MaskedOverride()
+            else:  # assume Latched
+                msg = LatchedOverride()
+
+            value = AlarmOverrideUnion(msg)
+
+        producer.send(key, value)
 
 
 def click_main() -> None:
