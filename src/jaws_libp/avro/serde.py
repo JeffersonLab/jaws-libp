@@ -1057,7 +1057,7 @@ class OverrideSerde(RegistryAvroWithReferencesSerde):
             obj = ShelvedOverride(uniondict['expiration'], uniondict['comments'],
                                   _unwrap_enum(uniondict['reason'], ShelvedReason), uniondict['oneshot'])
         else:
-            print(f"Unknown alarming type: {data['union']}")
+            print(f"Unknown type: {data['union']}")
             obj = None
 
         return AlarmOverrideUnion(obj)
