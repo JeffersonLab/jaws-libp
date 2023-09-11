@@ -152,8 +152,22 @@ if [[ -z "${ALARM_INSTANCES}" ]]; then
   echo "No alarm definitions specified"
 elif beginswith 'https://' "${ALARM_INSTANCES}"; then
   echo "HTTPS URL specified: $ALARM_INSTANCES"
-  wget -O /tmp/instances "$ALARM_INSTANCES"
-  set_instance --file /tmp/instances
+
+  if [[ -n "${ALARM_INSTANCES_URL_CSV}" ]]; then
+    echo "Using URL_CSV: $ALARM_INSTANCES_URL_CSV"
+    IFS=','
+    read -a definitions <<< "$ALARM_INSTANCES_URL_CSV"
+    for defStr in "${definitions[@]}";
+      do
+        echo "Loading URL: ${ALARM_INSTANCES}/${defStr}"
+        wget -O /tmp/instances "${ALARM_INSTANCES}/${defStr}"
+        set_instance --file /tmp/instances
+      done
+  else
+    echo "Grabbing single URL"
+    wget -O /tmp/instances "$ALARM_INSTANCES"
+    set_instance --file /tmp/instances
+  fi
 elif [[ -f "$ALARM_INSTANCES" ]]; then
   echo "Attempting to setup alarm definitions from file $ALARM_INSTANCES"
   set_instance --file "$ALARM_INSTANCES"
