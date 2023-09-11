@@ -516,7 +516,7 @@ class OverrideConsumer(JAWSConsumer):
         """
         schema_registry_client = get_registry_client()
         key_serde = OverrideKeySerde(schema_registry_client)
-        value_serde = OverrideSerde(schema_registry_client)
+        value_serde = OverrideSerde(schema_registry_client, UnionEncoding.DICT_WITH_TYPE)
 
         config = {
             'topic': 'alarm-overrides',
