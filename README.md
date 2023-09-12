@@ -77,6 +77,14 @@ python -m venv .venv_dev --upgrade-deps
 
 Activate the virtual env using your [shell specific command](https://gist.github.com/slominskir/e7ed71317ea24fc19b97a0ec006ff4f1#activate-dev-virtual-environment), then install in editable mode with dev deps and run build:
 ```
+# Windows
+.venv_dev\Scripts\activate.bat
+# Linux (SH Shell)
+source .venv_dev/bin/activate
+#MacOS (CSH Shell)
+source .venv_dev/bin/activate.csh
+
+
 pip install -e .[dev]
 python -m build
 ```
