@@ -15,15 +15,15 @@ class TypeFilter:
     """
         Filter override type messages
     """
-    def __init__(self, type):
-        self._type = type
+    def __init__(self, override_type):
+        self._override_type = override_type
 
     # pylint: disable=unused-argument
     def filter_if(self, key, value):
         """
             Filter out messages unless the override type matches the provided type
         """
-        return self._type is None or (value is not None and self._type == key.type.name)
+        return self._override_type is None or (value is not None and self._override_type == key.type.name)
 
 
 # pylint: disable=missing-function-docstring,no-value-for-parameter

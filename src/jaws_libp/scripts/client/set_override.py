@@ -31,7 +31,8 @@ from ...entities import AlarmOverrideUnion, LatchedOverride, FilteredOverride, M
 @click.option('--comments', help="Operator explanation for why suppressed")
 @click.option('--filtername', help="Name of filter rule associated with this override")
 @click.argument('name')
-def set_override(file, unset, override, expirationseconds, expirationts, reason, oneshot, comments, filtername, name) -> None:
+def set_override(file, unset, override, expirationseconds, expirationts, reason, oneshot, comments,
+                 filtername, name) -> None:
     producer = OverrideProducer('set_override.py')
 
     if file:
