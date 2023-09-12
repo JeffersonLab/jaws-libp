@@ -4,7 +4,7 @@ from click.testing import CliRunner
 from jaws_libp.avro.serde import OverrideSerde, OverrideKeySerde
 from jaws_libp.entities import AlarmOverrideUnion, LatchedOverride, AlarmOverrideKey, OverriddenAlarmType, \
     MaskedOverride, DisabledOverride, FilteredOverride, ShelvedOverride, ShelvedReason, OnDelayedOverride, \
-    OffDelayedOverride
+    OffDelayedOverride, UnionEncoding
 from jaws_libp.scripts.client.list_overrides import list_overrides
 from jaws_libp.scripts.client.set_override import set_override
 
@@ -26,7 +26,7 @@ def test_latched_override():
         result = runner.invoke(list_overrides, ['--export'])
         assert result.exit_code == 0
 
-        override_serde = OverrideSerde(None)
+        override_serde = OverrideSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
         key_serde = OverrideKeySerde(None)
         assert result.output == key_serde.to_json(override_key) + '=' + override_serde.to_json(override) + '\n'
 
@@ -53,7 +53,7 @@ def test_masked_override():
         result = runner.invoke(list_overrides, ['--export'])
         assert result.exit_code == 0
 
-        override_serde = OverrideSerde(None)
+        override_serde = OverrideSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
         key_serde = OverrideKeySerde(None)
         assert result.output == key_serde.to_json(override_key) + '=' + override_serde.to_json(override) + '\n'
 
@@ -81,7 +81,7 @@ def test_disabled_override():
         result = runner.invoke(list_overrides, ['--export'])
         assert result.exit_code == 0
 
-        override_serde = OverrideSerde(None)
+        override_serde = OverrideSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
         key_serde = OverrideKeySerde(None)
         assert result.output == key_serde.to_json(override_key) + '=' + override_serde.to_json(override) + '\n'
 
@@ -109,7 +109,7 @@ def test_filtered_override():
         result = runner.invoke(list_overrides, ['--export'])
         assert result.exit_code == 0
 
-        override_serde = OverrideSerde(None)
+        override_serde = OverrideSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
         key_serde = OverrideKeySerde(None)
         assert result.output == key_serde.to_json(override_key) + '=' + override_serde.to_json(override) + '\n'
 
@@ -143,7 +143,7 @@ def test_continuous_shelved_override():
         result = runner.invoke(list_overrides, ['--export'])
         assert result.exit_code == 0
 
-        override_serde = OverrideSerde(None)
+        override_serde = OverrideSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
         key_serde = OverrideKeySerde(None)
         assert result.output == key_serde.to_json(override_key) + '=' + override_serde.to_json(override) + '\n'
 
@@ -177,7 +177,7 @@ def test_oneshot_shelved_override():
         result = runner.invoke(list_overrides, ['--export'])
         assert result.exit_code == 0
 
-        override_serde = OverrideSerde(None)
+        override_serde = OverrideSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
         key_serde = OverrideKeySerde(None)
         assert result.output == key_serde.to_json(override_key) + '=' + override_serde.to_json(override) + '\n'
 
@@ -207,7 +207,7 @@ def test_on_delayed_override():
         result = runner.invoke(list_overrides, ['--export'])
         assert result.exit_code == 0
 
-        override_serde = OverrideSerde(None)
+        override_serde = OverrideSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
         key_serde = OverrideKeySerde(None)
         assert result.output == key_serde.to_json(override_key) + '=' + override_serde.to_json(override) + '\n'
 
@@ -237,7 +237,7 @@ def test_off_delayed_override():
         result = runner.invoke(list_overrides, ['--export'])
         assert result.exit_code == 0
 
-        override_serde = OverrideSerde(None)
+        override_serde = OverrideSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
         key_serde = OverrideKeySerde(None)
         assert result.output == key_serde.to_json(override_key) + '=' + override_serde.to_json(override) + '\n'
 
