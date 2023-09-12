@@ -1,0 +1,31 @@
+jaws\_libp.entities.OnDelayedOverride
+=====================================
+
+.. currentmodule:: jaws_libp.entities
+
+.. autoclass:: OnDelayedOverride
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OnDelayedOverride.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OnDelayedOverride.expiration
+   
+   

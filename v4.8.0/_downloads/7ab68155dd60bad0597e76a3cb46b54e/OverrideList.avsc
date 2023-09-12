@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "OverrideList",
+  "namespace": "org.jlab.jaws.entity",
+  "doc": "Internal processor intermediate record (used to join multiple AlarmOverrideUnions to form a AlarmOverrideSet)",
+  "fields": [
+    {
+      "name": "overrides",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "override",
+          "type": "AlarmOverrideUnion"
+        }
+      },
+      "doc": "The alarm overrides"
+    }
+  ]
+}

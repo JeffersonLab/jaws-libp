@@ -1,0 +1,36 @@
+jaws\_libp.scripts.registry.describe\_version
+=============================================
+
+.. automodule:: jaws_libp.scripts.registry.describe_version
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   ********************
+   describe_version
+   ********************
+   .. parsed-literal::
+      describe_version
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
