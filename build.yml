@@ -24,6 +24,8 @@ services:
       - ALARM_INSTANCES=/data/instances
       #- ALARM_INSTANCES=https://raw.githubusercontent.com/JeffersonLab/alarms/main/instances
       #- ALARM_INSTANCES_URL_CSV=aperture,bcm,beamdump,bels,blm,box,bpm,camac,crates,cryo,dempow,gun,harp,helicity,ioc,ion,laser,lcw,misc,mo,odh,radcon,rf,rfsep,trim,vacuum
+      - ALARM_OVERRIDES=/data/overrides
+      #- ALARM_OVERRIDES=https://raw.githubusercontent.com/JeffersonLab/alarms/main/overrides
     volumes:
       - ./docker/app/example-data:/data
       - ./docker/app/docker-entrypoint.sh:/docker-entrypoint.sh

@@ -200,4 +200,20 @@ else
     done
 fi
 
+echo "-------------------------"
+echo "Step 8: Adding overrides "
+echo "-------------------------"
+if [[ -z "${ALARM_OVERRIDES}" ]]; then
+  echo "No override definitions specified"
+elif beginswith 'https://' "${ALARM_OVERRIDES}"; then
+  echo "HTTPS URL specified: $ALARM_OVERRIDES"
+  wget -O /tmp/overrides "$ALARM_OVERRIDES"
+  set_override --file /tmp/overrides
+elif [[ -f "$ALARM_OVERRIDES" ]]; then
+  echo "Attempting to setup class definitions from file $ALARM_OVERRIDES"
+  set_override --file "$ALARM_OVERRIDES"
+else
+  echo "Non-file overrides from env not supported!"
+fi
+
 sleep infinity
