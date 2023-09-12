@@ -87,6 +87,7 @@ source .venv_dev/bin/activate.csh
 
 pip install -e .[dev]
 python -m build
+pylint src/jaws_libp
 ```
 
 **Note for JLab On-Site Users**: Jefferson Lab has an intercepting [proxy](https://gist.github.com/slominskir/92c25a033db93a90184a5994e71d0b78)
