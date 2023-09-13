@@ -15,7 +15,7 @@ services:
     hostname: jaws
     container_name: jaws
     healthcheck:
-      test: test $(list_schemas | wc -l) -gt 20
+      test: /docker-healthcheck.sh
       start_period: 30s
       start_interval: 5s
       #      interval: 30s      # waiting for https://github.com/docker/compose/issues/10830

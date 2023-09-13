@@ -216,4 +216,9 @@ else
   echo "Non-file overrides from env not supported!"
 fi
 
+echo "---------------------"
+echo "Step 9: Initialized! "
+echo "---------------------"
+touch /home/jaws/initialized
+
 sleep infinity

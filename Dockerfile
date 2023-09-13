@@ -63,12 +63,16 @@ RUN if [ -z "${CUSTOM_CRT_URL}" ] ; then echo "No custom cert needed"; else \
        && update-ca-certificates \
     ; fi \
     && apk add --no-cache $RUN_DEPS \
-    && usermod -d /tmp guest
+    && useradd jaws \
+    && mkdir /home/jaws \
+    && chown jaws:jaws /home/jaws
 COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
 COPY --from=builder /usr/lib/librdkafka.so.1 /usr/lib
 ENV TZ=UTC
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 ENV PS1="\W \$ "
 COPY --from=builder /app/docker/app/docker-entrypoint.sh /docker-entrypoint.sh
+COPY --from=builder /app/docker/app/docker-healthcheck.sh /docker-healthcheck.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --start-interval=5s --retries=5 CMD test $(list_schemas | wc -l) -gt 20
+USER jaws
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --start-interval=5s --retries=5 CMD /docker-healthcheck.sh
