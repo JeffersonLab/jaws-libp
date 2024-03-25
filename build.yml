@@ -28,4 +28,4 @@ services:
       #- ALARM_OVERRIDES=https://raw.githubusercontent.com/JeffersonLab/alarms/main/overrides
     volumes:
       - ./docker/app/example-data:/data
-      - ./docker/app/docker-entrypoint.sh:/docker-entrypoint.sh
+      - ./docker/app/container-entrypoint.sh:/container-entrypoint.sh

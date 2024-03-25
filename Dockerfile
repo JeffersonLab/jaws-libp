@@ -71,8 +71,8 @@ COPY --from=builder /usr/lib/librdkafka.so.1 /usr/lib
 ENV TZ=UTC
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 ENV PS1="\W \$ "
-COPY --from=builder /app/docker/app/docker-entrypoint.sh /docker-entrypoint.sh
-COPY --from=builder /app/docker/app/docker-healthcheck.sh /docker-healthcheck.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
+COPY --from=builder /app/container/app/container-entrypoint.sh /container-entrypoint.sh
+COPY --from=builder /app/container/app/container-healthcheck.sh /container-healthcheck.sh
+ENTRYPOINT ["/container-entrypoint.sh"]
 USER jaws
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --start-interval=5s --retries=5 CMD /docker-healthcheck.sh
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --start-interval=5s --retries=5 CMD /container-healthcheck.sh
