@@ -1,5 +1,3 @@
-import pytest
-
 from click.testing import CliRunner
 from jaws_libp.avro.serde import EffectiveNotificationSerde
 from jaws_libp.entities import AlarmState, EffectiveNotification, AlarmOverrideSet
@@ -7,7 +5,6 @@ from jaws_libp.scripts.client.list_effective_notifications import list_effective
 from jaws_libp.scripts.client.set_effective_notification import set_effective_notification
 
 
-@pytest.mark.integration
 def test_simple_effective_notification():
     alarm_name = "alarm1"
     activation = None

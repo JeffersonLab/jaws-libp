@@ -1,5 +1,3 @@
-import pytest
-
 from typing import Dict, Any, List
 
 from confluent_kafka import Message
@@ -8,7 +6,6 @@ from jaws_libp.clients import CategoryProducer, CategoryConsumer
 from jaws_libp.eventsource import EventSourceListener
 
 
-@pytest.mark.integration
 class CategoryListener(EventSourceListener):
     _categories: Dict[Any, Message]
 
@@ -22,7 +19,6 @@ class CategoryListener(EventSourceListener):
         return self._categories
 
 
-@pytest.mark.integration
 def test_category_client():
     producer = CategoryProducer('category-test')
     consumer = CategoryConsumer('catgory-test')

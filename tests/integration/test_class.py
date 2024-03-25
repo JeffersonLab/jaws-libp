@@ -1,5 +1,3 @@
-import pytest
-
 from click import Choice
 from click.testing import CliRunner
 from jaws_libp.avro.serde import ClassSerde
@@ -8,7 +6,6 @@ from jaws_libp.scripts.client.list_classes import list_classes
 from jaws_libp.scripts.client.set_class import set_class
 
 
-@pytest.mark.integration
 def test_class():
     category = 'EXAMPLE_CATEGORY'
     class_name = "TESTING_CLASS"

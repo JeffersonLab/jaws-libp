@@ -1,5 +1,3 @@
-import pytest
-
 from click import Choice
 from click.testing import CliRunner
 from jaws_libp.avro.serde import InstanceSerde
@@ -8,7 +6,6 @@ from jaws_libp.scripts.client.list_instances import list_instances
 from jaws_libp.scripts.client.set_instance import set_instance
 
 
-@pytest.mark.integration
 def test_simple_instance():
     alarm_name = "alarm1"
     class_name = "TESTING_CLASS"
@@ -42,7 +39,6 @@ def test_simple_instance():
         assert result.exit_code == 0
 
 
-@pytest.mark.integration
 def test_epics_instance():
     alarm_name = "alarm1"
     class_name = "TESTING_CLASS"

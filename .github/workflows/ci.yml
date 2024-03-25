@@ -38,7 +38,7 @@ jobs:
       run: docker exec -i kafka bash -c "sleep 20"
     - name: Test
       run: |
-        pytest
+        pytest tests/integration
     - name: Stop containers
       if: always()
       run: docker compose -f deps.yml down

@@ -1,5 +1,3 @@
-import pytest
-
 from click.testing import CliRunner
 from jaws_libp.avro.serde import LocationSerde
 from jaws_libp.entities import AlarmLocation
@@ -7,7 +5,6 @@ from jaws_libp.scripts.client.list_locations import list_locations
 from jaws_libp.scripts.client.set_location import set_location
 
 
-@pytest.mark.integration
 def test_location():
     location1_name = "LOCATION1"
     location1 = AlarmLocation(None)
@@ -32,7 +29,6 @@ def test_location():
         assert result.exit_code == 0
 
 
-@pytest.mark.integration
 def test_location_with_parent():
     location1_name = "LOCATION1"
     parent = "LOCATION2"

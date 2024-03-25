@@ -1,5 +1,3 @@
-import pytest
-
 from click.testing import CliRunner
 from jaws_libp.avro.serde import ActivationSerde
 from jaws_libp.entities import AlarmActivationUnion, Activation, ChannelErrorActivation, NoteActivation, \
@@ -8,7 +6,6 @@ from jaws_libp.scripts.client.list_activations import list_activations
 from jaws_libp.scripts.client.set_activation import set_activation
 
 
-@pytest.mark.integration
 def test_activation():
     alarm_name = "alarm1"
     activation = AlarmActivationUnion(Activation())
@@ -33,7 +30,6 @@ def test_activation():
         assert result.exit_code == 0
 
 
-@pytest.mark.integration
 def test_note_activation():
     alarm_name = "alarm2"
     note = "TESTING"
@@ -59,7 +55,6 @@ def test_note_activation():
         assert result.exit_code == 0
 
 
-@pytest.mark.integration
 def test_epics_activation():
     alarm_name = "alarm3"
     sevr = EPICSSEVR.MINOR
@@ -86,7 +81,6 @@ def test_epics_activation():
         assert result.exit_code == 0
 
 
-@pytest.mark.integration
 def test_error_activation():
     alarm_name = "alarm4"
     error = "Never Connected"

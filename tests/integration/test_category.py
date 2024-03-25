@@ -1,11 +1,8 @@
-import pytest
-
 from click.testing import CliRunner
 from jaws_libp.scripts.client.list_categories import list_categories
 from jaws_libp.scripts.client.set_category import set_category
 
 
-@pytest.mark.integration
 def test_category():
     category = 'EXAMPLE_CATEGORY'
 
