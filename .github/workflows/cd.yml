@@ -1,0 +1,33 @@
+name: CD
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'VERSION'
+
+jobs:
+  release:
+    uses: jeffersonlab/python-workflows/.github/workflows/gh-release.yml@main
+
+  artifact_publish:
+    needs:
+      - release
+    uses: jeffersonlab/python-workflows/.github/workflows/pypi-publish.yml@main
+    secrets: inherit
+
+  docs_publish:
+    needs:
+      - release
+    uses: jeffersonlab/python-workflows/.github/workflows/gh-pages-publish.yml@main
+    with:
+      semvertag: ${{ needs.release.outputs.semvertag }}
+    secrets: inherit
+
+  docker_publish:
+    needs:
+      - release
+    uses: jeffersonlab/container-workflows/.github/workflows/docker-publish.yml@main
+    with:
+      semvertag: ${{ needs.release.outputs.semvertag }}
+    secrets: inherit
