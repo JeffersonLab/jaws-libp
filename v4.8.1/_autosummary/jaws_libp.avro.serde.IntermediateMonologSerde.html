@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jaws_libp.avro.serde.IntermediateMonologSerde &mdash; jaws-libp  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jaws_libp.avro.serde.LocationSerde" href="jaws_libp.avro.serde.LocationSerde.html" />
+    <link rel="prev" title="jaws_libp.avro.serde.InstanceSerde" href="jaws_libp.avro.serde.InstanceSerde.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            jaws-libp
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jaws_libp.html">jaws_libp</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="jaws_libp.avro.html">jaws_libp.avro</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.avro.schemas.html">jaws_libp.avro.schemas</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="jaws_libp.avro.serde.html">jaws_libp.avro.serde</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.ActivationSerde.html">jaws_libp.avro.serde.ActivationSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.ClassSerde.html">jaws_libp.avro.serde.ClassSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.EffectiveAlarmSerde.html">jaws_libp.avro.serde.EffectiveAlarmSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.EffectiveNotificationSerde.html">jaws_libp.avro.serde.EffectiveNotificationSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.EffectiveRegistrationSerde.html">jaws_libp.avro.serde.EffectiveRegistrationSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.InstanceSerde.html">jaws_libp.avro.serde.InstanceSerde</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">jaws_libp.avro.serde.IntermediateMonologSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.LocationSerde.html">jaws_libp.avro.serde.LocationSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.OverrideKeySerde.html">jaws_libp.avro.serde.OverrideKeySerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.OverrideSerde.html">jaws_libp.avro.serde.OverrideSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.OverrideSetSerde.html">jaws_libp.avro.serde.OverrideSetSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.ProcessorTransitionsSerde.html">jaws_libp.avro.serde.ProcessorTransitionsSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.RegistryAvroSerde.html">jaws_libp.avro.serde.RegistryAvroSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.RegistryAvroWithReferencesSerde.html">jaws_libp.avro.serde.RegistryAvroWithReferencesSerde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.Serde.html">jaws_libp.avro.serde.Serde</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.avro.serde.StringSerde.html">jaws_libp.avro.serde.StringSerde</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.clients.html">jaws_libp.clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.console.html">jaws_libp.console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.entities.html">jaws_libp.entities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.eventsource.html">jaws_libp.eventsource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.scripts.html">jaws_libp.scripts</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jaws-libp</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="jaws_libp.html">jaws_libp</a></li>
+          <li class="breadcrumb-item"><a href="jaws_libp.avro.html">jaws_libp.avro</a></li>
+          <li class="breadcrumb-item"><a href="jaws_libp.avro.serde.html">jaws_libp.avro.serde</a></li>
+      <li class="breadcrumb-item active">jaws_libp.avro.serde.IntermediateMonologSerde</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/jaws_libp.avro.serde.IntermediateMonologSerde.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="jaws-libp-avro-serde-intermediatemonologserde">
+<h1>jaws_libp.avro.serde.IntermediateMonologSerde<a class="headerlink" href="#jaws-libp-avro-serde-intermediatemonologserde" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.IntermediateMonologSerde">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">jaws_libp.avro.serde.</span></span><span class="sig-name descname"><span class="pre">IntermediateMonologSerde</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_registry_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">union_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">UnionEncoding.DICT_WITH_TYPE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avro_conf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/avro/serde.html#IntermediateMonologSerde"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.avro.serde.IntermediateMonologSerde" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="jaws_libp.avro.serde.RegistryAvroWithReferencesSerde.html#jaws_libp.avro.serde.RegistryAvroWithReferencesSerde" title="jaws_libp.avro.serde.RegistryAvroWithReferencesSerde"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegistryAvroWithReferencesSerde</span></code></a></p>
+<p>Provides IntermediateMonolog serde utilities</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.IntermediateMonologSerde.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema_registry_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">union_encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">UnionEncoding.DICT_WITH_TYPE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avro_conf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/avro/serde.html#IntermediateMonologSerde.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.avro.serde.IntermediateMonologSerde.__init__" title="Link to this definition"></a></dt>
+<dd><p>Create a new IntermediateMonologSerde.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schema_registry_client</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemaRegistryClient</span></code></span>) – The SchemaRegistryClient</p></li>
+<li><p><strong>union_encoding</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="jaws_libp.entities.UnionEncoding.html#jaws_libp.entities.UnionEncoding" title="jaws_libp.entities.UnionEncoding"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnionEncoding</span></code></a></span>) – The union encoding to use</p></li>
+<li><p><strong>avro_conf</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]</span>) – configuration for avro serde</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.IntermediateMonologSerde.__init__" title="jaws_libp.avro.serde.IntermediateMonologSerde.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(schema_registry_client[, ...])</p></td>
+<td><p>Create a new IntermediateMonologSerde.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.IntermediateMonologSerde.deserializer" title="jaws_libp.avro.serde.IntermediateMonologSerde.deserializer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deserializer</span></code></a>()</p></td>
+<td><p>Get the deserializer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.IntermediateMonologSerde.from_dict" title="jaws_libp.avro.serde.IntermediateMonologSerde.from_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dict</span></code></a>(data)</p></td>
+<td><p>Converts a dict to IntermediateMonolog.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.IntermediateMonologSerde.from_json" title="jaws_libp.avro.serde.IntermediateMonologSerde.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(data)</p></td>
+<td><p>Convert an entity to a JSON string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.IntermediateMonologSerde.get_schema" title="jaws_libp.avro.serde.IntermediateMonologSerde.get_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_schema</span></code></a>()</p></td>
+<td><p>Get Schema.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.IntermediateMonologSerde.named_schemas" title="jaws_libp.avro.serde.IntermediateMonologSerde.named_schemas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">named_schemas</span></code></a>()</p></td>
+<td><p>Get the named schemas.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.IntermediateMonologSerde.references" title="jaws_libp.avro.serde.IntermediateMonologSerde.references"><code class="xref py py-obj docutils literal notranslate"><span class="pre">references</span></code></a>()</p></td>
+<td><p>Get the Schema References.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.IntermediateMonologSerde.serializer" title="jaws_libp.avro.serde.IntermediateMonologSerde.serializer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serializer</span></code></a>()</p></td>
+<td><p>Get the serializer.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.IntermediateMonologSerde.to_dict" title="jaws_libp.avro.serde.IntermediateMonologSerde.to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code></a>(data)</p></td>
+<td><p>Converts IntermediateMonolog to a dict.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.avro.serde.IntermediateMonologSerde.to_json" title="jaws_libp.avro.serde.IntermediateMonologSerde.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>(data)</p></td>
+<td><p>Convert a JSON string to an entity.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.IntermediateMonologSerde.deserializer">
+<span class="sig-name descname"><span class="pre">deserializer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.IntermediateMonologSerde.deserializer" title="Link to this definition"></a></dt>
+<dd><p>Get the deserializer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Deserializer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.IntermediateMonologSerde.from_dict">
+<span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/avro/serde.html#IntermediateMonologSerde.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.avro.serde.IntermediateMonologSerde.from_dict" title="Link to this definition"></a></dt>
+<dd><p>Converts a dict to IntermediateMonolog.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – The dict</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="jaws_libp.entities.IntermediateMonolog.html#jaws_libp.entities.IntermediateMonolog" title="jaws_libp.entities.IntermediateMonolog"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntermediateMonolog</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The IntermediateMonolog</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.IntermediateMonologSerde.from_json">
+<span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.IntermediateMonologSerde.from_json" title="Link to this definition"></a></dt>
+<dd><p>Convert an entity to a JSON string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – A JSON string</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An entity class or string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.IntermediateMonologSerde.get_schema">
+<span class="sig-name descname"><span class="pre">get_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.IntermediateMonologSerde.get_schema" title="Link to this definition"></a></dt>
+<dd><p>Get Schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Schema</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Schema</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.IntermediateMonologSerde.named_schemas">
+<span class="sig-name descname"><span class="pre">named_schemas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.IntermediateMonologSerde.named_schemas" title="Link to this definition"></a></dt>
+<dd><p>Get the named schemas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Return the named schemas</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.IntermediateMonologSerde.references">
+<span class="sig-name descname"><span class="pre">references</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.IntermediateMonologSerde.references" title="Link to this definition"></a></dt>
+<dd><p>Get the Schema References.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">SchemaReference</span></code>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The List of SchemaReference</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.IntermediateMonologSerde.serializer">
+<span class="sig-name descname"><span class="pre">serializer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.IntermediateMonologSerde.serializer" title="Link to this definition"></a></dt>
+<dd><p>Get the serializer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Serializer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.IntermediateMonologSerde.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/avro/serde.html#IntermediateMonologSerde.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.avro.serde.IntermediateMonologSerde.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Converts IntermediateMonolog to a dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="jaws_libp.entities.IntermediateMonolog.html#jaws_libp.entities.IntermediateMonolog" title="jaws_libp.entities.IntermediateMonolog"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntermediateMonolog</span></code></a></span>) – The IntermediateMonolog</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.avro.serde.IntermediateMonologSerde.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.avro.serde.IntermediateMonologSerde.to_json" title="Link to this definition"></a></dt>
+<dd><p>Convert a JSON string to an entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span>) – An entity class or string</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A JSON string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="jaws_libp.avro.serde.InstanceSerde.html" class="btn btn-neutral float-left" title="jaws_libp.avro.serde.InstanceSerde" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="jaws_libp.avro.serde.LocationSerde.html" class="btn btn-neutral float-right" title="jaws_libp.avro.serde.LocationSerde" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Jefferson Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

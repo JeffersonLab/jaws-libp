@@ -1,0 +1,23 @@
+jaws\_libp.avro.schemas
+=======================
+
+.. automodule:: jaws_libp.avro.schemas
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

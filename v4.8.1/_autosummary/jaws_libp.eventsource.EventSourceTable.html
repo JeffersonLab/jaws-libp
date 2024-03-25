@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jaws_libp.eventsource.EventSourceTable &mdash; jaws-libp  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jaws_libp.eventsource.TimeoutException" href="jaws_libp.eventsource.TimeoutException.html" />
+    <link rel="prev" title="jaws_libp.eventsource.EventSourceListener" href="jaws_libp.eventsource.EventSourceListener.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            jaws-libp
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jaws_libp.html">jaws_libp</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.avro.html">jaws_libp.avro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.clients.html">jaws_libp.clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.console.html">jaws_libp.console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.entities.html">jaws_libp.entities</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jaws_libp.eventsource.html">jaws_libp.eventsource</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="jaws_libp.eventsource.html#eventsource">eventsource</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.eventsource.EventSourceListener.html">jaws_libp.eventsource.EventSourceListener</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">jaws_libp.eventsource.EventSourceTable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.eventsource.TimeoutException.html">jaws_libp.eventsource.TimeoutException</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.scripts.html">jaws_libp.scripts</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jaws-libp</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="jaws_libp.html">jaws_libp</a></li>
+          <li class="breadcrumb-item"><a href="jaws_libp.eventsource.html">jaws_libp.eventsource</a></li>
+      <li class="breadcrumb-item active">jaws_libp.eventsource.EventSourceTable</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/jaws_libp.eventsource.EventSourceTable.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="jaws-libp-eventsource-eventsourcetable">
+<h1>jaws_libp.eventsource.EventSourceTable<a class="headerlink" href="#jaws-libp-eventsource-eventsourcetable" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="jaws_libp.eventsource.EventSourceTable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">jaws_libp.eventsource.</span></span><span class="sig-name descname"><span class="pre">EventSourceTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_exception=&lt;function</span> <span class="pre">log_exception&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/eventsource.html#EventSourceTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.eventsource.EventSourceTable" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class provides an Event Source Table abstraction.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.eventsource.EventSourceTable.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_exception=&lt;function</span> <span class="pre">log_exception&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/eventsource.html#EventSourceTable.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.eventsource.EventSourceTable.__init__" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><blockquote>
+<div><p>Create an EventSourceTable instance.</p>
+</div></blockquote>
+<dl>
+<dt>Args:</dt><dd><p>config (dict): Configuration</p>
+<p>on_exception (Callable): Function to call when an asynchronous exception occurs, including a Timeout.</p>
+</dd>
+<dt>Note:</dt><dd><blockquote>
+<div><p>The configuration options include:</p>
+</div></blockquote>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Property Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bootstrap.servers</span></code></p></td>
+<td><p>str</p></td>
+<td><p>Comma-separated list of brokers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">group.id</span></code></p></td>
+<td><p>str</p></td>
+<td><p>Client group id string.
+All clients sharing the same group.id belong to the
+same group.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">key.deserializer</span></code></p></td>
+<td><p>callable</p></td>
+<td><p>Callable(SerializationContext, bytes) -&gt; obj</p>
+<p>Deserializer used for message keys.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">value.deserializer</span></code></p></td>
+<td><p>callable</p></td>
+<td><p>Callable(SerializationContext, bytes) -&gt; obj</p>
+<p>Deserializer used for message values.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">topic</span></code></p></td>
+<td><p>str</p></td>
+<td><p>Kafka topic name to consume messages from</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">highwater.timeout</span></code></p></td>
+<td><p>float</p></td>
+<td><p>Number of seconds to wait for highwater. Default 30.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">compacted.cache</span></code></p></td>
+<td><p>bool</p></td>
+<td><p>If False, disables on_highwater cache. Default True.</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</div></blockquote>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Keys must be hashable so your key deserializer generally must generate immutable types.</p>
+</div>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.eventsource.EventSourceTable.__init__" title="jaws_libp.eventsource.EventSourceTable.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(config[, on_exception])</p></td>
+<td><p>Create an EventSourceTable instance.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.eventsource.EventSourceTable.add_listener" title="jaws_libp.eventsource.EventSourceTable.add_listener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_listener</span></code></a>(listener)</p></td>
+<td><p>Add an EventSourceListener.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.eventsource.EventSourceTable.await_highwater" title="jaws_libp.eventsource.EventSourceTable.await_highwater"><code class="xref py py-obj docutils literal notranslate"><span class="pre">await_highwater</span></code></a>()</p></td>
+<td><p>Block the calling thread and wait for topic highwater to be reached.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.eventsource.EventSourceTable.highwater_reached" title="jaws_libp.eventsource.EventSourceTable.highwater_reached"><code class="xref py py-obj docutils literal notranslate"><span class="pre">highwater_reached</span></code></a>()</p></td>
+<td><p>Check whether initial highwater has been reached.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.eventsource.EventSourceTable.remove_listener" title="jaws_libp.eventsource.EventSourceTable.remove_listener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_listener</span></code></a>(listener)</p></td>
+<td><p>Remove an EventSourceListener.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.eventsource.EventSourceTable.start" title="jaws_libp.eventsource.EventSourceTable.start"><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code></a>()</p></td>
+<td><p>Start monitoring for state updates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.eventsource.EventSourceTable.stop" title="jaws_libp.eventsource.EventSourceTable.stop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stop</span></code></a>()</p></td>
+<td><p>Stop monitoring for state updates.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.eventsource.EventSourceTable.add_listener">
+<span class="sig-name descname"><span class="pre">add_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/eventsource.html#EventSourceTable.add_listener"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.eventsource.EventSourceTable.add_listener" title="Link to this definition"></a></dt>
+<dd><p>Add an EventSourceListener.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>listener</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="jaws_libp.eventsource.EventSourceListener.html#jaws_libp.eventsource.EventSourceListener" title="jaws_libp.eventsource.EventSourceListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">EventSourceListener</span></code></a></span>) – The EventSourceListener to register</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.eventsource.EventSourceTable.await_highwater">
+<span class="sig-name descname"><span class="pre">await_highwater</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/eventsource.html#EventSourceTable.await_highwater"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.eventsource.EventSourceTable.await_highwater" title="Link to this definition"></a></dt>
+<dd><p>Block the calling thread and wait for topic highwater to be reached.</p>
+<p>See: The ‘highwater.timeout’ option passed to the config Dict in constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="jaws_libp.eventsource.TimeoutException.html#jaws_libp.eventsource.TimeoutException" title="jaws_libp.eventsource.TimeoutException"><strong>TimeoutException</strong></a> – If highwater is not reached before timeout</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.eventsource.EventSourceTable.highwater_reached">
+<span class="sig-name descname"><span class="pre">highwater_reached</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/eventsource.html#EventSourceTable.highwater_reached"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.eventsource.EventSourceTable.highwater_reached" title="Link to this definition"></a></dt>
+<dd><p>Check whether initial highwater has been reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if highwater reached</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.eventsource.EventSourceTable.remove_listener">
+<span class="sig-name descname"><span class="pre">remove_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/eventsource.html#EventSourceTable.remove_listener"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.eventsource.EventSourceTable.remove_listener" title="Link to this definition"></a></dt>
+<dd><p>Remove an EventSourceListener.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>listener</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="jaws_libp.eventsource.EventSourceListener.html#jaws_libp.eventsource.EventSourceListener" title="jaws_libp.eventsource.EventSourceListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">EventSourceListener</span></code></a></span>) – The EventSourceListener to unregister</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.eventsource.EventSourceTable.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/eventsource.html#EventSourceTable.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.eventsource.EventSourceTable.start" title="Link to this definition"></a></dt>
+<dd><p>Start monitoring for state updates.</p>
+<p>Note: start() should only be called once.  I’m too lazy to come up with some thread-safe locking check
+to ensure it, so just like Python doesn’t actually have private members, I’m not actually going to stop you,
+but you’ve been warned.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.eventsource.EventSourceTable.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/eventsource.html#EventSourceTable.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.eventsource.EventSourceTable.stop" title="Link to this definition"></a></dt>
+<dd><p>Stop monitoring for state updates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="jaws_libp.eventsource.EventSourceListener.html" class="btn btn-neutral float-left" title="jaws_libp.eventsource.EventSourceListener" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="jaws_libp.eventsource.TimeoutException.html" class="btn btn-neutral float-right" title="jaws_libp.eventsource.TimeoutException" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Jefferson Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

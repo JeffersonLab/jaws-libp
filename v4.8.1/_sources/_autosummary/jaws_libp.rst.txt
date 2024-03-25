@@ -1,0 +1,37 @@
+﻿jaws\_libp
+==========
+
+.. automodule:: jaws_libp
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+
+   jaws_libp.avro
+   jaws_libp.clients
+   jaws_libp.console
+   jaws_libp.entities
+   jaws_libp.eventsource
+   jaws_libp.scripts
+
