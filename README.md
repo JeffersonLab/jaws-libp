@@ -112,6 +112,13 @@ pytest
 ```
 
 ## Release
+1. Bump the version number in the VERSION file and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).
+2. The [CD](https://github.com/JeffersonLab/jaws-libp/blob/main/.github/workflows/cd.yml) GitHub Action should run automatically invoking:
+    - The [Create release](https://github.com/JeffersonLab/python-workflows/blob/main/.github/workflows/gh-release.yml) GitHub Action to tag the source and create release notes summarizing any pull requests.   Edit the release notes to add any missing details.
+    - The [Publish artifact](https://github.com/JeffersonLab/python-workflows/blob/main/.github/workflows/pypi-publish.yml) GitHub Action to create a deployment artifact on PyPi.
+    - The [Publish docs](https://github.com/JeffersonLab/python-workflows/blob/main/.github/workflows/gh-pages-publish.yml) GitHub Action to create Sphinx docs.
+    - The [Publish docker image](https://github.com/JeffersonLab/container-workflows/blob/main/.github/workflows/docker-publish.yml) GitHub Action to create a new demo Docker image, and bump the [compose.override.yaml](https://github.com/JeffersonLab/presenter/blob/main/compose.override.yaml) to use the new image.
+
 1. Bump the version number in pyproject.toml and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).   
 1. Create a new release on the GitHub [Releases](https://github.com/JeffersonLab/jaws-libp/releases) page corresponding to same version in pyproject.toml (Enumerate changes and link issues).
 1. [Publish to PyPi](https://github.com/JeffersonLab/jaws-libp/actions/workflows/pypi-publish.yml) GitHub Action should run automatically.
