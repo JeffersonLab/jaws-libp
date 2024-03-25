@@ -106,7 +106,7 @@ docker compose -f deps.yaml up
 `BOOTSTRAP_SERVERS=localhost:9094` and `SCHEMA_REGISTRY=http://localhost:8081`
 
 ## Test
-The integration tests depend on a running Kafka instance, generally in Docker.  The tests run automatically via the [CI](https://github.com/JeffersonLab/jaws-libp/actions/workflows/ci.yml) GitHub Action on every commit (unless `[no ci]` is included in the commit message).  The tests can be run locally during development.  Set up the development environment following the [Develop](https://github.com/JeffersonLab/jaws-libp#develop) instructions.  Then with the `deps.yml` Docker containers running and the build virtual environment activated run:
+The integration tests depend on a running Kafka instance, generally in Docker.  The tests run automatically via the [CI](https://github.com/JeffersonLab/jaws-libp/actions/workflows/ci.yml) GitHub Action on every commit (unless `[no ci]` is included in the commit message).  The tests can be run locally during development.  Set up the development environment following the [Develop](https://github.com/JeffersonLab/jaws-libp#develop) instructions.  Then with the `deps.yaml` Docker containers running and the build virtual environment activated run:
 ```
 pytest
 ```
