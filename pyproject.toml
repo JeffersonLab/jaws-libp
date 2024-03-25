@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jaws-libp"
-version = "4.8.0"
+dynamic = ["version"]
 authors = [
     {name = "Ryan Slominski", email = "ryans@jlab.org"},
 ]
@@ -36,6 +36,9 @@ dev = [
     "sphinx-rtd-theme>=1.2.2",
     "sphinx-autodoc-typehints>=1.23.0"
 ]
+
+[tool.setuptools.dynamic]
+version = {file = ["VERSION"]}
 
 [project.urls]
 Repository = "https://github.com/jeffersonlab/jaws-libp.git"
