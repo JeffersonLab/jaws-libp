@@ -1,3 +1,4 @@
+import pytest
 import time
 
 from click.testing import CliRunner
@@ -9,6 +10,7 @@ from jaws_libp.scripts.client.list_overrides import list_overrides
 from jaws_libp.scripts.client.set_override import set_override
 
 
+@pytest.mark.integration
 def test_latched_override():
     alarm_name = "alarm1"
     override_type = OverriddenAlarmType.Latched
@@ -36,6 +38,7 @@ def test_latched_override():
         assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_masked_override():
     alarm_name = "alarm1"
     override_type = OverriddenAlarmType.Masked
@@ -63,6 +66,7 @@ def test_masked_override():
         assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_disabled_override():
     alarm_name = "alarm1"
     comments = "Out of Service"
@@ -91,6 +95,7 @@ def test_disabled_override():
         assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_filtered_override():
     alarm_name = "alarm1"
     filter = "Area"
@@ -119,6 +124,7 @@ def test_filtered_override():
         assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_continuous_shelved_override():
     alarm_name = "alarm1"
     expiration_seconds = 15
@@ -153,6 +159,7 @@ def test_continuous_shelved_override():
         assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_oneshot_shelved_override():
     alarm_name = "alarm1"
     expiration_seconds = 15
@@ -187,6 +194,7 @@ def test_oneshot_shelved_override():
         assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_on_delayed_override():
     alarm_name = "alarm1"
     expiration_seconds = 15
@@ -217,6 +225,7 @@ def test_on_delayed_override():
         assert result.exit_code == 0
 
 
+@pytest.mark.integration
 def test_off_delayed_override():
     alarm_name = "alarm1"
     expiration_seconds = 15

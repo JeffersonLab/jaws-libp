@@ -1,7 +1,10 @@
+import pytest
+
 from jaws_libp.avro.serde import InstanceSerde
 from jaws_libp.entities import UnionEncoding
 
 
+@pytest.mark.integration
 def test_instance_serde():
 
     serde = InstanceSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
