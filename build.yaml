@@ -1,17 +1,17 @@
 services:
   kafka:
     extends:
-      file: docker-compose.yml
+      file: compose.yaml
       service: kafka
 
   registry:
     extends:
-      file: docker-compose.yml
+      file: compose.yaml
       service: registry
 
   jaws:
     extends:
-      file: docker-compose.yml
+      file: compose.yaml
       service: jaws
     build:
       context: .
@@ -27,5 +27,5 @@ services:
       - ALARM_OVERRIDES=/data/overrides
       #- ALARM_OVERRIDES=https://raw.githubusercontent.com/JeffersonLab/alarms/main/overrides
     volumes:
-      - ./docker/app/example-data:/data
-      - ./docker/app/container-entrypoint.sh:/container-entrypoint.sh
+      - ./container/app/example-data:/data
+      - ./container/app/container-entrypoint.sh:/container-entrypoint.sh
