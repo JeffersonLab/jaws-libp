@@ -2,7 +2,7 @@
 ARG BUILD_IMAGE=python:3.11-alpine3.18
 ARG RUN_IMAGE=python:3.11-alpine3.18
 ARG VIRTUAL_ENV=/opt/venv
-ARG LIBRD_VER=2.2.0
+ARG LIBRD_VER=2.3.0
 ARG CUSTOM_CRT_URL=http://pki.jlab.org/JLabCA.crt
 
 ################## Stage 0
