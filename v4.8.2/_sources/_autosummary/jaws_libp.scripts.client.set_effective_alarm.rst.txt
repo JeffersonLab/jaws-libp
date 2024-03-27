@@ -1,0 +1,34 @@
+jaws\_libp.scripts.client.set\_effective\_alarm
+===============================================
+
+.. automodule:: jaws_libp.scripts.client.set_effective_alarm
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   .. click:: jaws_libp.scripts.client.set_effective_alarm:set_effective_alarm
+      :prog: set_effective_alarm
+      :nested: full
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

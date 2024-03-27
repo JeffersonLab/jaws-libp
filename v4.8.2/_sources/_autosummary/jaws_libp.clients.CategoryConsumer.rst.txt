@@ -1,0 +1,33 @@
+jaws\_libp.clients.CategoryConsumer
+===================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: CategoryConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CategoryConsumer.__init__
+      ~CategoryConsumer.add_listener
+      ~CategoryConsumer.await_highwater
+      ~CategoryConsumer.await_highwater_get
+      ~CategoryConsumer.export_records
+      ~CategoryConsumer.highwater_reached
+      ~CategoryConsumer.remove_listener
+      ~CategoryConsumer.start
+      ~CategoryConsumer.stop
+   
+   
+
+   
+   
+   
