@@ -1,0 +1,70 @@
+jaws\_libp.clients
+==================
+
+.. automodule:: jaws_libp.clients
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   ********************
+   clients
+   ********************
+   .. parsed-literal::
+      clients
+   
+   
+   ********************
+   clients
+   ********************
+   .. parsed-literal::
+      clients
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ActivationConsumer
+      ActivationProducer
+      CategoryConsumer
+      CategoryProducer
+      ClassConsumer
+      ClassProducer
+      EffectiveAlarmConsumer
+      EffectiveAlarmProducer
+      EffectiveNotificationConsumer
+      EffectiveNotificationProducer
+      EffectiveRegistrationConsumer
+      EffectiveRegistrationProducer
+      InstanceConsumer
+      InstanceProducer
+      JAWSConsumer
+      JAWSProducer
+      LocationConsumer
+      LocationProducer
+      OverrideConsumer
+      OverrideProducer
+   
+   
+
+   
+   
+   
+
+
+

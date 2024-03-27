@@ -1,0 +1,36 @@
+jaws\_libp.scripts.registry.create\_schemas
+===========================================
+
+.. automodule:: jaws_libp.scripts.registry.create_schemas
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   ********************
+   create_schemas
+   ********************
+   .. parsed-literal::
+      create_schemas
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

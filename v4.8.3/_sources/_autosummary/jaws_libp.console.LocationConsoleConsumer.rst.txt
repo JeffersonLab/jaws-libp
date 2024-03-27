@@ -1,0 +1,28 @@
+jaws\_libp.console.LocationConsoleConsumer
+==========================================
+
+.. currentmodule:: jaws_libp.console
+
+.. autoclass:: LocationConsoleConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LocationConsoleConsumer.__init__
+      ~LocationConsoleConsumer.consume_then_done
+      ~LocationConsoleConsumer.get_keys_then_done
+      ~LocationConsoleConsumer.print_table
+   
+   
+
+   
+   
+   

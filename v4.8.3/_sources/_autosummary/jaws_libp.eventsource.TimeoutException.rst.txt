@@ -1,0 +1,6 @@
+jaws\_libp.eventsource.TimeoutException
+=======================================
+
+.. currentmodule:: jaws_libp.eventsource
+
+.. autoexception:: TimeoutException

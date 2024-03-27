@@ -1,0 +1,34 @@
+jaws\_libp.avro.serde.RegistryAvroWithReferencesSerde
+=====================================================
+
+.. currentmodule:: jaws_libp.avro.serde
+
+.. autoclass:: RegistryAvroWithReferencesSerde
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RegistryAvroWithReferencesSerde.__init__
+      ~RegistryAvroWithReferencesSerde.deserializer
+      ~RegistryAvroWithReferencesSerde.from_dict
+      ~RegistryAvroWithReferencesSerde.from_json
+      ~RegistryAvroWithReferencesSerde.get_schema
+      ~RegistryAvroWithReferencesSerde.named_schemas
+      ~RegistryAvroWithReferencesSerde.references
+      ~RegistryAvroWithReferencesSerde.serializer
+      ~RegistryAvroWithReferencesSerde.to_dict
+      ~RegistryAvroWithReferencesSerde.to_json
+   
+   
+
+   
+   
+   
