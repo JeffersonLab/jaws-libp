@@ -1,4 +1,4 @@
-name: Update DockerHub Description
+name: DD
 on:
   workflow_dispatch:
   push:
