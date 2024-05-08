@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   unit:
-    uses: jeffersonlab/python-workflows/.github/workflows/unit-ci.yml@main
+    uses: jeffersonlab/python-workflows/.github/workflows/unit-ci.yml@v1
 
   integration:
     needs:
