@@ -10,7 +10,4 @@ on:
 jobs:
   dockerHubDescription:
     uses: jeffersonlab/container-workflows/.github/workflows/docker-description.yml@main
-    with:
-      repository: "jeffersonlab/${{ github.event.repository.name }}"
-      description: "${{ github.event.repository.description }}"
     secrets: inherit
