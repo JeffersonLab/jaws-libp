@@ -9,5 +9,5 @@ on:
       - .github/workflows/dd.yml
 jobs:
   dockerHubDescription:
-    uses: jeffersonlab/container-workflows/.github/workflows/docker-description.yml@main
+    uses: jeffersonlab/container-workflows/.github/workflows/docker-description.yml@v1
     secrets: inherit
