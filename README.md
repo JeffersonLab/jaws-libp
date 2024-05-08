@@ -79,13 +79,13 @@ Activate the virtual env using your [shell specific command](https://gist.github
 ```
 # Windows
 .venv_dev\Scripts\activate.bat
-# Linux (SH Shell)
+# UNIX (SH Shell)
 source .venv_dev/bin/activate
-#MacOS (CSH Shell)
+# UNIX (CSH Shell)
 source .venv_dev/bin/activate.csh
 
 
-pip install -e .[dev]
+pip install -e ."[dev]"
 python -m build
 pylint --recursive=y src/*
 ```
