@@ -779,7 +779,7 @@ class EffectiveNotificationSerde(RegistryAvroWithReferencesSerde):
             :return: A dict
         """
         return {
-            "activation": self._activation_serde.to_dict(data.activatio) if data.activation is not None else None,
+            "activation": self._activation_serde.to_dict(data.activation) if data.activation is not None else None,
             "overrides": self._override_serde.to_dict(data.overrides),
             "state": data.state.name
         }
