@@ -10,7 +10,7 @@ def test_class():
     category = 'EXAMPLE_CATEGORY'
     class_name = "TESTING_CLASS"
     alarm_class = AlarmClass(category, AlarmPriority.P3_MINOR, 'TESTING_RATIONALE',
-                             'TESTING_CORRECTIVE_ACTION', 'TESTING_POC', True, True, None, None)
+                             'TESTING_CORRECTIVE_ACTION', True, True, None, None)
 
     runner = CliRunner()
 
@@ -22,8 +22,7 @@ def test_class():
                                            '--category', alarm_class.category,
                                            '--priority', alarm_class.priority.name,
                                            '--rationale', alarm_class.rationale,
-                                           '--correctiveaction', alarm_class.corrective_action,
-                                           '--pointofcontactusername', alarm_class.point_of_contact_username])
+                                           '--correctiveaction', alarm_class.corrective_action])
         assert result.exit_code == 0
 
         # Get

@@ -29,14 +29,13 @@ from ...entities import AlarmClass, AlarmPriority
               help="True if alarm can be filtered out of view")
 @click.option('--latchable/--not-latchable', is_flag=True, default=True,
               help="Indicate that the alarm latches and requires acknowledgement to clear")
-@click.option('--pointofcontactusername', help="The point of contact user name")
 @click.option('--rationale', help="The alarm rationale")
 @click.option('--correctiveaction', help="The corrective action")
 @click.option('--ondelayseconds', type=int, default=None, help="Number of on delay seconds")
 @click.option('--offdelayseconds', type=int, default=None, help="Number of off delay seconds")
 @click.argument('name')
 def set_class(file, unset, category,
-              priority, filterable, latchable, pointofcontactusername, rationale,
+              priority, filterable, latchable, rationale,
               correctiveaction, ondelayseconds, offdelayseconds, name) -> None:
     producer = ClassProducer('set_class.py')
 
@@ -60,14 +59,10 @@ def set_class(file, unset, category,
             if correctiveaction is None:
                 raise click.ClickException("--correctiveaction required")
 
-            if pointofcontactusername is None:
-                raise click.ClickException("--pointofcontactusername required")
-
             value = AlarmClass(category,
                                AlarmPriority[priority],
                                rationale,
                                correctiveaction,
-                               pointofcontactusername,
                                latchable,
                                filterable,
                                ondelayseconds,
