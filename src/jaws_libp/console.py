@@ -187,7 +187,7 @@ class CategoryConsoleConsumer(ConsoleConsumer):
         """
         consumer = CategoryConsumer(client_name)
 
-        super().__init__(consumer, ['Category'], lambda msg: [msg.key()])
+        super().__init__(consumer, ["Category Name", "Team"], lambda msg: [msg.key(), msg.value().team])
 
 
 class ClassConsoleConsumer(ConsoleConsumer):

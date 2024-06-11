@@ -1,4 +1,5 @@
 [
+  {"file": "avro/schemas/AlarmCategory.avsc", "subject": "alarm-categories-value", "references": []},
   {"file": "avro/schemas/AlarmLocation.avsc", "subject": "alarm-locations-value", "references": []},
   {"file": "avro/schemas/DisabledOverride.avsc", "subject": "disabled-override", "references": []},
   {"file": "avro/schemas/FilteredOverride.avsc", "subject": "filtered-override", "references": []},

@@ -11,7 +11,7 @@
 import click
 
 from ...clients import CategoryProducer
-
+from ...entities import AlarmCategory
 
 # pylint: disable=missing-function-docstring,no-value-for-parameter
 @click.command()
@@ -20,7 +20,8 @@ from ...clients import CategoryProducer
                    "empty string")
 @click.option('--unset', is_flag=True, help="Remove the category")
 @click.argument('name')
-def set_category(file, unset, name) -> None:
+@click.option('--team', '-t', help="Name of team")
+def set_category(file, unset, name, team) -> None:
     producer = CategoryProducer('set_category.py')
 
     key = name
@@ -31,7 +32,7 @@ def set_category(file, unset, name) -> None:
         if unset:
             value = None
         else:
-            value = ""
+            value = AlarmCategory(team)
 
         producer.send(key, value)
 

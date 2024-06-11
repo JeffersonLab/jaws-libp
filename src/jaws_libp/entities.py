@@ -139,6 +139,15 @@ class EPICSSTAT(Enum):
 
 
 @dataclass
+class AlarmCategory:
+    """
+        Alarm Category record
+    """
+    team: str
+    """Team name"""
+
+
+@dataclass
 class AlarmLocation:
     """
         Alarm Location record
