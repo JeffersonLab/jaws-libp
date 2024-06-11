@@ -1,0 +1,16 @@
+{
+    "type": "record",
+    "name": "AlarmCategory",
+    "namespace": "org.jlab.jaws.entity",
+    "doc": "Value of a named category",
+    "fields": [
+        {
+            "name": "team",
+            "type": {
+                "type": "string",
+                "avro.java.string": "String"
+            },
+            "doc": "The responsible team name"
+        }
+    ]
+}

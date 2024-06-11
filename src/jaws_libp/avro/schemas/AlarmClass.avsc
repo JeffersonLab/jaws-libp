@@ -10,7 +10,7 @@
                 "type": "string",
                 "avro.java.string": "String"
             },
-            "doc": "The alarm category"
+            "doc": "The alarm category name"
         },
         {
             "name": "priority",
@@ -42,14 +42,6 @@
                 "avro.java.string": "String"
             },
             "doc": "Markdown formatted text describing the corrective action to take when the alarm becomes active"
-        },
-        {
-            "name": "pointofcontactusername",
-            "type": {
-                "type": "string",
-                "avro.java.string": "String"
-            },
-            "doc": "Username (identifier) of point of contact.  Full contact info should be obtained from user database (LDAP for example)"
         },
         {
             "name": "latchable",
