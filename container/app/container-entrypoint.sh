@@ -81,7 +81,15 @@ else
       IFS='|'
       read -a def <<< "$defStr"
       name="${def[0]}"
-      set_category "${name}"
+      team="${def[1]}"
+
+      PARMS=("${name}")
+
+      if [[  ! -z "${team}" ]]; then
+        PARMS+=(--team "${team}")
+      fi
+
+      set_category "${PARMS[@]}"
     done
 fi
 
@@ -111,14 +119,13 @@ else
       priority="${def[2]}"
       rationale="${def[3]}"
       correctiveaction="${def[4]}"
-      pointofcontactusername="${def[5]}"
-      latchable="${def[6]}"
-      filterable="${def[7]}"
-      ondelayseconds="${def[8]}"
-      offdelayseconds="${def[9]}"
+      latchable="${def[5]}"
+      filterable="${def[6]}"
+      ondelayseconds="${def[7]}"
+      offdelayseconds="${def[8]}"
 
       PARMS=("${name}" --category "${category}" --priority "${priority}" --rationale "${rationale}")
-      PARMS+=(--correctiveaction "${correctiveaction}" --pointofcontactusername "${pointofcontactusername}")
+      PARMS+=(--correctiveaction "${correctiveaction}")
 
       if [[ "${latchable}" == "True" ]]; then
         PARMS+=(--latchable)
