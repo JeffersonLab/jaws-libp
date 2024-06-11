@@ -4,7 +4,7 @@ from confluent_kafka import Message
 
 from jaws_libp.clients import CategoryProducer, CategoryConsumer
 from jaws_libp.eventsource import EventSourceListener
-
+from jaws_libp.entities import AlarmCategory
 
 class CategoryListener(EventSourceListener):
     _categories: Dict[Any, Message]
@@ -21,10 +21,10 @@ class CategoryListener(EventSourceListener):
 
 def test_category_client():
     producer = CategoryProducer('category-test')
-    consumer = CategoryConsumer('catgory-test')
+    consumer = CategoryConsumer('category-test')
 
     expected_key = "TESTING"
-    expected_value = ""
+    expected_value = AlarmCategory("Tester")
 
     try:
         producer.send(expected_key, expected_value)

@@ -15,7 +15,7 @@ from confluent_kafka import Message, SerializingProducer, KafkaError
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from psutil import Process
 
-from .avro.serde import LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
+from .avro.serde import CategorySerde, LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
     StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ClassSerde, ActivationSerde, InstanceSerde
 from .entities import UnionEncoding
 from .eventsource import EventSourceListener, EventSourceTable
@@ -347,8 +347,9 @@ class CategoryConsumer(JAWSConsumer):
 
             :param client_name: The name of the client application
         """
+        schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = StringSerde()
+        value_serde = CategorySerde(schema_registry_client)
 
         config = {
             'topic': 'alarm-categories',
@@ -555,8 +556,9 @@ class CategoryProducer(JAWSProducer):
 
             :param client_name: The name of the client application
         """
+        schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = StringSerde()
+        value_serde = CategorySerde(schema_registry_client)
 
         super().__init__('alarm-categories', client_name, key_serde, value_serde)
 

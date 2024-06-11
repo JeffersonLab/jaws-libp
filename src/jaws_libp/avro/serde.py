@@ -13,7 +13,7 @@ from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserialize
 from confluent_kafka.serialization import StringSerializer, StringDeserializer, Serializer, Deserializer, \
     SerializationContext
 
-from ..entities import AlarmLocation, AlarmPriority, ChannelErrorActivation, NoActivation, \
+from ..entities import AlarmCategory, AlarmLocation, AlarmPriority, ChannelErrorActivation, NoActivation, \
     Source, AlarmInstance, AlarmActivationUnion, Activation, \
     EPICSActivation, NoteActivation, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
     OnDelayedOverride, OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, \
@@ -328,6 +328,46 @@ class ClassSerde(RegistryAvroSerde):
                           data.get('filterable'),
                           data.get('ondelayseconds'),
                           data.get('offdelayseconds'))
+
+
+class CategorySerde(RegistryAvroSerde):
+    """
+        Provides AlarmCategory serde utilities
+    """
+
+    def __init__(self, schema_registry_client: SchemaRegistryClient, avro_conf: Dict = None):
+        """
+            Create a new CategorySerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+            :param avro_conf: configuration for avro serde
+        """
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmCategory.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", [])
+
+        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, avro_conf)
+
+    def to_dict(self, data: AlarmLocation) -> Dict[str, str]:
+        """
+        Converts AlarmCategory to a dict.
+
+        :param data: The AlarmCategory
+        :return: A dict
+        """
+        return {
+            "team": data.team
+        }
+
+    def from_dict(self, data: Dict[str, str]) -> AlarmLocation:
+        """
+        Converts a dict to AlarmCategory.
+
+        :param data: The dict
+        :return: The AlarmCategory
+        """
+        return AlarmCategory(data['team'])
 
 
 class LocationSerde(RegistryAvroSerde):
