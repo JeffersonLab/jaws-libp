@@ -1,6 +1,6 @@
 services:
   jaws:
-    image: jeffersonlab/jaws-libp:4.8.3
+    image: jeffersonlab/jaws-libp:latest
     environment:
       - ALARM_LOCATIONS=INJ|CEBAF,NL|CEBAF,SL|CEBAF,CEBAF|
       - ALARM_CATEGORIES=Vacuum|VacGuys,RF|RfGuys,RADCON|RadGuys
