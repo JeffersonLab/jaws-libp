@@ -106,18 +106,18 @@ docker compose -f deps.yaml up
 `BOOTSTRAP_SERVERS=localhost:9094` and `SCHEMA_REGISTRY=http://localhost:8081`
 
 ## Test
-The integration tests depend on a running Kafka instance, generally in Docker.  The tests run automatically via the [CI](https://github.com/JeffersonLab/jaws-libp/actions/workflows/ci.yml) GitHub Action on every commit (unless `[no ci]` is included in the commit message).  The tests can be run locally during development.  Set up the development environment following the [Develop](https://github.com/JeffersonLab/jaws-libp#develop) instructions.  Then with the `deps.yaml` Docker containers running and the build virtual environment activated run:
+The integration tests depend on a running Kafka instance, generally in Docker.  The tests run automatically via the [CI](https://github.com/JeffersonLab/jaws-libp/actions/workflows/ci.yaml) GitHub Action on every commit (unless `[no ci]` is included in the commit message).  The tests can be run locally during development.  Set up the development environment following the [Develop](https://github.com/JeffersonLab/jaws-libp#develop) instructions.  Then with the `deps.yaml` Docker containers running and the build virtual environment activated run:
 ```
 pytest
 ```
 
 ## Release
 1. Bump the version number in the VERSION file and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).
-2. The [CD](https://github.com/JeffersonLab/jaws-libp/blob/main/.github/workflows/cd.yml) GitHub Action should run automatically invoking:
+2. The [CD](https://github.com/JeffersonLab/jaws-libp/blob/main/.github/workflows/cd.yaml) GitHub Action should run automatically invoking:
     - The [Create release](https://github.com/JeffersonLab/python-workflows/blob/main/.github/workflows/gh-release.yml) GitHub Action to tag the source and create release notes summarizing any pull requests.   Edit the release notes to add any missing details.
     - The [Publish artifact](https://github.com/JeffersonLab/python-workflows/blob/main/.github/workflows/pypi-publish.yml) GitHub Action to create a deployment artifact on PyPi.
     - The [Publish docs](https://github.com/JeffersonLab/python-workflows/blob/main/.github/workflows/gh-pages-publish.yml) GitHub Action to create Sphinx docs.
-    - The [Publish docker image](https://github.com/JeffersonLab/container-workflows/blob/main/.github/workflows/docker-publish.yml) GitHub Action to create a new demo Docker image, and bump the [compose.override.yaml](https://github.com/JeffersonLab/jaws-libp/blob/main/compose.override.yaml) to use the new image.
+    - The [Publish docker image](https://github.com/JeffersonLab/container-workflows/blob/main/.github/workflows/docker-publish.yaml) GitHub Action to create a new demo Docker image.
 
 ## See Also
  - [jaws-libj (Java)](https://github.com/JeffersonLab/jaws-libj)
