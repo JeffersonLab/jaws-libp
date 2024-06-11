@@ -1,4 +1,4 @@
-ODH=
-RADCON=
-RF=
-Vacuum=
+ODH={"team": "SSG"}
+RADCON={"team": "RADCON"}
+RF={"team": "RF"}
+Vacuum={"team": "Vacuum"}
