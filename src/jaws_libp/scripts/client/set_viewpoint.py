@@ -18,6 +18,8 @@ from ...entities import AlarmViewpoint
 @click.option('--unset', is_flag=True, help="Remove the viewpoint")
 @click.argument('name')
 @click.option('--location', '-l', help="Name of location", multiple=True)
+@click.option('--category', '-c', help="Name of category", multiple=True)
+@click.option('--alarmclass', '-a', help="Name of alarmclass", multiple=True)
 def set_viewpoint(file, unset, name, location, category, alarmclass) -> None:
     producer = ViewpointProducer('set_viewpoint.py')
 
