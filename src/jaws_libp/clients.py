@@ -707,7 +707,7 @@ class OverrideProducer(JAWSProducer):
         super().__init__('alarm-overrides', client_name, key_serde, value_serde)
 
 
-class ViewportProducer(JAWSProducer):
+class ViewpointProducer(JAWSProducer):
     """
         Producer for JAWS Viewport messages.
     """
