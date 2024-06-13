@@ -347,7 +347,7 @@ class CategorySerde(RegistryAvroSerde):
 
         super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, avro_conf)
 
-    def to_dict(self, data: AlarmLocation) -> Dict[str, str]:
+    def to_dict(self, data: AlarmCategory) -> Dict[str, str]:
         """
         Converts AlarmCategory to a dict.
 
@@ -358,7 +358,7 @@ class CategorySerde(RegistryAvroSerde):
             "team": data.team
         }
 
-    def from_dict(self, data: Dict[str, str]) -> AlarmLocation:
+    def from_dict(self, data: Dict[str, str]) -> AlarmCategory:
         """
         Converts a dict to AlarmCategory.
 
