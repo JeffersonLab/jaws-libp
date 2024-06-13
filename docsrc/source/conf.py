@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath("../../src"))
 # -- Project information -----------------------------------------------------
 
 project = 'jaws-libp'
-copyright = '2021, Jefferson Lab'
+html_show_copyright = False
 author = 'Ryan Slominski'
 
 
