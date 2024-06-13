@@ -1,0 +1,33 @@
+jaws\_libp.clients.EffectiveRegistrationConsumer
+================================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: EffectiveRegistrationConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EffectiveRegistrationConsumer.__init__
+      ~EffectiveRegistrationConsumer.add_listener
+      ~EffectiveRegistrationConsumer.await_highwater
+      ~EffectiveRegistrationConsumer.await_highwater_get
+      ~EffectiveRegistrationConsumer.export_records
+      ~EffectiveRegistrationConsumer.highwater_reached
+      ~EffectiveRegistrationConsumer.remove_listener
+      ~EffectiveRegistrationConsumer.start
+      ~EffectiveRegistrationConsumer.stop
+   
+   
+
+   
+   
+   
