@@ -8,21 +8,19 @@ on:
 
 jobs:
   release:
-    uses: jeffersonlab/python-workflows/.github/workflows/gh-release.yml@v1
+    uses: jeffersonlab/python-workflows/.github/workflows/gh-release.yaml@v2
 
   artifact_publish:
     needs:
       - release
-    uses: jeffersonlab/python-workflows/.github/workflows/pypi-publish.yml@v1
-    secrets: inherit
+    uses: jeffersonlab/python-workflows/.github/workflows/pypi-publish.yaml@v2
 
   docs_publish:
     needs:
       - release
-    uses: jeffersonlab/python-workflows/.github/workflows/gh-pages-publish.yml@v1
+    uses: jeffersonlab/python-workflows/.github/workflows/gh-pages-publish.yaml@v2
     with:
       semvertag: ${{ needs.release.outputs.semvertag }}
-    secrets: inherit
 
   docker_publish:
     needs:
