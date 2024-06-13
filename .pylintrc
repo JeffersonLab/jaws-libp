@@ -1,5 +1,6 @@
 [MASTER]
 ignore=avro.py
+disable=duplicate-code
 
 [MESSAGES CONTROL]
 disable=invalid-name

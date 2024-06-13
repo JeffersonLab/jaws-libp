@@ -7,6 +7,7 @@ from enum import Enum
 from typing import Union, Optional, List
 from functools import total_ordering
 
+
 class AlarmPriority(Enum):
     """
         Alarm Priority
@@ -154,6 +155,19 @@ class AlarmLocation:
     """
     parent: Optional[str]
     """Parent Location or null if top-level"""
+
+
+@dataclass
+class AlarmViewpoint:
+    """
+        Alarm Viewpoint.
+    """
+    location: List[str]
+    """The Alarm Location names"""
+    category: List[str]
+    """The Alarm Category names"""
+    alarmclass: List[str]
+    """The Alarm Class names"""
 
 
 @dataclass
