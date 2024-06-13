@@ -1,0 +1,34 @@
+jaws\_libp.scripts.client.set\_activation
+=========================================
+
+.. automodule:: jaws_libp.scripts.client.set_activation
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   .. click:: jaws_libp.scripts.client.set_activation:set_activation
+      :prog: set_activation
+      :nested: full
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

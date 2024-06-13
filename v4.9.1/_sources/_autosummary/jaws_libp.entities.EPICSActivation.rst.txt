@@ -1,0 +1,32 @@
+jaws\_libp.entities.EPICSActivation
+===================================
+
+.. currentmodule:: jaws_libp.entities
+
+.. autoclass:: EPICSActivation
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EPICSActivation.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EPICSActivation.sevr
+      ~EPICSActivation.stat
+   
+   

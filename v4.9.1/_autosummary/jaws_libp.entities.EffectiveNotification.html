@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jaws_libp.entities.EffectiveNotification &mdash; jaws-libp  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jaws_libp.entities.EffectiveRegistration" href="jaws_libp.entities.EffectiveRegistration.html" />
+    <link rel="prev" title="jaws_libp.entities.EffectiveAlarm" href="jaws_libp.entities.EffectiveAlarm.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            jaws-libp
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jaws_libp.html">jaws_libp</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.avro.html">jaws_libp.avro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.clients.html">jaws_libp.clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.console.html">jaws_libp.console</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jaws_libp.entities.html">jaws_libp.entities</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.Activation.html">jaws_libp.entities.Activation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmActivationUnion.html">jaws_libp.entities.AlarmActivationUnion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmCategory.html">jaws_libp.entities.AlarmCategory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmClass.html">jaws_libp.entities.AlarmClass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmInstance.html">jaws_libp.entities.AlarmInstance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmLocation.html">jaws_libp.entities.AlarmLocation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmOverrideKey.html">jaws_libp.entities.AlarmOverrideKey</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmOverrideSet.html">jaws_libp.entities.AlarmOverrideSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmOverrideUnion.html">jaws_libp.entities.AlarmOverrideUnion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmPriority.html">jaws_libp.entities.AlarmPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.AlarmState.html">jaws_libp.entities.AlarmState</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.CALCSource.html">jaws_libp.entities.CALCSource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ChannelErrorActivation.html">jaws_libp.entities.ChannelErrorActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.DisabledOverride.html">jaws_libp.entities.DisabledOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSActivation.html">jaws_libp.entities.EPICSActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSSEVR.html">jaws_libp.entities.EPICSSEVR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSSTAT.html">jaws_libp.entities.EPICSSTAT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EPICSSource.html">jaws_libp.entities.EPICSSource</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EffectiveAlarm.html">jaws_libp.entities.EffectiveAlarm</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jaws_libp.entities.EffectiveNotification</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#jaws_libp.entities.EffectiveNotification"><code class="docutils literal notranslate"><span class="pre">EffectiveNotification</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.EffectiveRegistration.html">jaws_libp.entities.EffectiveRegistration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.FilteredOverride.html">jaws_libp.entities.FilteredOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.IntermediateMonolog.html">jaws_libp.entities.IntermediateMonolog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.LatchedOverride.html">jaws_libp.entities.LatchedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.MaskedOverride.html">jaws_libp.entities.MaskedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.NoActivation.html">jaws_libp.entities.NoActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.NoteActivation.html">jaws_libp.entities.NoteActivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.OffDelayedOverride.html">jaws_libp.entities.OffDelayedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.OnDelayedOverride.html">jaws_libp.entities.OnDelayedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.OverriddenAlarmType.html">jaws_libp.entities.OverriddenAlarmType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ProcessorTransitions.html">jaws_libp.entities.ProcessorTransitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ShelvedOverride.html">jaws_libp.entities.ShelvedOverride</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.ShelvedReason.html">jaws_libp.entities.ShelvedReason</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.Source.html">jaws_libp.entities.Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.entities.UnionEncoding.html">jaws_libp.entities.UnionEncoding</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.eventsource.html">jaws_libp.eventsource</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.scripts.html">jaws_libp.scripts</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jaws-libp</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="jaws_libp.html">jaws_libp</a></li>
+          <li class="breadcrumb-item"><a href="jaws_libp.entities.html">jaws_libp.entities</a></li>
+      <li class="breadcrumb-item active">jaws_libp.entities.EffectiveNotification</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/jaws_libp.entities.EffectiveNotification.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="jaws-libp-entities-effectivenotification">
+<h1>jaws_libp.entities.EffectiveNotification<a class="headerlink" href="#jaws-libp-entities-effectivenotification" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="jaws_libp.entities.EffectiveNotification">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">jaws_libp.entities.</span></span><span class="sig-name descname"><span class="pre">EffectiveNotification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">activation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overrides</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jaws_libp/entities.html#EffectiveNotification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#jaws_libp.entities.EffectiveNotification" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Effective Notification (activation + overrides + state)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="jaws_libp.entities.EffectiveNotification.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">activation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overrides</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#jaws_libp.entities.EffectiveNotification.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.entities.EffectiveNotification.__init__" title="jaws_libp.entities.EffectiveNotification.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(activation, overrides, state)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.entities.EffectiveNotification.activation" title="jaws_libp.entities.EffectiveNotification.activation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">activation</span></code></a></p></td>
+<td><p>The Alarm Activation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#jaws_libp.entities.EffectiveNotification.overrides" title="jaws_libp.entities.EffectiveNotification.overrides"><code class="xref py py-obj docutils literal notranslate"><span class="pre">overrides</span></code></a></p></td>
+<td><p>The Alarm Overrides</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#jaws_libp.entities.EffectiveNotification.state" title="jaws_libp.entities.EffectiveNotification.state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state</span></code></a></p></td>
+<td><p>The calculated AlarmState considering activation and overrides</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jaws_libp.entities.EffectiveNotification.activation">
+<span class="sig-name descname"><span class="pre">activation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="jaws_libp.entities.AlarmActivationUnion.html#jaws_libp.entities.AlarmActivationUnion" title="jaws_libp.entities.AlarmActivationUnion"><code class="xref py py-class docutils literal notranslate"><span class="pre">AlarmActivationUnion</span></code></a></em><a class="headerlink" href="#jaws_libp.entities.EffectiveNotification.activation" title="Permalink to this definition"></a></dt>
+<dd><p>The Alarm Activation</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jaws_libp.entities.EffectiveNotification.overrides">
+<span class="sig-name descname"><span class="pre">overrides</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="jaws_libp.entities.AlarmOverrideSet.html#jaws_libp.entities.AlarmOverrideSet" title="jaws_libp.entities.AlarmOverrideSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">AlarmOverrideSet</span></code></a></em><a class="headerlink" href="#jaws_libp.entities.EffectiveNotification.overrides" title="Permalink to this definition"></a></dt>
+<dd><p>The Alarm Overrides</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="jaws_libp.entities.EffectiveNotification.state">
+<span class="sig-name descname"><span class="pre">state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="jaws_libp.entities.AlarmState.html#jaws_libp.entities.AlarmState" title="jaws_libp.entities.AlarmState"><code class="xref py py-class docutils literal notranslate"><span class="pre">AlarmState</span></code></a></em><a class="headerlink" href="#jaws_libp.entities.EffectiveNotification.state" title="Permalink to this definition"></a></dt>
+<dd><p>The calculated AlarmState considering activation and overrides</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="jaws_libp.entities.EffectiveAlarm.html" class="btn btn-neutral float-left" title="jaws_libp.entities.EffectiveAlarm" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="jaws_libp.entities.EffectiveRegistration.html" class="btn btn-neutral float-right" title="jaws_libp.entities.EffectiveRegistration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Jefferson Lab.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

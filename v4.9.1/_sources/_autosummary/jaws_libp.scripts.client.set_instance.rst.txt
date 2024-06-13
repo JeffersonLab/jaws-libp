@@ -1,0 +1,34 @@
+jaws\_libp.scripts.client.set\_instance
+=======================================
+
+.. automodule:: jaws_libp.scripts.client.set_instance
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   .. click:: jaws_libp.scripts.client.set_instance:set_instance
+      :prog: set_instance
+      :nested: full
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,34 @@
+jaws\_libp.scripts.client.set\_category
+=======================================
+
+.. automodule:: jaws_libp.scripts.client.set_category
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   .. click:: jaws_libp.scripts.client.set_category:set_category
+      :prog: set_category
+      :nested: full
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
