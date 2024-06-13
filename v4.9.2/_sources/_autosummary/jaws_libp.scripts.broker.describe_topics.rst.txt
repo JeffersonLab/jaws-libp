@@ -1,0 +1,36 @@
+jaws\_libp.scripts.broker.describe\_topics
+==========================================
+
+.. automodule:: jaws_libp.scripts.broker.describe_topics
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   ********************
+   describe_topics
+   ********************
+   .. parsed-literal::
+      describe_topics
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
