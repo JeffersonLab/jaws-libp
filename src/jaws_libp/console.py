@@ -211,7 +211,6 @@ class ClassConsoleConsumer(ConsoleConsumer):
                                       if msg.value().rationale is not None else None,
                                       msg.value().corrective_action.replace("\n", "\\n")
                                       if msg.value().corrective_action is not None else None,
-                                      msg.value().point_of_contact_username,
                                       msg.value().latchable,
                                       msg.value().filterable,
                                       msg.value().on_delay_seconds,
