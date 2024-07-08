@@ -28,6 +28,9 @@ def set_category(file, unset, name, team) -> None:
         if unset:
             value = None
         else:
+            if team is None:
+                raise click.ClickException("--team required")
+
             value = AlarmCategory(team)
 
         producer.send(key, value)
