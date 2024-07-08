@@ -203,7 +203,7 @@ class ClassConsoleConsumer(ConsoleConsumer):
         consumer = ClassConsumer(client_name)
 
         super().__init__(consumer, ["Class Name", "Category", "Priority", "Rationale", "Corrective Action",
-                                    "P.O.C. Username", "Latchable", "Filterable", "On Delay", "Off Delay"],
+                                   "Latchable", "Filterable", "On Delay", "Off Delay"],
                          lambda msg: [msg.key(),
                                       msg.value().category,
                                       msg.value().priority.name if msg.value().priority is not None else None,
