@@ -1,0 +1,32 @@
+jaws\_libp.avro.serde.CategorySerde
+===================================
+
+.. currentmodule:: jaws_libp.avro.serde
+
+.. autoclass:: CategorySerde
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CategorySerde.__init__
+      ~CategorySerde.deserializer
+      ~CategorySerde.from_dict
+      ~CategorySerde.from_json
+      ~CategorySerde.get_schema
+      ~CategorySerde.serializer
+      ~CategorySerde.to_dict
+      ~CategorySerde.to_json
+   
+   
+
+   
+   
+   
