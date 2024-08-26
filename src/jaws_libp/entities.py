@@ -292,9 +292,9 @@ class ShelvedOverride:
 
 
 @dataclass
-class AlarmClass:
+class AlarmAction:
     """
-        Alarm Class
+        Alarm Action (class of alarm)
     """
     category: str
     """The Alarm Category"""
@@ -317,11 +317,11 @@ class AlarmClass:
 @dataclass
 class AlarmInstance:
     """
-        Alarm Instance (of an AlarmClass).   An instance inherits class attributes, but also brings instance-specific
+        Alarm Instance.   An instance inherits action class attributes, but also brings instance-specific
         attributes.
     """
-    alarm_class: str
-    """The Alarm Class"""
+    action: str
+    """The Alarm Action"""
     source: Union[Source, EPICSSource, CALCSource]
     """The Alarm Source specific info"""
     location: List[str]
@@ -417,10 +417,10 @@ class ProcessorTransitions:
 @dataclass
 class EffectiveRegistration:
     """
-        Effective Registration (class + instance)
+        Effective Registration (action class + instance)
     """
-    alarm_class: AlarmClass
-    """The Alarm Class"""
+    action: AlarmAction
+    """The Alarm Action (class of alarm)"""
 
     instance: AlarmInstance
     """The actual alarm registration instance"""
