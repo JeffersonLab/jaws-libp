@@ -14,7 +14,7 @@ from confluent_kafka.serialization import StringSerializer, StringDeserializer, 
     SerializationContext
 
 from ..entities import AlarmCategory, AlarmLocation, AlarmPriority, ChannelErrorActivation, NoActivation, \
-    Source, AlarmInstance, AlarmActivationUnion, Activation, \
+    Source, AlarmInstance, AlarmActivationUnion, Activation, AlarmViewpoint, \
     EPICSActivation, NoteActivation, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
     OnDelayedOverride, OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, \
     ShelvedReason, EPICSSEVR, EPICSSTAT, UnionEncoding, CALCSource, EPICSSource, AlarmClass, \
@@ -1234,3 +1234,45 @@ class IntermediateMonologSerde(RegistryAvroWithReferencesSerde):
         return IntermediateMonolog(self._effective_registration_serde.from_dict(data['registration']),
                                    self._effective_notification_serde.from_dict(data['notification']),
                                    self._processor_transition_serde.from_dict(data['transitions']))
+
+
+class ViewpointSerde(RegistryAvroSerde):
+    """
+        Provides AlarmViewpoint serde utilities
+    """
+
+    def __init__(self, schema_registry_client: SchemaRegistryClient, avro_conf: Dict = None):
+        """
+            Create a new ViewpointSerde.
+
+            :param schema_registry_client: The SchemaRegistryClient
+            :param avro_conf: configuration for avro serde
+        """
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmViewpoint.avsc")
+        schema_str = schema_bytes.decode('utf-8')
+
+        schema = Schema(schema_str, "AVRO", [])
+
+        super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, avro_conf)
+
+    def to_dict(self, data: AlarmViewpoint) -> Dict[str, str]:
+        """
+        Converts AlarmViewpoint to a dict.
+
+        :param data: The AlarmViewpoint
+        :return: A dict
+        """
+        return {
+            "location": data.location,
+            "category": data.category,
+            "alarmclass": data.alarmclass
+        }
+
+    def from_dict(self, data: Dict[str, str]) -> AlarmViewpoint:
+        """
+        Converts a dict to AlarmViewpoint.
+
+        :param data: The dict
+        :return: The AlarmViewpoint
+        """
+        return AlarmViewpoint(data['location'], data['category'], data['alarmclass'])

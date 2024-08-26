@@ -16,7 +16,8 @@ from confluent_kafka.schema_registry import SchemaRegistryClient
 from psutil import Process
 
 from .avro.serde import CategorySerde, LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
-    StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ClassSerde, ActivationSerde, InstanceSerde
+    StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ClassSerde, ActivationSerde, InstanceSerde, \
+    ViewpointSerde
 from .entities import UnionEncoding
 from .eventsource import EventSourceListener, EventSourceTable
 from .scripts import DEFAULT_BOOTSTRAP_SERVERS
@@ -529,6 +530,30 @@ class OverrideConsumer(JAWSConsumer):
         super().__init__(config)
 
 
+class ViewpointConsumer(JAWSConsumer):
+    """
+        Consumer for JAWS Viewpoint messages.
+    """
+    def __init__(self, client_name: str):
+        """
+            Create a new Consumer.
+
+            :param client_name: The name of the client application
+        """
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = ViewpointSerde(schema_registry_client)
+
+        config = {
+            'topic': 'alarm-viewpoints',
+            'client.name': client_name,
+            'key.serde': key_serde,
+            'value.serde': value_serde
+        }
+
+        super().__init__(config)
+
+
 class ActivationProducer(JAWSProducer):
     """
         Producer for JAWS Activation messages.
@@ -680,3 +705,20 @@ class OverrideProducer(JAWSProducer):
         value_serde = OverrideSerde(schema_registry_client)
 
         super().__init__('alarm-overrides', client_name, key_serde, value_serde)
+
+
+class ViewpointProducer(JAWSProducer):
+    """
+        Producer for JAWS Viewport messages.
+    """
+    def __init__(self, client_name: str):
+        """
+            Create a new Producer.
+
+            :param client_name: The name of the client application
+        """
+        schema_registry_client = get_registry_client()
+        key_serde = StringSerde()
+        value_serde = ViewpointSerde(schema_registry_client)
+
+        super().__init__('alarm-viewpoints', client_name, key_serde, value_serde)

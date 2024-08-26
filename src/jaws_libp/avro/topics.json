@@ -5,6 +5,7 @@
   "alarm-instances",
   "alarm-locations",
   "alarm-overrides",
+  "alarm-viewpoints",
   "intermediate-registration",
   "intermediate-activation",
   "intermediate-latch",

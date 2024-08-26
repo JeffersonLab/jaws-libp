@@ -1,0 +1,35 @@
+{
+    "type": "record",
+    "name": "AlarmViewpoint",
+    "namespace": "org.jlab.jaws.entity",
+    "doc": "Value of a named viewpoint",
+    "fields": [
+        {
+            "name": "location",
+            "type": {
+                "type": "array",
+                "items" : "string",
+                "default": []
+            },
+            "doc": "The location names"
+        },
+        {
+            "name": "category",
+            "type": {
+                "type": "array",
+                "items" : "string",
+                "default": []
+            },
+            "doc": "The category names"
+        },
+        {
+            "name": "alarmclass",
+            "type": {
+                "type": "array",
+                "items" : "string",
+                "default": []
+            },
+            "doc": "The alarmclass names"
+        }
+    ]
+}

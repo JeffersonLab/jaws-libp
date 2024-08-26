@@ -11,7 +11,7 @@ from confluent_kafka import Message
 from tabulate import tabulate
 from .clients import JAWSConsumer, CategoryConsumer, ActivationConsumer, LocationConsumer, OverrideConsumer, \
     InstanceConsumer, EffectiveRegistrationConsumer, EffectiveAlarmConsumer, EffectiveNotificationConsumer, \
-    ClassConsumer
+    ClassConsumer, ViewpointConsumer
 from .eventsource import EventSourceListener
 
 
@@ -322,3 +322,19 @@ class OverrideConsoleConsumer(ConsoleConsumer):
         super().__init__(consumer, ["Alarm Name", "Override Type", "Value"], lambda msg: [msg.key().name,
                                                                                           msg.key().type.name,
                                                                                           msg.value()])
+
+
+class ViewpointConsoleConsumer(ConsoleConsumer):
+    """
+        ConsoleConsumer for JAWS Viewpoint messages.
+    """
+    def __init__(self, client_name: str):
+        """
+            Create a new Consumer.
+
+            :param client_name: The name of the client application
+        """
+        consumer = ViewpointConsumer(client_name)
+
+        super().__init__(consumer, ["Viewpoint Name", "Location", "Category", "AlarmClass"],
+                         lambda msg: [msg.key(), msg.value().location, msg.value().category, msg.value().alarmclass])
