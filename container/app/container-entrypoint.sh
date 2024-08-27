@@ -61,21 +61,21 @@ fi
 
 
 echo "--------------------------"
-echo "Step 5: Adding categories "
+echo "Step 5: Adding systems "
 echo "--------------------------"
-if [[ -z "${ALARM_CATEGORIES}" ]]; then
-  echo "No categories specified"
-elif beginswith 'https://' "${ALARM_CATEGORIES}"; then
-  echo "HTTPS URL specified: $ALARM_CATEGORIES"
-  wget -O /tmp/categories "$ALARM_CATEGORIES"
-  set_category --file /tmp/categories
-elif [[ -f "$ALARM_CATEGORIES" ]]; then
-  echo "Attempting to setup categories from file $ALARM_CATEGORIES"
-  set_category --file "$ALARM_CATEGORIES"
+if [[ -z "${ALARM_SYSTEMS}" ]]; then
+  echo "No systems specified"
+elif beginswith 'https://' "${ALARM_SYSTEMS}"; then
+  echo "HTTPS URL specified: $ALARM_SYSTEMS"
+  wget -O /tmp/systems "$ALARM_SYSTEMS"
+  set_category --file /tmp/systems
+elif [[ -f "$ALARM_SYSTEMS" ]]; then
+  echo "Attempting to setup systems from file $ALARM_SYSTEMS"
+  set_category --file "$ALARM_SYSTEMS"
 else
   echo "Attempting to setup categories"
   IFS=','
-  read -a definitions <<< "$ALARM_CATEGORIES"
+  read -a definitions <<< "$ALARM_SYSTEMS"
   for defStr in "${definitions[@]}";
     do
       IFS='|'

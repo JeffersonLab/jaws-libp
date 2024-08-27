@@ -19,11 +19,11 @@ services:
     environment:
       - LOGLEVEL=DEBUG
       - ALARM_LOCATIONS=/data/locations
-      - ALARM_CATEGORIES=/data/categories
+      - ALARM_SYSTEMS=/data/systems
       - ALARM_ACTIONS=/data/actions
-      - ALARM_INSTANCES=/data/alarms
-      #- ALARM_INSTANCES=https://raw.githubusercontent.com/JeffersonLab/alarms/main/instances
-      #- ALARM_INSTANCES_URL_CSV=aperture,bcm,beamdump,bels,blm,box,bpm,camac,crates,cryo,dempow,gun,harp,helicity,ioc,ion,laser,lcw,misc,mo,odh,radcon,rf,rfsep,trim,vacuum
+      - ALARMS=/data/alarms
+      #- ALARMS=https://raw.githubusercontent.com/JeffersonLab/alarms/main/instances
+      #- ALARMS_URL_CSV=aperture,bcm,beamdump,bels,blm,box,bpm,camac,crates,cryo,dempow,gun,harp,helicity,ioc,ion,laser,lcw,misc,mo,odh,radcon,rf,rfsep,trim,vacuum
       - ALARM_OVERRIDES=/data/overrides
       #- ALARM_OVERRIDES=https://raw.githubusercontent.com/JeffersonLab/alarms/main/overrides
     volumes:

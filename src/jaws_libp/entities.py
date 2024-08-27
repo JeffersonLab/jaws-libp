@@ -139,9 +139,9 @@ class EPICSSTAT(Enum):
 
 
 @dataclass
-class AlarmCategory:
+class AlarmSystem:
     """
-        Alarm Category record
+        Alarm System record
     """
     team: str
     """Team name"""
@@ -296,8 +296,8 @@ class AlarmAction:
     """
         Alarm Action (class of alarm)
     """
-    category: str
-    """The Alarm Category"""
+    system: str
+    """The Alarm System"""
     priority: AlarmPriority
     """The Alarm Priority"""
     rationale: str
@@ -317,8 +317,8 @@ class AlarmAction:
 @dataclass
 class Alarm:
     """
-        Alarm Instance.   An instance associates with action class attributes, but also brings instance-specific
-        attributes.
+        Alarm registration instance.   An instance associates with action class attributes, but also brings
+        instance-specific attributes.
     """
     action: str
     """The Alarm Action"""

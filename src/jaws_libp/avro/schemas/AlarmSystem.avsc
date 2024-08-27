@@ -1,8 +1,8 @@
 {
     "type": "record",
-    "name": "AlarmCategory",
+    "name": "AlarmSystem",
     "namespace": "org.jlab.jaws.entity",
-    "doc": "Value of a named category",
+    "doc": "Value of a named system",
     "fields": [
         {
             "name": "team",

@@ -12,7 +12,7 @@ import click
 from click import Choice
 
 from ...clients import ActionProducer
-from ...console import CategoryConsoleConsumer
+from ...console import SystemConsoleConsumer
 from ...entities import AlarmAction, AlarmPriority
 
 
@@ -22,8 +22,8 @@ from ...entities import AlarmAction, AlarmPriority
               help="Imports a file of key=value pairs (one per line) where the key is alarm name and value is JSON "
                    "encoded AVRO formatted per the alarm-actions-value schema")
 @click.option('--unset', is_flag=True, help="Remove the class")
-@click.option('--category', type=click.Choice([]),
-              help="The alarm category (Options queried on-demand from alarm-categories topic)")
+@click.option('--system', type=click.Choice([]),
+              help="The alarm system (Options queried on-demand from alarm-systems topic)")
 @click.option('--priority', type=click.Choice(list(map(lambda c: c.name, AlarmPriority))), help="The alarm priority")
 @click.option('--filterable/--not-filterable', is_flag=True, default=True,
               help="True if alarm can be filtered out of view")
@@ -34,7 +34,7 @@ from ...entities import AlarmAction, AlarmPriority
 @click.option('--ondelayseconds', type=int, default=None, help="Number of on delay seconds")
 @click.option('--offdelayseconds', type=int, default=None, help="Number of off delay seconds")
 @click.argument('name')
-def set_action(file, unset, category,
+def set_action(file, unset, system,
               priority, filterable, latchable, rationale,
               correctiveaction, ondelayseconds, offdelayseconds, name) -> None:
     producer = ActionProducer('set_action.py')
@@ -47,8 +47,8 @@ def set_action(file, unset, category,
         if unset:
             value = None
         else:
-            if category is None:
-                raise click.ClickException("--category required")
+            if system is None:
+                raise click.ClickException("--system required")
 
             if priority is None:
                 raise click.ClickException("--priority required")
@@ -59,23 +59,23 @@ def set_action(file, unset, category,
             if correctiveaction is None:
                 raise click.ClickException("--correctiveaction required")
 
-            value = AlarmAction(category,
-                               AlarmPriority[priority],
-                               rationale,
-                               correctiveaction,
-                               latchable,
-                               filterable,
-                               ondelayseconds,
-                               offdelayseconds)
+            value = AlarmAction(system,
+                                AlarmPriority[priority],
+                                rationale,
+                                correctiveaction,
+                                latchable,
+                                filterable,
+                                ondelayseconds,
+                                offdelayseconds)
 
         producer.send(key, value)
 
 
 def click_main() -> None:
-    cat_consumer = CategoryConsoleConsumer('set_action.py')
-    categories = cat_consumer.get_keys_then_done()
+    cat_consumer = SystemConsoleConsumer('set_action.py')
+    systems = cat_consumer.get_keys_then_done()
 
-    set_action.params[2].type = Choice(categories)
+    set_action.params[2].type = Choice(systems)
 
     set_action()
 
