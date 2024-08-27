@@ -457,9 +457,9 @@ class EffectiveRegistrationConsumer(JAWSConsumer):
         super().__init__(config)
 
 
-class InstanceConsumer(JAWSConsumer):
+class AlarmConsumer(JAWSConsumer):
     """
-        Consumer for JAWS Instance messages.
+        Consumer for JAWS Alarm registration instance messages.
     """
     def __init__(self, client_name: str):
         """
@@ -631,9 +631,9 @@ class EffectiveRegistrationProducer(JAWSProducer):
         super().__init__('effective-registrations', client_name, key_serde, value_serde)
 
 
-class InstanceProducer(JAWSProducer):
+class AlarmProducer(JAWSProducer):
     """
-        Producer for JAWS Instance messages.
+        Producer for JAWS alarm registration instance messages.
     """
     def __init__(self, client_name: str):
         """

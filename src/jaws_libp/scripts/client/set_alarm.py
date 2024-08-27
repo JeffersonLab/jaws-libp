@@ -11,7 +11,7 @@
 import click
 from click import Choice
 
-from ...clients import InstanceProducer
+from ...clients import AlarmProducer
 from ...console import LocationConsoleConsumer
 from ...entities import Alarm, \
     Source, EPICSSource, CALCSource
@@ -35,7 +35,7 @@ from ...entities import Alarm, \
 @click.argument('name')
 def set_alarm(file, unset, action, pv, expression, location,
                  screencommand, managedby, maskedby, name) -> None:
-    producer = InstanceProducer('set_alarm.py')
+    producer = AlarmProducer('set_alarm.py')
 
     key = name
 

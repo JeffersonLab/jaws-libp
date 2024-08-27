@@ -567,11 +567,11 @@ class AlarmSerde(RegistryAvroSerde):
             source = Source()
 
         return Alarm(data.get('action'),
-                             source,
-                             data.get('location'),
-                             data.get('managedby'),
-                             data.get('maskedby'),
-                             data.get('screencommand'))
+                     source,
+                     data.get('location'),
+                     data.get('managedby'),
+                     data.get('maskedby'),
+                     data.get('screencommand'))
 
 
 class OverrideSetSerde(RegistryAvroWithReferencesSerde):
@@ -708,25 +708,25 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
             :param avro_conf: configuration for avro serde
         """
         self._action_serde = ActionSerde(schema_registry_client)
-        self._instance_serde = AlarmSerde(schema_registry_client)
+        self._alarm_serde = AlarmSerde(schema_registry_client)
 
         action_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmAction", "alarm-actions-value", 1)
-        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.Alarm",
+        alarm_schema_ref = SchemaReference("org.jlab.jaws.entity.Alarm",
                                                   "alarm-value", 1)
 
-        references = [action_schema_ref, registration_schema_ref]
+        references = [action_schema_ref, alarm_schema_ref]
 
         action_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmAction.avsc")
         action_schema_str = action_bytes.decode('utf-8')
 
-        instance_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/Alarm.avsc")
-        instance_schema_str = instance_bytes.decode('utf-8')
+        alarm_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/Alarm.avsc")
+        alarm_schema_str = alarm_bytes.decode('utf-8')
 
         named_schemas = {}
 
         ref_dict = json.loads(action_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = json.loads(instance_schema_str)
+        ref_dict = json.loads(alarm_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
         schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveRegistration.avsc")
@@ -746,7 +746,7 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
         """
         return {
             "action": self._action_serde.to_dict(data.action) if data.action is not None else None,
-            "instance": self._instance_serde.to_dict(data.instance) if data.instance is not None else None
+            "alarm": self._alarm_serde.to_dict(data.alarm) if data.alarm is not None else None
         }
 
     def from_dict(self, data: Dict[str, Any]) -> EffectiveRegistration:
@@ -758,8 +758,8 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
         """
         return EffectiveRegistration(
             self._action_serde.from_dict(data['action'][1]) if data.get('action') is not None else None,
-            self._instance_serde.from_dict(data['instance'][1])
-            if data.get('instance') is not None else None)
+            self._alarm_serde.from_dict(data['alarm'][1])
+            if data.get('alarm') is not None else None)
 
 
 class EffectiveNotificationSerde(RegistryAvroWithReferencesSerde):

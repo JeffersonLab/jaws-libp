@@ -152,36 +152,36 @@ else
 fi
 
 
-echo "-------------------------"
-echo "Step 7: Adding instances "
-echo "-------------------------"
-if [[ -z "${ALARM_INSTANCES}" ]]; then
+echo "--------------------------------------------"
+echo "Step 7: Adding alarm registration instances "
+echo "--------------------------------------------"
+if [[ -z "${ALARMS}" ]]; then
   echo "No alarm definitions specified"
-elif beginswith 'https://' "${ALARM_INSTANCES}"; then
-  echo "HTTPS URL specified: $ALARM_INSTANCES"
+elif beginswith 'https://' "${ALARMS}"; then
+  echo "HTTPS URL specified: $ALARMS"
 
-  if [[ -n "${ALARM_INSTANCES_URL_CSV}" ]]; then
-    echo "Using URL_CSV: $ALARM_INSTANCES_URL_CSV"
+  if [[ -n "${ALARMS_URL_CSV}" ]]; then
+    echo "Using URL_CSV: $ALARMS_URL_CSV"
     IFS=','
-    read -a definitions <<< "$ALARM_INSTANCES_URL_CSV"
+    read -a definitions <<< "$ALARMS_URL_CSV"
     for defStr in "${definitions[@]}";
       do
-        echo "Loading URL: ${ALARM_INSTANCES}/${defStr}"
-        wget -O /tmp/instances "${ALARM_INSTANCES}/${defStr}"
-        set_instance --file /tmp/instances
+        echo "Loading URL: ${ALARMS}/${defStr}"
+        wget -O /tmp/alarms "${ALARMS}/${defStr}"
+        set_instance --file /tmp/alarms
       done
   else
     echo "Grabbing single URL"
-    wget -O /tmp/instances "$ALARM_INSTANCES"
-    set_instance --file /tmp/instances
+    wget -O /tmp/alarms "$ALARMS"
+    set_instance --file /tmp/alarms
   fi
-elif [[ -f "$ALARM_INSTANCES" ]]; then
-  echo "Attempting to setup alarm definitions from file $ALARM_INSTANCES"
-  set_instance --file "$ALARM_INSTANCES"
+elif [[ -f "$ALARMS" ]]; then
+  echo "Attempting to setup alarm definitions from file $ALARMS"
+  set_instance --file "$ALARMS"
 else
   echo "Attempting to setup instances"
   IFS=','
-  read -a definitions <<< "$ALARM_INSTANCES"
+  read -a definitions <<< "$ALARMS"
   for defStr in "${definitions[@]}";
     do
       IFS='|'

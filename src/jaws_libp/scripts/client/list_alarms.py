@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 """
-    Lists the alarm registration instances.
+    Lists the alarm registration alarms.
 """
 
 import click
 
-from ...console import InstanceConsoleConsumer
+from ...console import AlarmConsoleConsumer
 
 
 # pylint: disable=too-few-public-methods
@@ -32,7 +32,7 @@ class ActionFilter:
 @click.option('--export', is_flag=True, help="Dump records in AVRO JSON format")
 @click.option('--action', help="Only show alarms with the specified action (class of alarm)")
 def list_alarms(monitor, nometa, export, action) -> None:
-    consumer = InstanceConsoleConsumer('list_alarms.py')
+    consumer = AlarmConsoleConsumer('list_alarms.py')
 
     filter_obj = ActionFilter(action)
 
