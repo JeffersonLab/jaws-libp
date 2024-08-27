@@ -68,10 +68,10 @@ if [[ -z "${ALARM_SYSTEMS}" ]]; then
 elif beginswith 'https://' "${ALARM_SYSTEMS}"; then
   echo "HTTPS URL specified: $ALARM_SYSTEMS"
   wget -O /tmp/systems "$ALARM_SYSTEMS"
-  set_category --file /tmp/systems
+  set_system --file /tmp/systems
 elif [[ -f "$ALARM_SYSTEMS" ]]; then
   echo "Attempting to setup systems from file $ALARM_SYSTEMS"
-  set_category --file "$ALARM_SYSTEMS"
+  set_system --file "$ALARM_SYSTEMS"
 else
   echo "Attempting to setup categories"
   IFS=','
@@ -89,7 +89,7 @@ else
         PARMS+=(--team "${team}")
       fi
 
-      set_category "${PARMS[@]}"
+      set_system "${PARMS[@]}"
     done
 fi
 
