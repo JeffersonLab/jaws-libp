@@ -315,9 +315,9 @@ class AlarmAction:
 
 
 @dataclass
-class AlarmInstance:
+class Alarm:
     """
-        Alarm Instance.   An instance inherits action class attributes, but also brings instance-specific
+        Alarm Instance.   An instance associates with action class attributes, but also brings instance-specific
         attributes.
     """
     action: str
@@ -419,13 +419,13 @@ class ProcessorTransitions:
 @dataclass
 class EffectiveRegistration:
     """
-        Effective Registration (action class + instance)
+        Effective Registration (action class + alarm instance)
     """
     action: AlarmAction
     """The Alarm Action (class of alarm)"""
 
-    instance: AlarmInstance
-    """The actual alarm registration instance"""
+    alarm: Alarm
+    """The registered alarm instance"""
 
 
 @dataclass

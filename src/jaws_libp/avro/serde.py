@@ -14,7 +14,7 @@ from confluent_kafka.serialization import StringSerializer, StringDeserializer, 
     SerializationContext
 
 from ..entities import AlarmCategory, AlarmLocation, AlarmPriority, ChannelErrorActivation, NoActivation, \
-    Source, AlarmInstance, AlarmActivationUnion, Activation, \
+    Source, Alarm, AlarmActivationUnion, Activation, \
     EPICSActivation, NoteActivation, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
     OnDelayedOverride, OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, \
     ShelvedReason, EPICSSEVR, EPICSSTAT, UnionEncoding, CALCSource, EPICSSource, AlarmAction, \
@@ -495,32 +495,32 @@ class ActivationSerde(RegistryAvroSerde):
         return AlarmActivationUnion(obj)
 
 
-class InstanceSerde(RegistryAvroSerde):
+class AlarmSerde(RegistryAvroSerde):
     """
-        Provides AlarmInstance serde utilities
+        Provides Alarm serde utilities
     """
 
     def __init__(self, schema_registry_client: SchemaRegistryClient,
                  union_encoding: UnionEncoding = UnionEncoding.TUPLE, avro_conf: Dict = None):
         """
-            Create a new InstanceSerde.
+            Create a new AlarmSerde.
 
             :param schema_registry_client: The SchemaRegistryClient
             :param union_encoding: The union encoding to use
             :param avro_conf: configuration for avro serde
         """
-        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmInstance.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/Alarm.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
 
         super().__init__(schema_registry_client, schema, union_encoding, avro_conf)
 
-    def to_dict(self, data: AlarmInstance) -> Dict[str, Union[str, Dict[str, Any]]]:
+    def to_dict(self, data: Alarm) -> Dict[str, Union[str, Dict[str, Any]]]:
         """
-            Converts an AlarmInstance to a dict.
+            Converts an Alarm to a dict.
 
-            :param data: The AlarmInstance
+            :param data: The Alarm
             :return: A dict
         """
         if isinstance(data.source, Source):
@@ -546,14 +546,14 @@ class InstanceSerde(RegistryAvroSerde):
             "screencommand": data.screen_command
         }
 
-    def from_dict(self, data: Dict[str, Union[str, Any]]) -> AlarmInstance:
+    def from_dict(self, data: Dict[str, Union[str, Any]]) -> Alarm:
         """
-            Converts a dict to an AlarmInstance.
+            Converts a dict to an Alarm.
 
             Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
 
             :param data: The dict
-            :return: The AlarmInstance
+            :return: The Alarm
         """
         unionobj = data['source']
 
@@ -566,12 +566,12 @@ class InstanceSerde(RegistryAvroSerde):
         else:
             source = Source()
 
-        return AlarmInstance(data.get('action'),
-                             source,
-                             data.get('location'),
-                             data.get('managedby'),
-                             data.get('maskedby'),
-                             data.get('screencommand'))
+        return Alarm(data.get('action'),
+                     source,
+                     data.get('location'),
+                     data.get('managedby'),
+                     data.get('maskedby'),
+                     data.get('screencommand'))
 
 
 class OverrideSetSerde(RegistryAvroWithReferencesSerde):
@@ -708,25 +708,25 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
             :param avro_conf: configuration for avro serde
         """
         self._action_serde = ActionSerde(schema_registry_client)
-        self._instance_serde = InstanceSerde(schema_registry_client)
+        self._alarm_serde = AlarmSerde(schema_registry_client)
 
         action_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmAction", "alarm-actions-value", 1)
-        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmInstance",
-                                                  "alarm-instances-value", 1)
+        alarm_schema_ref = SchemaReference("org.jlab.jaws.entity.Alarm",
+                                                  "alarms-value", 1)
 
-        references = [action_schema_ref, registration_schema_ref]
+        references = [action_schema_ref, alarm_schema_ref]
 
         action_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmAction.avsc")
         action_schema_str = action_bytes.decode('utf-8')
 
-        instance_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmInstance.avsc")
-        instance_schema_str = instance_bytes.decode('utf-8')
+        alarm_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/Alarm.avsc")
+        alarm_schema_str = alarm_bytes.decode('utf-8')
 
         named_schemas = {}
 
         ref_dict = json.loads(action_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
-        ref_dict = json.loads(instance_schema_str)
+        ref_dict = json.loads(alarm_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
 
         schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/EffectiveRegistration.avsc")
@@ -746,7 +746,7 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
         """
         return {
             "action": self._action_serde.to_dict(data.action) if data.action is not None else None,
-            "instance": self._instance_serde.to_dict(data.instance) if data.instance is not None else None
+            "alarm": self._alarm_serde.to_dict(data.alarm) if data.alarm is not None else None
         }
 
     def from_dict(self, data: Dict[str, Any]) -> EffectiveRegistration:
@@ -758,8 +758,8 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
         """
         return EffectiveRegistration(
             self._action_serde.from_dict(data['action'][1]) if data.get('action') is not None else None,
-            self._instance_serde.from_dict(data['instance'][1])
-            if data.get('instance') is not None else None)
+            self._alarm_serde.from_dict(data['alarm'][1])
+            if data.get('alarm') is not None else None)
 
 
 class EffectiveNotificationSerde(RegistryAvroWithReferencesSerde):

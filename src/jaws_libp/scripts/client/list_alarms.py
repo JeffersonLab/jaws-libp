@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 """
-    Lists the alarm registration instances.
+    Lists the alarm registration alarms.
 """
 
 import click
 
-from ...console import InstanceConsoleConsumer
+from ...console import AlarmConsoleConsumer
 
 
 # pylint: disable=too-few-public-methods
@@ -30,9 +30,9 @@ class ActionFilter:
 @click.option('--monitor', is_flag=True, help="Monitor indefinitely")
 @click.option('--nometa', is_flag=True, help="Exclude audit headers and timestamp")
 @click.option('--export', is_flag=True, help="Dump records in AVRO JSON format")
-@click.option('--action', help="Only show instances with the specified action (class of alarm)")
-def list_instances(monitor, nometa, export, action) -> None:
-    consumer = InstanceConsoleConsumer('list_instances.py')
+@click.option('--action', help="Only show alarms with the specified action (class of alarm)")
+def list_alarms(monitor, nometa, export, action) -> None:
+    consumer = AlarmConsoleConsumer('list_alarms.py')
 
     filter_obj = ActionFilter(action)
 
@@ -40,7 +40,7 @@ def list_instances(monitor, nometa, export, action) -> None:
 
 
 def click_main() -> None:
-    list_instances()
+    list_alarms()
 
 
 if __name__ == "__main__":
