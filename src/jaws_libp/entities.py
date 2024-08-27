@@ -326,6 +326,8 @@ class AlarmInstance:
     """The Alarm Source specific info"""
     location: List[str]
     """The Alarm Location"""
+    managed_by: Optional[str]
+    """(optional) Whom manages this alarm"""
     masked_by: Optional[str]
     """(optional) The parent alarm which masks this one"""
     screen_command: str

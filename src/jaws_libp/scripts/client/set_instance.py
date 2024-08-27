@@ -30,10 +30,11 @@ from ...entities import AlarmInstance, \
               help="The alarm location (Options queried on-demand from alarm-locations topic).  Multiple locations "
                    "allowed.")
 @click.option('--screencommand', help="The command to open the related control system screen")
+@click.option('--managedby', help="Whom manages this alarm (optional)")
 @click.option('--maskedby', help="The optional parent alarm that masks this one")
 @click.argument('name')
 def set_instance(file, unset, action, pv, expression, location,
-                 screencommand, maskedby, name) -> None:
+                 screencommand, managedby, maskedby, name) -> None:
     producer = InstanceProducer('set_instance.py')
 
     key = name
@@ -57,6 +58,7 @@ def set_instance(file, unset, action, pv, expression, location,
             value = AlarmInstance(action,
                                   source,
                                   location,
+                                  managedby,
                                   maskedby,
                                   screencommand)
 

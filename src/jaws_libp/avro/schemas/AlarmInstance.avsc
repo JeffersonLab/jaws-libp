@@ -76,6 +76,17 @@
             "doc": "The locations associated with the alarm"
         },
         {
+            "name": "managedby",
+            "type": [
+                "null",
+                {
+                    "type": "string",
+                    "avro.java.string": "String"
+                }
+            ],
+            "doc": "Whom manages this alarm"
+        },
+        {
             "name": "maskedby",
             "type": [
                 "null",

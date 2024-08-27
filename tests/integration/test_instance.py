@@ -11,9 +11,10 @@ def test_simple_instance():
     action_name = "TESTING_ACTION"
     location = ["LOCATION1"]
     source = Source()
+    managed_by = None
     masked_by = None
     screen_command = None
-    instance = AlarmInstance(action_name, source, location, masked_by, screen_command)
+    instance = AlarmInstance(action_name, source, location, managed_by, masked_by, screen_command)
 
     runner = CliRunner()
 
@@ -44,9 +45,10 @@ def test_epics_instance():
     action_name = "TESTING_ACTION"
     location = ["LOCATION1"]
     source = EPICSSource("channel1")
+    managed_by = None
     masked_by = None
     screen_command = None
-    instance = AlarmInstance(action_name, source, location, masked_by, screen_command)
+    instance = AlarmInstance(action_name, source, location, managed_by, masked_by, screen_command)
 
     runner = CliRunner()
 

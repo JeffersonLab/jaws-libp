@@ -190,13 +190,18 @@ else
       action="${def[1]}"
       pv="${def[2]}"
       location="${def[3]}"
-      maskedby="${def[4]}"
-      screencommand="${def[5]}"
+      managedby="${def[4]}"
+      maskedby="${def[5]}"
+      screencommand="${def[6]}"
 
       PARMS=("${name}" --action "${action}" --location "${location}" --screencommand "${screencommand}")
 
       if [[ ! -z "${pv}" ]]; then
         PARMS+=(--pv "${pv}")
+      fi
+
+      if [[  ! -z "${managedby}" ]]; then
+        PARMS+=(--managedby "${managedby}")
       fi
 
       if [[  ! -z "${maskedby}" ]]; then
