@@ -202,10 +202,10 @@ class ActionConsoleConsumer(ConsoleConsumer):
         """
         consumer = ActionConsumer(client_name)
 
-        super().__init__(consumer, ["Action Name", "Category", "Priority", "Rationale", "Corrective Action",
+        super().__init__(consumer, ["Action Name", "System", "Priority", "Rationale", "Corrective Action",
                                    "Latchable", "Filterable", "On Delay", "Off Delay"],
                          lambda msg: [msg.key(),
-                                      msg.value().category,
+                                      msg.value().system,
                                       msg.value().priority.name if msg.value().priority is not None else None,
                                       msg.value().rationale.replace("\n", "\\n ")
                                       if msg.value().rationale is not None else None,
