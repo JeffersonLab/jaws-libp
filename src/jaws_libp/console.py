@@ -9,7 +9,7 @@ from typing import Callable, List, Any, Dict, Tuple
 
 from confluent_kafka import Message
 from tabulate import tabulate
-from .clients import JAWSConsumer, CategoryConsumer, ActivationConsumer, LocationConsumer, OverrideConsumer, \
+from .clients import JAWSConsumer, SystemConsumer, ActivationConsumer, LocationConsumer, OverrideConsumer, \
     AlarmConsumer, EffectiveRegistrationConsumer, EffectiveAlarmConsumer, EffectiveNotificationConsumer, \
     ActionConsumer
 from .eventsource import EventSourceListener
@@ -175,9 +175,9 @@ class ActivationConsoleConsumer(ConsoleConsumer):
         super().__init__(consumer, None, None)
 
 
-class CategoryConsoleConsumer(ConsoleConsumer):
+class SystemConsoleConsumer(ConsoleConsumer):
     """
-        ConsoleConsumer for JAWS Category messages.
+        ConsoleConsumer for JAWS System messages.
     """
     def __init__(self, client_name: str):
         """
@@ -185,9 +185,9 @@ class CategoryConsoleConsumer(ConsoleConsumer):
 
             :param client_name: The name of the client application
         """
-        consumer = CategoryConsumer(client_name)
+        consumer = SystemConsumer(client_name)
 
-        super().__init__(consumer, ["Category Name", "Team"], lambda msg: [msg.key(), msg.value().team])
+        super().__init__(consumer, ["System Name", "Team"], lambda msg: [msg.key(), msg.value().team])
 
 
 class ActionConsoleConsumer(ConsoleConsumer):

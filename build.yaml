@@ -19,7 +19,7 @@ services:
     environment:
       - LOGLEVEL=DEBUG
       - ALARM_LOCATIONS=/data/locations
-      - ALARM_CATEGORIES=/data/categories
+      - ALARM_CATEGORIES=/data/systems
       - ALARM_ACTIONS=/data/actions
       - ALARM_INSTANCES=/data/alarms
       #- ALARM_INSTANCES=https://raw.githubusercontent.com/JeffersonLab/alarms/main/instances

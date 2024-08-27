@@ -9,23 +9,23 @@
 import click
 from click import Choice
 
-from ...console import CategoryConsoleConsumer, ActionConsoleConsumer
+from ...console import SystemConsoleConsumer, ActionConsoleConsumer
 
 
 # pylint: disable=too-few-public-methods
-class CategoryFilter:
+class SystemFilter:
     """
-        Filter category messages
+        Filter system messages
     """
-    def __init__(self, category):
-        self._category = category
+    def __init__(self, system):
+        self._system = system
 
     # pylint: disable=unused-argument
     def filter_if(self, key, value):
         """
-            Filter out messages unless the category matches the provided category
+            Filter out messages unless the system matches the provided system
         """
-        return self._category is None or (value is not None and self._category == value.category)
+        return self._system is None or (value is not None and self._system == value.system)
 
 
 # pylint: disable=missing-function-docstring,no-value-for-parameter
@@ -33,22 +33,22 @@ class CategoryFilter:
 @click.option('--monitor', is_flag=True, help="Monitor indefinitely")
 @click.option('--nometa', is_flag=True, help="Exclude audit headers and timestamp")
 @click.option('--export', is_flag=True, help="Dump records in AVRO JSON format")
-@click.option('--category', type=click.Choice([]),
-              help="Only show registered alarms in the specified category (Options queried on-demand from "
-                   "alarm-categories topic)")
-def list_actions(monitor, nometa, export, category) -> None:
+@click.option('--system', type=click.Choice([]),
+              help="Only show registered alarms in the specified system (Options queried on-demand from "
+                   "alarm-systems topic)")
+def list_actions(monitor, nometa, export, system) -> None:
     consumer = ActionConsoleConsumer('list_actions.py')
 
-    filter_obj = CategoryFilter(category)
+    filter_obj = SystemFilter(system)
 
     consumer.consume_then_done(monitor, nometa, export, filter_obj.filter_if)
 
 
 def click_main() -> None:
-    cat_consumer = CategoryConsoleConsumer('list_actions.py')
-    categories = cat_consumer.get_keys_then_done()
+    cat_consumer = SystemConsoleConsumer('list_actions.py')
+    systems = cat_consumer.get_keys_then_done()
 
-    list_actions.params[3].type = Choice(categories)
+    list_actions.params[3].type = Choice(systems)
 
     list_actions()
 

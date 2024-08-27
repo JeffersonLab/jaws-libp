@@ -13,7 +13,7 @@ from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserialize
 from confluent_kafka.serialization import StringSerializer, StringDeserializer, Serializer, Deserializer, \
     SerializationContext
 
-from ..entities import AlarmCategory, AlarmLocation, AlarmPriority, ChannelErrorActivation, NoActivation, \
+from ..entities import AlarmSystem, AlarmLocation, AlarmPriority, ChannelErrorActivation, NoActivation, \
     Source, Alarm, AlarmActivationUnion, Activation, \
     EPICSActivation, NoteActivation, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
     OnDelayedOverride, OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, \
@@ -299,7 +299,7 @@ class ActionSerde(RegistryAvroSerde):
         """
 
         return {
-            "category": data.category,
+            "system": data.system,
             "priority": data.priority.name,
             "rationale": data.rationale,
             "correctiveaction": data.corrective_action,
@@ -318,7 +318,7 @@ class ActionSerde(RegistryAvroSerde):
             :param data: The dict
             :return: The AlarmAction
             """
-        return AlarmAction(data.get('category'),
+        return AlarmAction(data.get('system'),
                           _unwrap_enum(data.get('priority'), AlarmPriority),
                           data.get('rationale'),
                           data.get('correctiveaction'),
@@ -328,44 +328,44 @@ class ActionSerde(RegistryAvroSerde):
                           data.get('offdelayseconds'))
 
 
-class CategorySerde(RegistryAvroSerde):
+class SystemSerde(RegistryAvroSerde):
     """
-        Provides AlarmCategory serde utilities
+        Provides AlarmSystem serde utilities
     """
 
     def __init__(self, schema_registry_client: SchemaRegistryClient, avro_conf: Dict = None):
         """
-            Create a new CategorySerde.
+            Create a new SystemSerde.
 
             :param schema_registry_client: The SchemaRegistryClient
             :param avro_conf: configuration for avro serde
         """
-        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmCategory.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmSystem.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
 
         super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, avro_conf)
 
-    def to_dict(self, data: AlarmCategory) -> Dict[str, str]:
+    def to_dict(self, data: AlarmSystem) -> Dict[str, str]:
         """
-        Converts AlarmCategory to a dict.
+        Converts AlarmSystem to a dict.
 
-        :param data: The AlarmCategory
+        :param data: The AlarmSystem
         :return: A dict
         """
         return {
             "team": data.team
         }
 
-    def from_dict(self, data: Dict[str, str]) -> AlarmCategory:
+    def from_dict(self, data: Dict[str, str]) -> AlarmSystem:
         """
-        Converts a dict to AlarmCategory.
+        Converts a dict to AlarmSystem.
 
         :param data: The dict
-        :return: The AlarmCategory
+        :return: The AlarmSystem
         """
-        return AlarmCategory(data['team'])
+        return AlarmSystem(data['team'])
 
 
 class LocationSerde(RegistryAvroSerde):

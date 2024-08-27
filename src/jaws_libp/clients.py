@@ -15,7 +15,7 @@ from confluent_kafka import Message, SerializingProducer, KafkaError
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from psutil import Process
 
-from .avro.serde import CategorySerde, LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
+from .avro.serde import SystemSerde, LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
     StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ActionSerde, ActivationSerde, AlarmSerde
 from .entities import UnionEncoding
 from .eventsource import EventSourceListener, EventSourceTable
@@ -337,9 +337,9 @@ class ActivationConsumer(JAWSConsumer):
         super().__init__(config)
 
 
-class CategoryConsumer(JAWSConsumer):
+class SystemConsumer(JAWSConsumer):
     """
-        Consumer for JAWS Category messages.
+        Consumer for JAWS System messages.
     """
     def __init__(self, client_name: str):
         """
@@ -349,10 +349,10 @@ class CategoryConsumer(JAWSConsumer):
         """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = CategorySerde(schema_registry_client)
+        value_serde = SystemSerde(schema_registry_client)
 
         config = {
-            'topic': 'alarm-categories',
+            'topic': 'alarm-systems',
             'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
@@ -546,9 +546,9 @@ class ActivationProducer(JAWSProducer):
         super().__init__('alarm-activations', client_name, key_serde, value_serde)
 
 
-class CategoryProducer(JAWSProducer):
+class SystemProducer(JAWSProducer):
     """
-        Producer for JAWS Category messages.
+        Producer for JAWS System messages.
     """
     def __init__(self, client_name: str):
         """
@@ -558,9 +558,9 @@ class CategoryProducer(JAWSProducer):
         """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = CategorySerde(schema_registry_client)
+        value_serde = SystemSerde(schema_registry_client)
 
-        super().__init__('alarm-categories', client_name, key_serde, value_serde)
+        super().__init__('alarm-systems', client_name, key_serde, value_serde)
 
 
 class ActionProducer(JAWSProducer):

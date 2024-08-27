@@ -1,8 +1,8 @@
 from click.testing import CliRunner
 from jaws_libp.avro.serde import CategorySerde
 from jaws_libp.entities import AlarmCategory
-from jaws_libp.scripts.client.list_categories import list_categories
-from jaws_libp.scripts.client.set_category import set_category
+from jaws_libp.scripts.client.list_systems import list_categories
+from jaws_libp.scripts.client.set_system import set_category
 
 
 def test_category():

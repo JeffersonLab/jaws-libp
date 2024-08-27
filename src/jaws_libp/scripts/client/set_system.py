@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 
 """
-    Set alarm category.
+    Set alarm system.
 """
 
 import click
 
-from ...clients import CategoryProducer
-from ...entities import AlarmCategory
+from ...clients import SystemProducer
+from ...entities import AlarmSystem
 
 # pylint: disable=missing-function-docstring,no-value-for-parameter
 @click.command()
 @click.option('--file', is_flag=True,
-              help="Imports a file of key=value pairs (one per line) where the key is category name and value is "
-                   "AlarmCategory JSON")
+              help="Imports a file of key=value pairs (one per line) where the key is system name and value is "
+                   "AlarmSystem JSON")
 @click.option('--unset', is_flag=True, help="Remove the category")
 @click.argument('name')
 @click.option('--team', '-t', help="Name of team")
-def set_category(file, unset, name, team) -> None:
-    producer = CategoryProducer('set_category.py')
+def set_system(file, unset, name, team) -> None:
+    producer = SystemProducer('set_system.py')
 
     key = name
 
@@ -31,13 +31,13 @@ def set_category(file, unset, name, team) -> None:
             if team is None:
                 raise click.ClickException("--team required")
 
-            value = AlarmCategory(team)
+            value = AlarmSystem(team)
 
         producer.send(key, value)
 
 
 def click_main() -> None:
-    set_category()
+    set_system()
 
 
 if __name__ == "__main__":

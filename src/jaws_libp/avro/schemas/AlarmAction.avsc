@@ -5,12 +5,12 @@
     "doc": "An alarm action (class of alarm)",
     "fields": [
         {
-            "name": "category",
+            "name": "system",
             "type": {
                 "type": "string",
                 "avro.java.string": "String"
             },
-            "doc": "The alarm category name"
+            "doc": "The alarm system name"
         },
         {
             "name": "priority",
