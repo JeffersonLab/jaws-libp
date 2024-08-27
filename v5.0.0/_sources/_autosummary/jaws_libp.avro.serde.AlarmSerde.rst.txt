@@ -1,0 +1,32 @@
+jaws\_libp.avro.serde.AlarmSerde
+================================
+
+.. currentmodule:: jaws_libp.avro.serde
+
+.. autoclass:: AlarmSerde
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AlarmSerde.__init__
+      ~AlarmSerde.deserializer
+      ~AlarmSerde.from_dict
+      ~AlarmSerde.from_json
+      ~AlarmSerde.get_schema
+      ~AlarmSerde.serializer
+      ~AlarmSerde.to_dict
+      ~AlarmSerde.to_json
+   
+   
+
+   
+   
+   

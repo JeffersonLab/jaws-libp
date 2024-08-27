@@ -1,0 +1,32 @@
+jaws\_libp.avro.serde.ActionSerde
+=================================
+
+.. currentmodule:: jaws_libp.avro.serde
+
+.. autoclass:: ActionSerde
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ActionSerde.__init__
+      ~ActionSerde.deserializer
+      ~ActionSerde.from_dict
+      ~ActionSerde.from_json
+      ~ActionSerde.get_schema
+      ~ActionSerde.serializer
+      ~ActionSerde.to_dict
+      ~ActionSerde.to_json
+   
+   
+
+   
+   
+   

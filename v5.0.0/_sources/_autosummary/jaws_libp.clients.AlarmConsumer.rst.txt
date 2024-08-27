@@ -1,0 +1,33 @@
+jaws\_libp.clients.AlarmConsumer
+================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: AlarmConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AlarmConsumer.__init__
+      ~AlarmConsumer.add_listener
+      ~AlarmConsumer.await_highwater
+      ~AlarmConsumer.await_highwater_get
+      ~AlarmConsumer.export_records
+      ~AlarmConsumer.highwater_reached
+      ~AlarmConsumer.remove_listener
+      ~AlarmConsumer.start
+      ~AlarmConsumer.stop
+   
+   
+
+   
+   
+   

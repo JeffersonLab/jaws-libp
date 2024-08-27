@@ -1,0 +1,33 @@
+jaws\_libp.clients.SystemConsumer
+=================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: SystemConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SystemConsumer.__init__
+      ~SystemConsumer.add_listener
+      ~SystemConsumer.await_highwater
+      ~SystemConsumer.await_highwater_get
+      ~SystemConsumer.export_records
+      ~SystemConsumer.highwater_reached
+      ~SystemConsumer.remove_listener
+      ~SystemConsumer.start
+      ~SystemConsumer.stop
+   
+   
+
+   
+   
+   

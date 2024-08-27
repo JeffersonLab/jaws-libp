@@ -1,0 +1,36 @@
+jaws\_libp.entities.Alarm
+=========================
+
+.. currentmodule:: jaws_libp.entities
+
+.. autoclass:: Alarm
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Alarm.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Alarm.action
+      ~Alarm.source
+      ~Alarm.location
+      ~Alarm.managed_by
+      ~Alarm.masked_by
+      ~Alarm.screen_command
+   
+   

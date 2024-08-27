@@ -1,0 +1,28 @@
+jaws\_libp.console.ActionConsoleConsumer
+========================================
+
+.. currentmodule:: jaws_libp.console
+
+.. autoclass:: ActionConsoleConsumer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ActionConsoleConsumer.__init__
+      ~ActionConsoleConsumer.consume_then_done
+      ~ActionConsoleConsumer.get_keys_then_done
+      ~ActionConsoleConsumer.print_table
+   
+   
+
+   
+   
+   

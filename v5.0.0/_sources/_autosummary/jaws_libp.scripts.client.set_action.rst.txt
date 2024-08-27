@@ -1,0 +1,34 @@
+jaws\_libp.scripts.client.set\_action
+=====================================
+
+.. automodule:: jaws_libp.scripts.client.set_action
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   .. click:: jaws_libp.scripts.client.set_action:set_action
+      :prog: set_action
+      :nested: full
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

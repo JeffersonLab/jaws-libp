@@ -1,0 +1,27 @@
+jaws\_libp.clients.ActionProducer
+=================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: ActionProducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ActionProducer.__init__
+      ~ActionProducer.import_records
+      ~ActionProducer.send
+   
+   
+
+   
+   
+   

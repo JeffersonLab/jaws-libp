@@ -1,0 +1,49 @@
+jaws\_libp.scripts.client
+=========================
+
+.. automodule:: jaws_libp.scripts.client
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+
+   jaws_libp.scripts.client.list_actions
+   jaws_libp.scripts.client.list_activations
+   jaws_libp.scripts.client.list_alarms
+   jaws_libp.scripts.client.list_effective_alarms
+   jaws_libp.scripts.client.list_effective_notifications
+   jaws_libp.scripts.client.list_effective_registrations
+   jaws_libp.scripts.client.list_locations
+   jaws_libp.scripts.client.list_overrides
+   jaws_libp.scripts.client.list_systems
+   jaws_libp.scripts.client.set_action
+   jaws_libp.scripts.client.set_activation
+   jaws_libp.scripts.client.set_alarm
+   jaws_libp.scripts.client.set_effective_alarm
+   jaws_libp.scripts.client.set_effective_notification
+   jaws_libp.scripts.client.set_effective_registration
+   jaws_libp.scripts.client.set_location
+   jaws_libp.scripts.client.set_override
+   jaws_libp.scripts.client.set_system
+

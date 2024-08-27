@@ -1,0 +1,26 @@
+jaws\_libp.scripts.client.list\_activations.ActivationFilter
+============================================================
+
+.. currentmodule:: jaws_libp.scripts.client.list_activations
+
+.. autoclass:: ActivationFilter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ActivationFilter.__init__
+      ~ActivationFilter.filter_if
+   
+   
+
+   
+   
+   

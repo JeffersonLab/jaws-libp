@@ -1,0 +1,27 @@
+jaws\_libp.clients.AlarmProducer
+================================
+
+.. currentmodule:: jaws_libp.clients
+
+.. autoclass:: AlarmProducer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AlarmProducer.__init__
+      ~AlarmProducer.import_records
+      ~AlarmProducer.send
+   
+   
+
+   
+   
+   

@@ -1,0 +1,34 @@
+jaws\_libp.scripts.client.set\_system
+=====================================
+
+.. automodule:: jaws_libp.scripts.client.set_system
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   .. click:: jaws_libp.scripts.client.set_system:set_system
+      :prog: set_system
+      :nested: full
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

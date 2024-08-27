@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>jaws_libp.scripts.client &mdash; jaws-libp  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jaws_libp.scripts.client.list_actions" href="jaws_libp.scripts.client.list_actions.html" />
+    <link rel="prev" title="jaws_libp.scripts.broker.show_consumer_groups" href="jaws_libp.scripts.broker.show_consumer_groups.html" />
+<link href="../_static/rtd_custom.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            jaws-libp
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="jaws_libp.html">jaws_libp</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.avro.html">jaws_libp.avro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.clients.html">jaws_libp.clients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.console.html">jaws_libp.console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.entities.html">jaws_libp.entities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jaws_libp.eventsource.html">jaws_libp.eventsource</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="jaws_libp.scripts.html">jaws_libp.scripts</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.scripts.broker.html">jaws_libp.scripts.broker</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">jaws_libp.scripts.client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.list_actions.html">jaws_libp.scripts.client.list_actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.list_activations.html">jaws_libp.scripts.client.list_activations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.list_alarms.html">jaws_libp.scripts.client.list_alarms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.list_effective_alarms.html">jaws_libp.scripts.client.list_effective_alarms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.list_effective_notifications.html">jaws_libp.scripts.client.list_effective_notifications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.list_effective_registrations.html">jaws_libp.scripts.client.list_effective_registrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.list_locations.html">jaws_libp.scripts.client.list_locations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.list_overrides.html">jaws_libp.scripts.client.list_overrides</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.list_systems.html">jaws_libp.scripts.client.list_systems</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.set_action.html">jaws_libp.scripts.client.set_action</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.set_activation.html">jaws_libp.scripts.client.set_activation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.set_alarm.html">jaws_libp.scripts.client.set_alarm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.set_effective_alarm.html">jaws_libp.scripts.client.set_effective_alarm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.set_effective_notification.html">jaws_libp.scripts.client.set_effective_notification</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.set_effective_registration.html">jaws_libp.scripts.client.set_effective_registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.set_location.html">jaws_libp.scripts.client.set_location</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.set_override.html">jaws_libp.scripts.client.set_override</a></li>
+<li class="toctree-l4"><a class="reference internal" href="jaws_libp.scripts.client.set_system.html">jaws_libp.scripts.client.set_system</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="jaws_libp.scripts.registry.html">jaws_libp.scripts.registry</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jaws-libp</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="jaws_libp.html">jaws_libp</a></li>
+          <li class="breadcrumb-item"><a href="jaws_libp.scripts.html">jaws_libp.scripts</a></li>
+      <li class="breadcrumb-item active">jaws_libp.scripts.client</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_autosummary/jaws_libp.scripts.client.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-jaws_libp.scripts.client">
+<span id="jaws-libp-scripts-client"></span><h1>jaws_libp.scripts.client<a class="headerlink" href="#module-jaws_libp.scripts.client" title="Permalink to this heading"></a></h1>
+<p>CLI client admin scripts</p>
+<p class="rubric">Modules</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.scripts.client.list_actions.html#module-jaws_libp.scripts.client.list_actions" title="jaws_libp.scripts.client.list_actions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.list_actions</span></code></a></p></td>
+<td><p>Lists the alarm actions (class of alarm).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.scripts.client.list_activations.html#module-jaws_libp.scripts.client.list_activations" title="jaws_libp.scripts.client.list_activations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.list_activations</span></code></a></p></td>
+<td><p>Lists the alarm activations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.scripts.client.list_alarms.html#module-jaws_libp.scripts.client.list_alarms" title="jaws_libp.scripts.client.list_alarms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.list_alarms</span></code></a></p></td>
+<td><p>Lists the alarm registration alarms.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.scripts.client.list_effective_alarms.html#module-jaws_libp.scripts.client.list_effective_alarms" title="jaws_libp.scripts.client.list_effective_alarms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.list_effective_alarms</span></code></a></p></td>
+<td><p>Lists the effective alarms.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.scripts.client.list_effective_notifications.html#module-jaws_libp.scripts.client.list_effective_notifications" title="jaws_libp.scripts.client.list_effective_notifications"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.list_effective_notifications</span></code></a></p></td>
+<td><p>Lists the alarm effective notifications.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.scripts.client.list_effective_registrations.html#module-jaws_libp.scripts.client.list_effective_registrations" title="jaws_libp.scripts.client.list_effective_registrations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.list_effective_registrations</span></code></a></p></td>
+<td><p>Lists the effective registrations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.scripts.client.list_locations.html#module-jaws_libp.scripts.client.list_locations" title="jaws_libp.scripts.client.list_locations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.list_locations</span></code></a></p></td>
+<td><p>Lists the alarm locations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.scripts.client.list_overrides.html#module-jaws_libp.scripts.client.list_overrides" title="jaws_libp.scripts.client.list_overrides"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.list_overrides</span></code></a></p></td>
+<td><p>Lists the alarm overrides.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.scripts.client.list_systems.html#module-jaws_libp.scripts.client.list_systems" title="jaws_libp.scripts.client.list_systems"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.list_systems</span></code></a></p></td>
+<td><p>Lists the alarm systems.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.scripts.client.set_action.html#module-jaws_libp.scripts.client.set_action" title="jaws_libp.scripts.client.set_action"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.set_action</span></code></a></p></td>
+<td><p>Set alarm action (class of alarm) .</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.scripts.client.set_activation.html#module-jaws_libp.scripts.client.set_activation" title="jaws_libp.scripts.client.set_activation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.set_activation</span></code></a></p></td>
+<td><p>Set alarm activation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.scripts.client.set_alarm.html#module-jaws_libp.scripts.client.set_alarm" title="jaws_libp.scripts.client.set_alarm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.set_alarm</span></code></a></p></td>
+<td><p>Set alarm registration instance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.scripts.client.set_effective_alarm.html#module-jaws_libp.scripts.client.set_effective_alarm" title="jaws_libp.scripts.client.set_effective_alarm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.set_effective_alarm</span></code></a></p></td>
+<td><p>Set effective alarm.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.scripts.client.set_effective_notification.html#module-jaws_libp.scripts.client.set_effective_notification" title="jaws_libp.scripts.client.set_effective_notification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.set_effective_notification</span></code></a></p></td>
+<td><p>Set effective notification.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.scripts.client.set_effective_registration.html#module-jaws_libp.scripts.client.set_effective_registration" title="jaws_libp.scripts.client.set_effective_registration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.set_effective_registration</span></code></a></p></td>
+<td><p>Set effective registration.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.scripts.client.set_location.html#module-jaws_libp.scripts.client.set_location" title="jaws_libp.scripts.client.set_location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.set_location</span></code></a></p></td>
+<td><p>Set alarm location.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="jaws_libp.scripts.client.set_override.html#module-jaws_libp.scripts.client.set_override" title="jaws_libp.scripts.client.set_override"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.set_override</span></code></a></p></td>
+<td><p>Set alarm override.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="jaws_libp.scripts.client.set_system.html#module-jaws_libp.scripts.client.set_system" title="jaws_libp.scripts.client.set_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jaws_libp.scripts.client.set_system</span></code></a></p></td>
+<td><p>Set alarm system.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="jaws_libp.scripts.broker.show_consumer_groups.html" class="btn btn-neutral float-left" title="jaws_libp.scripts.broker.show_consumer_groups" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="jaws_libp.scripts.client.list_actions.html" class="btn btn-neutral float-right" title="jaws_libp.scripts.client.list_actions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

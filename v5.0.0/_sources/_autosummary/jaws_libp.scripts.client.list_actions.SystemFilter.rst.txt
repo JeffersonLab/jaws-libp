@@ -1,0 +1,26 @@
+jaws\_libp.scripts.client.list\_actions.SystemFilter
+====================================================
+
+.. currentmodule:: jaws_libp.scripts.client.list_actions
+
+.. autoclass:: SystemFilter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SystemFilter.__init__
+      ~SystemFilter.filter_if
+   
+   
+
+   
+   
+   

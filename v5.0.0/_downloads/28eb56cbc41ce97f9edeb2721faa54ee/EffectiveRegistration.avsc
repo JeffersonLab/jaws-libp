@@ -1,0 +1,26 @@
+{
+    "type": "record",
+    "name": "EffectiveRegistration",
+    "namespace": "org.jlab.jaws.entity",
+    "doc": "Processed registration (instance + class)",
+    "fields": [
+        {
+            "name": "alarm",
+            "type": [
+                "null",
+                "Alarm"
+            ],
+            "doc": "The alarm registration instance",
+            "default": null
+        },
+        {
+            "name": "action",
+            "type": [
+                "null",
+                "AlarmAction"
+            ],
+            "doc": "The alarm action (class of alarm)",
+            "default": null
+        }
+    ]
+}

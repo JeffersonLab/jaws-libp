@@ -1,0 +1,47 @@
+jaws\_libp.avro.serde
+=====================
+
+.. automodule:: jaws_libp.avro.serde
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ActionSerde
+      ActivationSerde
+      AlarmSerde
+      EffectiveAlarmSerde
+      EffectiveNotificationSerde
+      EffectiveRegistrationSerde
+      IntermediateMonologSerde
+      LocationSerde
+      OverrideKeySerde
+      OverrideSerde
+      OverrideSetSerde
+      ProcessorTransitionsSerde
+      RegistryAvroSerde
+      RegistryAvroWithReferencesSerde
+      Serde
+      StringSerde
+      SystemSerde
+   
+   
+
+   
+   
+   
+
+
+

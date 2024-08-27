@@ -1,0 +1,42 @@
+jaws\_libp.scripts.client.list\_effective\_registrations
+========================================================
+
+.. automodule:: jaws_libp.scripts.client.list_effective_registrations
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+   
+   .. click:: jaws_libp.scripts.client.list_effective_registrations:list_effective_registrations
+      :prog: list_effective_registrations
+      :nested: full
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ActionFilter
+   
+   
+
+   
+   
+   
+
+
+
