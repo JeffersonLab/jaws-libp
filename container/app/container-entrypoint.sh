@@ -168,18 +168,18 @@ elif beginswith 'https://' "${ALARMS}"; then
       do
         echo "Loading URL: ${ALARMS}/${defStr}"
         wget -O /tmp/alarms "${ALARMS}/${defStr}"
-        set_instance --file /tmp/alarms
+        set_alarm --file /tmp/alarms
       done
   else
     echo "Grabbing single URL"
     wget -O /tmp/alarms "$ALARMS"
-    set_instance --file /tmp/alarms
+    set_alarm --file /tmp/alarms
   fi
 elif [[ -f "$ALARMS" ]]; then
   echo "Attempting to setup alarm definitions from file $ALARMS"
-  set_instance --file "$ALARMS"
+  set_alarm --file "$ALARMS"
 else
-  echo "Attempting to setup instances"
+  echo "Attempting to setup alarm instances"
   IFS=','
   read -a definitions <<< "$ALARMS"
   for defStr in "${definitions[@]}";
@@ -208,7 +208,7 @@ else
         PARMS+=(--maskedby "${maskedby}")
       fi
 
-      set_instance "${PARMS[@]}"
+      set_alarm "${PARMS[@]}"
     done
 fi
 

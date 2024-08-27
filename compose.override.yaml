@@ -1,5 +1,5 @@
 services:
-  jaws:
+  cli:
     image: jeffersonlab/jaws-libp:latest
     environment:
       - ALARM_LOCATIONS=INJ|CEBAF,NL|CEBAF,SL|CEBAF,CEBAF|

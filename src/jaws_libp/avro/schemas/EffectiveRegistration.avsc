@@ -5,12 +5,12 @@
     "doc": "Processed registration (instance + class)",
     "fields": [
         {
-            "name": "instance",
+            "name": "alarm",
             "type": [
                 "null",
-                "AlarmInstance"
+                "Alarm"
             ],
-            "doc": "The alarm instance",
+            "doc": "The alarm registration instance",
             "default": null
         },
         {
