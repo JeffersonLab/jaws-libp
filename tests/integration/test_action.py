@@ -18,7 +18,7 @@ def test_action():
 
     try:
         # Set
-        result = runner.invoke(set_action, [action,
+        result = runner.invoke(set_action, [action_name,
                                            '--category', action.category,
                                            '--priority', action.priority.name,
                                            '--rationale', action.rationale,
