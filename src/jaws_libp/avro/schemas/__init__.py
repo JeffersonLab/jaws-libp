@@ -3,14 +3,15 @@
 
     Schemas:
 
+    * :download:`Alarm.avsc </../../src/jaws_libp/avro/schemas/Alarm.avsc>`
+    * :download:`AlarmAction.avsc </../../src/jaws_libp/avro/schemas/AlarmAction.avsc>`
     * :download:`AlarmActivationUnion.avsc </../../src/jaws_libp/avro/schemas/AlarmActivationUnion.avsc>`
-    * :download:`AlarmClass.avsc </../../src/jaws_libp/avro/schemas/AlarmClass.avsc>`
     * :download:`AlarmLocation.avsc </../../src/jaws_libp/avro/schemas/AlarmLocation.avsc>`
     * :download:`AlarmOverrideKey.avsc </../../src/jaws_libp/avro/schemas/AlarmOverrideKey.avsc>`
     * :download:`AlarmOverrideSet.avsc </../../src/jaws_libp/avro/schemas/AlarmOverrideSet.avsc>`
     * :download:`AlarmOverrideUnion.avsc </../../src/jaws_libp/avro/schemas/AlarmOverrideUnion.avsc>`
-    * :download:`Alarm.avsc </../../src/jaws_libp/avro/schemas/Alarm.avsc>`
     * :download:`AlarmState.avsc </../../src/jaws_libp/avro/schemas/AlarmState.avsc>`
+    * :download:`AlarmSystem.avsc </../../src/jaws_libp/avro/schemas/AlarmSystem.avsc>`
     * :download:`DisabledOverride.avsc </../../src/jaws_libp/avro/schemas/DisabledOverride.avsc>`
     * :download:`EffectiveNotification.avsc </../../src/jaws_libp/avro/schemas/EffectiveNotification.avsc>`
     * :download:`EffectiveAlarm.avsc </../../src/jaws_libp/avro/schemas/EffectiveAlarm.avsc>`
