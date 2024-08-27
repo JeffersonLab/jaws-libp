@@ -246,12 +246,12 @@ class EffectiveAlarmConsoleConsumer(ConsoleConsumer):
         """
         consumer = EffectiveAlarmConsumer(client_name)
 
-        super().__init__(consumer, ["Alarm Name", "State", "Overrides", "Instance", "Class"],
+        super().__init__(consumer, ["Name", "State", "Overrides", "Alarm Registration", "Action"],
                          lambda msg: [msg.key(),
                                       msg.value().notification.state.name,
                                       msg.value().notification.overrides,
-                                      msg.value().registration.instance,
-                                      msg.value().registration.alarm_class])
+                                      msg.value().registration.alarm,
+                                      msg.value().registration.action])
 
 
 class EffectiveRegistrationConsoleConsumer(ConsoleConsumer):
@@ -266,9 +266,9 @@ class EffectiveRegistrationConsoleConsumer(ConsoleConsumer):
         """
         consumer = EffectiveRegistrationConsumer(client_name)
 
-        super().__init__(consumer, ["Alarm Name", "Instance", "Class"], lambda msg: [msg.key(),
-                                                                                     msg.value().instance,
-                                                                                     msg.value().alarm_class])
+        super().__init__(consumer, ["Name", "Alarm Registration", "Action"], lambda msg: [msg.key(),
+                                                                                     msg.value().alarm,
+                                                                                     msg.value().action])
 
 
 class AlarmConsoleConsumer(ConsoleConsumer):
