@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 
 """
-    Set alarm registration class.
+    Set alarm action (class of alarm) .
 
-    **Note**: bulk imports with ``--file`` expect alarm class records formatted in
+    **Note**: bulk imports with ``--file`` expect alarm action records formatted in
     `AVRO JSON Encoding <https://avro.apache.org/docs/current/spec.html#json_encoding>`_
-    See `Example file <https://github.com/JeffersonLab/jaws/blob/main/examples/data/classes>`_.
+    See `Example file <https://github.com/JeffersonLab/jaws/blob/main/examples/data/actions>`_.
 """
 
 import click
 from click import Choice
 
-from ...clients import ClassProducer
+from ...clients import ActionProducer
 from ...console import CategoryConsoleConsumer
-from ...entities import AlarmClass, AlarmPriority
+from ...entities import AlarmAction, AlarmPriority
 
 
 # pylint: disable=duplicate-code,missing-function-docstring,no-value-for-parameter,too-many-arguments
 @click.command()
 @click.option('--file', is_flag=True,
               help="Imports a file of key=value pairs (one per line) where the key is alarm name and value is JSON "
-                   "encoded AVRO formatted per the alarm-classes-value schema")
+                   "encoded AVRO formatted per the alarm-actions-value schema")
 @click.option('--unset', is_flag=True, help="Remove the class")
 @click.option('--category', type=click.Choice([]),
               help="The alarm category (Options queried on-demand from alarm-categories topic)")
@@ -34,10 +34,10 @@ from ...entities import AlarmClass, AlarmPriority
 @click.option('--ondelayseconds', type=int, default=None, help="Number of on delay seconds")
 @click.option('--offdelayseconds', type=int, default=None, help="Number of off delay seconds")
 @click.argument('name')
-def set_class(file, unset, category,
+def set_action(file, unset, category,
               priority, filterable, latchable, rationale,
               correctiveaction, ondelayseconds, offdelayseconds, name) -> None:
-    producer = ClassProducer('set_class.py')
+    producer = ActionProducer('set_action.py')
 
     key = name
 
@@ -59,7 +59,7 @@ def set_class(file, unset, category,
             if correctiveaction is None:
                 raise click.ClickException("--correctiveaction required")
 
-            value = AlarmClass(category,
+            value = AlarmAction(category,
                                AlarmPriority[priority],
                                rationale,
                                correctiveaction,
@@ -72,12 +72,12 @@ def set_class(file, unset, category,
 
 
 def click_main() -> None:
-    cat_consumer = CategoryConsoleConsumer('set_class.py')
+    cat_consumer = CategoryConsoleConsumer('set_action.py')
     categories = cat_consumer.get_keys_then_done()
 
-    set_class.params[2].type = Choice(categories)
+    set_action.params[2].type = Choice(categories)
 
-    set_class()
+    set_action()
 
 
 if __name__ == "__main__":

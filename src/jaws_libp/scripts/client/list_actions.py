@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
 """
-    Lists the alarm registration classes.
+    Lists the alarm actions (class of alarm).
 
-    **Note**: With the ``--export`` option you can export a file that can be imported by ``set-class --file``.
+    **Note**: With the ``--export`` option you can export a file that can be imported by ``set_action --file``.
 """
 
 import click
 from click import Choice
 
-from ...console import CategoryConsoleConsumer, ClassConsoleConsumer
+from ...console import CategoryConsoleConsumer, ActionConsoleConsumer
 
 
 # pylint: disable=too-few-public-methods
@@ -36,8 +36,8 @@ class CategoryFilter:
 @click.option('--category', type=click.Choice([]),
               help="Only show registered alarms in the specified category (Options queried on-demand from "
                    "alarm-categories topic)")
-def list_classes(monitor, nometa, export, category) -> None:
-    consumer = ClassConsoleConsumer('list_classes.py')
+def list_actions(monitor, nometa, export, category) -> None:
+    consumer = ActionConsoleConsumer('list_actions.py')
 
     filter_obj = CategoryFilter(category)
 
@@ -45,12 +45,12 @@ def list_classes(monitor, nometa, export, category) -> None:
 
 
 def click_main() -> None:
-    cat_consumer = CategoryConsoleConsumer('list_classes.py')
+    cat_consumer = CategoryConsoleConsumer('list_actions.py')
     categories = cat_consumer.get_keys_then_done()
 
-    list_classes.params[3].type = Choice(categories)
+    list_actions.params[3].type = Choice(categories)
 
-    list_classes()
+    list_actions()
 
 
 if __name__ == "__main__":

@@ -95,21 +95,21 @@ fi
 
 
 echo "-----------------------"
-echo "Step 6: Adding classes "
+echo "Step 6: Adding actions "
 echo "-----------------------"
-if [[ -z "${ALARM_CLASSES}" ]]; then
-  echo "No class definitions specified"
-elif beginswith 'https://' "${ALARM_CLASSES}"; then
-  echo "HTTPS URL specified: $ALARM_CLASSES"
-  wget -O /tmp/classes "$ALARM_CLASSES"
-  set_class --file /tmp/classes
-elif [[ -f "$ALARM_CLASSES" ]]; then
-  echo "Attempting to setup class definitions from file $ALARM_CLASSES"
-  set_class --file "$ALARM_CLASSES"
+if [[ -z "${ALARM_ACTIONS}" ]]; then
+  echo "No action definitions specified"
+elif beginswith 'https://' "${ALARM_ACTIONS}"; then
+  echo "HTTPS URL specified: $ALARM_ACTIONS"
+  wget -O /tmp/actions "$ALARM_ACTIONS"
+  set_action --file /tmp/actions
+elif [[ -f "$ALARM_ACTIONS" ]]; then
+  echo "Attempting to setup action definitions from file $ALARM_ACTIONS"
+  set_action --file "$ALARM_ACTIONS"
 else
-  echo "Attempting to setup classes"
+  echo "Attempting to setup actions"
   IFS=','
-  read -a definitions <<< "$ALARM_CLASSES"
+  read -a definitions <<< "$ALARM_ACTIONS"
   for defStr in "${definitions[@]}";
     do
       IFS='|'
@@ -187,13 +187,13 @@ else
       IFS='|'
       read -a def <<< "$defStr"
       name="${def[0]}"
-      class="${def[1]}"
+      action="${def[1]}"
       pv="${def[2]}"
       location="${def[3]}"
       maskedby="${def[4]}"
       screencommand="${def[5]}"
 
-      PARMS=("${name}" --alarmclass "${class}" --location "${location}" --screencommand "${screencommand}")
+      PARMS=("${name}" --action "${action}" --location "${location}" --screencommand "${screencommand}")
 
       if [[ ! -z "${pv}" ]]; then
         PARMS+=(--pv "${pv}")

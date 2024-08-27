@@ -5,12 +5,12 @@
     "doc": "Instance of an alarm class",
     "fields": [
         {
-            "name": "alarmclass",
+            "name": "action",
             "type": {
                 "type": "string",
                 "avro.java.string": "String"
             },
-            "doc": "The alarm class; provides inheritable shared values",
+            "doc": "The alarm action; provides inheritable shared class values",
             "default": "base"
         },
         {

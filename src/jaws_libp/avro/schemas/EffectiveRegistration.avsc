@@ -14,12 +14,12 @@
             "default": null
         },
         {
-            "name": "class",
+            "name": "action",
             "type": [
                 "null",
-                "AlarmClass"
+                "AlarmAction"
             ],
-            "doc": "The alarm class",
+            "doc": "The alarm action (class of alarm)",
             "default": null
         }
     ]

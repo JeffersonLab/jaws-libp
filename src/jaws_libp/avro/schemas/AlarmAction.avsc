@@ -1,8 +1,8 @@
 {
     "type": "record",
-    "name": "AlarmClass",
+    "name": "AlarmAction",
     "namespace": "org.jlab.jaws.entity",
-    "doc": "An alarm class",
+    "doc": "An alarm action (class of alarm)",
     "fields": [
         {
             "name": "category",
