@@ -13,8 +13,8 @@
     * :download:`AlarmState.avsc </../../src/jaws_libp/avro/schemas/AlarmState.avsc>`
     * :download:`AlarmSystem.avsc </../../src/jaws_libp/avro/schemas/AlarmSystem.avsc>`
     * :download:`DisabledOverride.avsc </../../src/jaws_libp/avro/schemas/DisabledOverride.avsc>`
-    * :download:`EffectiveNotification.avsc </../../src/jaws_libp/avro/schemas/EffectiveNotification.avsc>`
     * :download:`EffectiveAlarm.avsc </../../src/jaws_libp/avro/schemas/EffectiveAlarm.avsc>`
+    * :download:`EffectiveNotification.avsc </../../src/jaws_libp/avro/schemas/EffectiveNotification.avsc>`
     * :download:`EffectiveRegistration.avsc </../../src/jaws_libp/avro/schemas/EffectiveRegistration.avsc>`
     * :download:`FilteredOverride.avsc </../../src/jaws_libp/avro/schemas/FilteredOverride.avsc>`
     * :download:`IntermediateMonolog.avsc </../../src/jaws_libp/avro/schemas/IntermediateMonolog.avsc>`
