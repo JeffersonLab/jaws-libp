@@ -1,10 +1,10 @@
-from jaws_libp.avro.serde import InstanceSerde
+from jaws_libp.avro.serde import AlarmSerde
 from jaws_libp.entities import UnionEncoding
 
 
-def test_instance_serde():
+def test_alarm_serde():
 
-    serde = InstanceSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
+    serde = AlarmSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
 
     expected_json = '{"action": "base", "location": ["INJ"], "managedby": null, "maskedby": null, "screencommand": "/", "source": {' \
                     '"org.jlab.jaws.entity.EPICSSource": {"pv": "channel1"}}}'
