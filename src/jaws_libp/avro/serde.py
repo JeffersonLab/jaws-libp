@@ -538,7 +538,7 @@ class InstanceSerde(RegistryAvroSerde):
         source = self._to_union(uniontype, uniondict)
 
         return {
-            "alarmclass": data.alarm_class,
+            "action": data.action,
             "source": source,
             "location": data.location,
             "maskedby": data.masked_by,
@@ -565,7 +565,7 @@ class InstanceSerde(RegistryAvroSerde):
         else:
             source = Source()
 
-        return AlarmInstance(data.get('alarmclass'),
+        return AlarmInstance(data.get('action'),
                              source,
                              data.get('location'),
                              data.get('maskedby'),
