@@ -8,12 +8,12 @@ from jaws_libp.scripts.client.set_instance import set_instance
 
 def test_simple_instance():
     alarm_name = "alarm1"
-    class_name = "TESTING_CLASS"
+    action_name = "TESTING_ACTION"
     location = ["LOCATION1"]
     source = Source()
     masked_by = None
     screen_command = None
-    instance = AlarmInstance(class_name, source, location, masked_by, screen_command)
+    instance = AlarmInstance(action_name, source, location, masked_by, screen_command)
 
     runner = CliRunner()
 
@@ -22,7 +22,7 @@ def test_simple_instance():
     try:
         # Set
         result = runner.invoke(set_instance, [alarm_name,
-                                              '--alarmclass', class_name,
+                                              '--action', action_name,
                                               '--location', location[0]])
         assert result.exit_code == 0
 
@@ -41,12 +41,12 @@ def test_simple_instance():
 
 def test_epics_instance():
     alarm_name = "alarm1"
-    class_name = "TESTING_CLASS"
+    action_name = "TESTING_ACTION"
     location = ["LOCATION1"]
     source = EPICSSource("channel1")
     masked_by = None
     screen_command = None
-    instance = AlarmInstance(class_name, source, location, masked_by, screen_command)
+    instance = AlarmInstance(action_name, source, location, masked_by, screen_command)
 
     runner = CliRunner()
 
@@ -56,7 +56,7 @@ def test_epics_instance():
         # Set
         result = runner.invoke(set_instance, [alarm_name,
                                               '--pv', source.pv,
-                                              '--alarmclass', class_name,
+                                              '--action', action_name,
                                               '--location', location[0]])
         assert result.exit_code == 0
 

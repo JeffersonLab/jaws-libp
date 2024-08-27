@@ -23,7 +23,7 @@ from ...entities import AlarmInstance, \
               help="Imports a file of key=value pairs (one per line) where the key is alarm name and value is JSON "
                    "encoded AVRO formatted per the alarm-instances-value schema")
 @click.option('--unset', is_flag=True, help="Remove the alarm")
-@click.option('--alarmclass', help="The alarm class")
+@click.option('--action', help="The alarm action (class of alarm)")
 @click.option('--pv', help="The name of the EPICS CA PV that directly powers this alarm")
 @click.option('--expression', help="The CALC expression used to generate this alarm")
 @click.option('--location', '-l', type=click.Choice([]), multiple=True,
@@ -32,7 +32,7 @@ from ...entities import AlarmInstance, \
 @click.option('--screencommand', help="The command to open the related control system screen")
 @click.option('--maskedby', help="The optional parent alarm that masks this one")
 @click.argument('name')
-def set_instance(file, unset, alarmclass, pv, expression, location,
+def set_instance(file, unset, action, pv, expression, location,
                  screencommand, maskedby, name) -> None:
     producer = InstanceProducer('set_instance.py')
 
@@ -51,10 +51,10 @@ def set_instance(file, unset, alarmclass, pv, expression, location,
             else:
                 source = Source()
 
-            if alarmclass is None:
-                alarmclass = "base"
+            if action is None:
+                action = "base"
 
-            value = AlarmInstance(alarmclass,
+            value = AlarmInstance(action,
                                   source,
                                   location,
                                   maskedby,
