@@ -16,7 +16,7 @@ from confluent_kafka.schema_registry import SchemaRegistryClient
 from psutil import Process
 
 from .avro.serde import CategorySerde, LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
-    StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ActionSerde, ActivationSerde, InstanceSerde
+    StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ActionSerde, ActivationSerde, AlarmSerde
 from .entities import UnionEncoding
 from .eventsource import EventSourceListener, EventSourceTable
 from .scripts import DEFAULT_BOOTSTRAP_SERVERS
@@ -469,10 +469,10 @@ class InstanceConsumer(JAWSConsumer):
         """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = InstanceSerde(schema_registry_client, UnionEncoding.DICT_WITH_TYPE)
+        value_serde = AlarmSerde(schema_registry_client, UnionEncoding.DICT_WITH_TYPE)
 
         config = {
-            'topic': 'alarm-instances',
+            'topic': 'alarms',
             'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
@@ -643,9 +643,9 @@ class InstanceProducer(JAWSProducer):
         """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = InstanceSerde(schema_registry_client)
+        value_serde = AlarmSerde(schema_registry_client)
 
-        super().__init__('alarm-instances', client_name, key_serde, value_serde)
+        super().__init__('alarms', client_name, key_serde, value_serde)
 
 
 class LocationProducer(JAWSProducer):

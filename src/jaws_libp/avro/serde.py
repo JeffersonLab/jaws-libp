@@ -14,7 +14,7 @@ from confluent_kafka.serialization import StringSerializer, StringDeserializer, 
     SerializationContext
 
 from ..entities import AlarmCategory, AlarmLocation, AlarmPriority, ChannelErrorActivation, NoActivation, \
-    Source, AlarmInstance, AlarmActivationUnion, Activation, \
+    Source, Alarm, AlarmActivationUnion, Activation, \
     EPICSActivation, NoteActivation, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
     OnDelayedOverride, OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, \
     ShelvedReason, EPICSSEVR, EPICSSTAT, UnionEncoding, CALCSource, EPICSSource, AlarmAction, \
@@ -495,32 +495,32 @@ class ActivationSerde(RegistryAvroSerde):
         return AlarmActivationUnion(obj)
 
 
-class InstanceSerde(RegistryAvroSerde):
+class AlarmSerde(RegistryAvroSerde):
     """
-        Provides AlarmInstance serde utilities
+        Provides Alarm serde utilities
     """
 
     def __init__(self, schema_registry_client: SchemaRegistryClient,
                  union_encoding: UnionEncoding = UnionEncoding.TUPLE, avro_conf: Dict = None):
         """
-            Create a new InstanceSerde.
+            Create a new AlarmSerde.
 
             :param schema_registry_client: The SchemaRegistryClient
             :param union_encoding: The union encoding to use
             :param avro_conf: configuration for avro serde
         """
-        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmInstance.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/Alarm.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
 
         super().__init__(schema_registry_client, schema, union_encoding, avro_conf)
 
-    def to_dict(self, data: AlarmInstance) -> Dict[str, Union[str, Dict[str, Any]]]:
+    def to_dict(self, data: Alarm) -> Dict[str, Union[str, Dict[str, Any]]]:
         """
-            Converts an AlarmInstance to a dict.
+            Converts an Alarm to a dict.
 
-            :param data: The AlarmInstance
+            :param data: The Alarm
             :return: A dict
         """
         if isinstance(data.source, Source):
@@ -546,14 +546,14 @@ class InstanceSerde(RegistryAvroSerde):
             "screencommand": data.screen_command
         }
 
-    def from_dict(self, data: Dict[str, Union[str, Any]]) -> AlarmInstance:
+    def from_dict(self, data: Dict[str, Union[str, Any]]) -> Alarm:
         """
-            Converts a dict to an AlarmInstance.
+            Converts a dict to an Alarm.
 
             Note: UnionEncoding.POSSIBLY_AMBIGUOUS_DICT is not supported.
 
             :param data: The dict
-            :return: The AlarmInstance
+            :return: The Alarm
         """
         unionobj = data['source']
 
@@ -566,7 +566,7 @@ class InstanceSerde(RegistryAvroSerde):
         else:
             source = Source()
 
-        return AlarmInstance(data.get('action'),
+        return Alarm(data.get('action'),
                              source,
                              data.get('location'),
                              data.get('managedby'),
@@ -708,18 +708,18 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
             :param avro_conf: configuration for avro serde
         """
         self._action_serde = ActionSerde(schema_registry_client)
-        self._instance_serde = InstanceSerde(schema_registry_client)
+        self._instance_serde = AlarmSerde(schema_registry_client)
 
         action_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmAction", "alarm-actions-value", 1)
-        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmInstance",
-                                                  "alarm-instances-value", 1)
+        registration_schema_ref = SchemaReference("org.jlab.jaws.entity.Alarm",
+                                                  "alarm-value", 1)
 
         references = [action_schema_ref, registration_schema_ref]
 
         action_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmAction.avsc")
         action_schema_str = action_bytes.decode('utf-8')
 
-        instance_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmInstance.avsc")
+        instance_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/Alarm.avsc")
         instance_schema_str = instance_bytes.decode('utf-8')
 
         named_schemas = {}

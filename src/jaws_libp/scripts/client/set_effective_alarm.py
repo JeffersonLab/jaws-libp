@@ -14,7 +14,7 @@ from ...clients import EffectiveAlarmProducer
 from ...entities import EffectiveAlarm, AlarmState, AlarmOverrideSet, \
     OverriddenAlarmType, EffectiveRegistration, EffectiveNotification, \
     DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, OnDelayedOverride, OffDelayedOverride, \
-    ShelvedOverride, ShelvedReason, Source, AlarmInstance
+    ShelvedOverride, ShelvedReason, Source, Alarm
 
 
 # pylint: disable=duplicate-code
@@ -43,12 +43,12 @@ def __get_overrides(override):
 
 
 def __get_instance():
-    return AlarmInstance("base",
-                         Source(),
-                         ["INJ"],
-                         None,
-                         "alarm1",
-                         "command1")
+    return Alarm("base",
+                 Source(),
+                 ["INJ"],
+                 None,
+                 "alarm1",
+                 "command1")
 
 
 # pylint: disable=duplicate-code,missing-function-docstring,no-value-for-parameter

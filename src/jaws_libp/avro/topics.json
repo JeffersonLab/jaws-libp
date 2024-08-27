@@ -2,7 +2,7 @@
   "alarm-activations",
   "alarm-categories",
   "alarm-actions",
-  "alarm-instances",
+  "alarms",
   "alarm-locations",
   "alarm-overrides",
   "intermediate-registration",

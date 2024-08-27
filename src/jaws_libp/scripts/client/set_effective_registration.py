@@ -10,17 +10,17 @@
 import click
 from ...clients import EffectiveRegistrationProducer
 from ...entities import EffectiveRegistration, \
-    AlarmInstance, Source
+    Alarm, Source
 
 
 # pylint: disable=duplicate-code
 def __get_instance():
-    return AlarmInstance("base",
-                         Source(),
-                         ["INJ"],
-                         None,
-                         "alarm1",
-                         "command1")
+    return Alarm("base",
+                 Source(),
+                 ["INJ"],
+                 None,
+                 "alarm1",
+                 "command1")
 
 
 # pylint: disable=missing-function-docstring,no-value-for-parameter
@@ -35,10 +35,10 @@ def set_effective_registration(unset, name):
     if unset:
         value = None
     else:
-        alarm_class = None
-        alarm_instance = __get_instance()
+        action = None
+        alarm = __get_instance()
 
-        value = EffectiveRegistration(alarm_class, alarm_instance)
+        value = EffectiveRegistration(action, alarm)
 
     producer.send(key, value)
 

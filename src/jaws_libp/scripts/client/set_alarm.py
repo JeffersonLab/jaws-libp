@@ -5,7 +5,7 @@
 
     **Note**: bulk imports with ``--file`` expect alarm instance records formatted in
     `AVRO JSON Encoding <https://avro.apache.org/docs/current/spec.html#json_encoding>`_.
-    See `Example file <https://github.com/JeffersonLab/jaws/blob/main/examples/data/instances>`_.
+    See `Example file <https://github.com/JeffersonLab/jaws/blob/main/examples/data/alarms>`_.
 """
 
 import click
@@ -13,7 +13,7 @@ from click import Choice
 
 from ...clients import InstanceProducer
 from ...console import LocationConsoleConsumer
-from ...entities import AlarmInstance, \
+from ...entities import Alarm, \
     Source, EPICSSource, CALCSource
 
 
@@ -21,7 +21,7 @@ from ...entities import AlarmInstance, \
 @click.command()
 @click.option('--file', is_flag=True,
               help="Imports a file of key=value pairs (one per line) where the key is alarm name and value is JSON "
-                   "encoded AVRO formatted per the alarm-instances-value schema")
+                   "encoded AVRO formatted per the alarm-value schema")
 @click.option('--unset', is_flag=True, help="Remove the alarm")
 @click.option('--action', help="The alarm action (class of alarm)")
 @click.option('--pv', help="The name of the EPICS CA PV that directly powers this alarm")
@@ -33,9 +33,9 @@ from ...entities import AlarmInstance, \
 @click.option('--managedby', help="Whom manages this alarm (optional)")
 @click.option('--maskedby', help="The optional parent alarm that masks this one")
 @click.argument('name')
-def set_instance(file, unset, action, pv, expression, location,
+def set_alarm(file, unset, action, pv, expression, location,
                  screencommand, managedby, maskedby, name) -> None:
-    producer = InstanceProducer('set_instance.py')
+    producer = InstanceProducer('set_alarm.py')
 
     key = name
 
@@ -55,23 +55,23 @@ def set_instance(file, unset, action, pv, expression, location,
             if action is None:
                 action = "base"
 
-            value = AlarmInstance(action,
-                                  source,
-                                  location,
-                                  managedby,
-                                  maskedby,
-                                  screencommand)
+            value = Alarm(action,
+                          source,
+                          location,
+                          managedby,
+                          maskedby,
+                          screencommand)
 
         producer.send(key, value)
 
 
 def click_main() -> None:
-    consumer = LocationConsoleConsumer('set_instance.py')
+    consumer = LocationConsoleConsumer('set_alarm.py')
     locations = consumer.get_keys_then_done()
 
-    set_instance.params[5].type = Choice(locations)
+    set_alarm.params[5].type = Choice(locations)
 
-    set_instance()
+    set_alarm()
 
 
 if __name__ == "__main__":

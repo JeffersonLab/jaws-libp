@@ -2,8 +2,8 @@ from click import Choice
 from click.testing import CliRunner
 from jaws_libp.avro.serde import InstanceSerde
 from jaws_libp.entities import AlarmInstance, Source, UnionEncoding, EPICSSource
-from jaws_libp.scripts.client.list_instances import list_instances
-from jaws_libp.scripts.client.set_instance import set_instance
+from jaws_libp.scripts.client.list_alarms import list_instances
+from jaws_libp.scripts.client.set_alarm import set_instance
 
 
 def test_simple_instance():
