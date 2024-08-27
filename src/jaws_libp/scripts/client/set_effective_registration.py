@@ -18,6 +18,7 @@ def __get_instance():
     return AlarmInstance("base",
                          Source(),
                          ["INJ"],
+                         None,
                          "alarm1",
                          "command1")
 
