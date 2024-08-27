@@ -21,7 +21,7 @@ from ...entities import Alarm, \
 @click.command()
 @click.option('--file', is_flag=True,
               help="Imports a file of key=value pairs (one per line) where the key is alarm name and value is JSON "
-                   "encoded AVRO formatted per the alarm-value schema")
+                   "encoded AVRO formatted per the alarms-value schema")
 @click.option('--unset', is_flag=True, help="Remove the alarm")
 @click.option('--action', help="The alarm action (class of alarm)")
 @click.option('--pv', help="The name of the EPICS CA PV that directly powers this alarm")

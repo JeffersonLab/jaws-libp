@@ -712,7 +712,7 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
 
         action_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmAction", "alarm-actions-value", 1)
         alarm_schema_ref = SchemaReference("org.jlab.jaws.entity.Alarm",
-                                                  "alarm-value", 1)
+                                                  "alarms-value", 1)
 
         references = [action_schema_ref, alarm_schema_ref]
 
