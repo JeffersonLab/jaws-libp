@@ -17,7 +17,7 @@ from ..entities import AlarmCategory, AlarmLocation, AlarmPriority, ChannelError
     Source, AlarmInstance, AlarmActivationUnion, Activation, \
     EPICSActivation, NoteActivation, DisabledOverride, FilteredOverride, LatchedOverride, MaskedOverride, \
     OnDelayedOverride, OffDelayedOverride, ShelvedOverride, AlarmOverrideUnion, OverriddenAlarmType, AlarmOverrideKey, \
-    ShelvedReason, EPICSSEVR, EPICSSTAT, UnionEncoding, CALCSource, EPICSSource, AlarmClass, \
+    ShelvedReason, EPICSSEVR, EPICSSTAT, UnionEncoding, CALCSource, EPICSSource, AlarmAction, \
     EffectiveRegistration, EffectiveNotification, EffectiveAlarm, IntermediateMonolog, AlarmState, AlarmOverrideSet, \
     ProcessorTransitions
 
@@ -271,30 +271,30 @@ class RegistryAvroWithReferencesSerde(RegistryAvroSerde):
                                 True)
 
 
-class ClassSerde(RegistryAvroSerde):
+class ActionSerde(RegistryAvroSerde):
     """
-        Provides AlarmClass serde utilities
+        Provides AlarmAction serde utilities
     """
 
     def __init__(self, schema_registry_client: SchemaRegistryClient, avro_conf: Dict = None):
         """
-            Create a new ClassSerde.
+            Create a new ActionSerde.
 
             :param schema_registry_client: The SchemaRegistryClient
             :param avro_conf: configuration for avro serde
         """
-        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmClass.avsc")
+        schema_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmAction.avsc")
         schema_str = schema_bytes.decode('utf-8')
 
         schema = Schema(schema_str, "AVRO", [])
 
         super().__init__(schema_registry_client, schema, UnionEncoding.DICT_WITH_TYPE, avro_conf)
 
-    def to_dict(self, data: AlarmClass) -> Dict[str, str]:
+    def to_dict(self, data: AlarmAction) -> Dict[str, str]:
         """
-            Converts an AlarmClass to a dict.
+            Converts an AlarmAction to a dict.
 
-            :param data: The AlarmClass
+            :param data: The AlarmAction
             :return: A dict
         """
 
@@ -309,16 +309,16 @@ class ClassSerde(RegistryAvroSerde):
             "offdelayseconds": data.off_delay_seconds
         }
 
-    def from_dict(self, data: Dict[str, Any]) -> AlarmClass:
+    def from_dict(self, data: Dict[str, Any]) -> AlarmAction:
         """
-            Converts a dict to an AlarmClass.
+            Converts a dict to an AlarmAction.
 
             Note: Generally the Dict values are Strings, but the priority field may be a Tuple or Enum.
 
             :param data: The dict
-            :return: The AlarmClass
+            :return: The AlarmAction
             """
-        return AlarmClass(data.get('category'),
+        return AlarmAction(data.get('category'),
                           _unwrap_enum(data.get('priority'), AlarmPriority),
                           data.get('rationale'),
                           data.get('correctiveaction'),
@@ -705,24 +705,24 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
             :param schema_registry_client: The SchemaRegistryClient
             :param avro_conf: configuration for avro serde
         """
-        self._class_serde = ClassSerde(schema_registry_client)
+        self._action_serde = ActionSerde(schema_registry_client)
         self._instance_serde = InstanceSerde(schema_registry_client)
 
-        classes_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmClass", "alarm-classes-value", 1)
+        action_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmAction", "alarm-actions-value", 1)
         registration_schema_ref = SchemaReference("org.jlab.jaws.entity.AlarmInstance",
                                                   "alarm-instances-value", 1)
 
-        references = [classes_schema_ref, registration_schema_ref]
+        references = [action_schema_ref, registration_schema_ref]
 
-        classes_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmClass.avsc")
-        classes_schema_str = classes_bytes.decode('utf-8')
+        action_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmAction.avsc")
+        action_schema_str = action_bytes.decode('utf-8')
 
         instance_bytes = pkgutil.get_data("jaws_libp", "avro/schemas/AlarmInstance.avsc")
         instance_schema_str = instance_bytes.decode('utf-8')
 
         named_schemas = {}
 
-        ref_dict = json.loads(classes_schema_str)
+        ref_dict = json.loads(action_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
         ref_dict = json.loads(instance_schema_str)
         fastavro.parse_schema(ref_dict, named_schemas=named_schemas)
@@ -743,7 +743,7 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
             :return: A dict
         """
         return {
-            "class": self._class_serde.to_dict(data.alarm_class) if data.alarm_class is not None else None,
+            "action": self._action_serde.to_dict(data.action) if data.action is not None else None,
             "instance": self._instance_serde.to_dict(data.instance) if data.instance is not None else None
         }
 
@@ -755,7 +755,7 @@ class EffectiveRegistrationSerde(RegistryAvroWithReferencesSerde):
             :return: The EffectiveRegistration
         """
         return EffectiveRegistration(
-            self._class_serde.from_dict(data['class'][1]) if data.get('class') is not None else None,
+            self._action_serde.from_dict(data['action'][1]) if data.get('action') is not None else None,
             self._instance_serde.from_dict(data['instance'][1])
             if data.get('instance') is not None else None)
 

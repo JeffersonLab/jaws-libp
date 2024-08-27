@@ -1,7 +1,7 @@
 [
   "alarm-activations",
   "alarm-categories",
-  "alarm-classes",
+  "alarm-actions",
   "alarm-instances",
   "alarm-locations",
   "alarm-overrides",

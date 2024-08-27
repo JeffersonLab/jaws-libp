@@ -2,8 +2,8 @@ from click import Choice
 from click.testing import CliRunner
 from jaws_libp.avro.serde import ClassSerde
 from jaws_libp.entities import AlarmClass, AlarmPriority
-from jaws_libp.scripts.client.list_classes import list_classes
-from jaws_libp.scripts.client.set_class import set_class
+from jaws_libp.scripts.client.list_actions import list_classes
+from jaws_libp.scripts.client.set_action import set_class
 
 
 def test_class():

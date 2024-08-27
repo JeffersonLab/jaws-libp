@@ -16,7 +16,7 @@ from confluent_kafka.schema_registry import SchemaRegistryClient
 from psutil import Process
 
 from .avro.serde import CategorySerde, LocationSerde, OverrideKeySerde, OverrideSerde, EffectiveRegistrationSerde, \
-    StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ClassSerde, ActivationSerde, InstanceSerde
+    StringSerde, Serde, EffectiveAlarmSerde, EffectiveNotificationSerde, ActionSerde, ActivationSerde, InstanceSerde
 from .entities import UnionEncoding
 from .eventsource import EventSourceListener, EventSourceTable
 from .scripts import DEFAULT_BOOTSTRAP_SERVERS
@@ -361,9 +361,9 @@ class CategoryConsumer(JAWSConsumer):
         super().__init__(config)
 
 
-class ClassConsumer(JAWSConsumer):
+class ActionConsumer(JAWSConsumer):
     """
-        Consumer for JAWS Class messages.
+        Consumer for JAWS Action (class of alarm) messages.
     """
     def __init__(self, client_name: str):
         """
@@ -373,10 +373,10 @@ class ClassConsumer(JAWSConsumer):
         """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = ClassSerde(schema_registry_client)
+        value_serde = ActionSerde(schema_registry_client)
 
         config = {
-            'topic': 'alarm-classes',
+            'topic': 'alarm-actions',
             'client.name': client_name,
             'key.serde': key_serde,
             'value.serde': value_serde
@@ -563,9 +563,9 @@ class CategoryProducer(JAWSProducer):
         super().__init__('alarm-categories', client_name, key_serde, value_serde)
 
 
-class ClassProducer(JAWSProducer):
+class ActionProducer(JAWSProducer):
     """
-        Producer for JAWS Class messages.
+        Producer for JAWS Action (class of alarm) messages.
     """
     def __init__(self, client_name: str):
         """
@@ -575,9 +575,9 @@ class ClassProducer(JAWSProducer):
         """
         schema_registry_client = get_registry_client()
         key_serde = StringSerde()
-        value_serde = ClassSerde(schema_registry_client)
+        value_serde = ActionSerde(schema_registry_client)
 
-        super().__init__('alarm-classes', client_name, key_serde, value_serde)
+        super().__init__('alarm-actions', client_name, key_serde, value_serde)
 
 
 class EffectiveNotificationProducer(JAWSProducer):

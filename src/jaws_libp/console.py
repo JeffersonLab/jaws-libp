@@ -11,7 +11,7 @@ from confluent_kafka import Message
 from tabulate import tabulate
 from .clients import JAWSConsumer, CategoryConsumer, ActivationConsumer, LocationConsumer, OverrideConsumer, \
     InstanceConsumer, EffectiveRegistrationConsumer, EffectiveAlarmConsumer, EffectiveNotificationConsumer, \
-    ClassConsumer
+    ActionConsumer
 from .eventsource import EventSourceListener
 
 
@@ -190,7 +190,7 @@ class CategoryConsoleConsumer(ConsoleConsumer):
         super().__init__(consumer, ["Category Name", "Team"], lambda msg: [msg.key(), msg.value().team])
 
 
-class ClassConsoleConsumer(ConsoleConsumer):
+class ActionConsoleConsumer(ConsoleConsumer):
     """
         ConsoleConsumer for JAWS Class messages.
     """
@@ -200,9 +200,9 @@ class ClassConsoleConsumer(ConsoleConsumer):
 
             :param client_name: The name of the client application
         """
-        consumer = ClassConsumer(client_name)
+        consumer = ActionConsumer(client_name)
 
-        super().__init__(consumer, ["Class Name", "Category", "Priority", "Rationale", "Corrective Action",
+        super().__init__(consumer, ["Action Name", "Category", "Priority", "Rationale", "Corrective Action",
                                    "Latchable", "Filterable", "On Delay", "Off Delay"],
                          lambda msg: [msg.key(),
                                       msg.value().category,
