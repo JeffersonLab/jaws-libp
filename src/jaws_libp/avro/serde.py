@@ -541,6 +541,7 @@ class InstanceSerde(RegistryAvroSerde):
             "action": data.action,
             "source": source,
             "location": data.location,
+            "managedby": data.managed_by,
             "maskedby": data.masked_by,
             "screencommand": data.screen_command
         }
@@ -568,6 +569,7 @@ class InstanceSerde(RegistryAvroSerde):
         return AlarmInstance(data.get('action'),
                              source,
                              data.get('location'),
+                             data.get('managedby'),
                              data.get('maskedby'),
                              data.get('screencommand'))
 

@@ -6,7 +6,7 @@ def test_instance_serde():
 
     serde = InstanceSerde(None, union_encoding=UnionEncoding.DICT_WITH_TYPE)
 
-    expected_json = '{"action": "base", "location": ["INJ"], "maskedby": null, "screencommand": "/", "source": {' \
+    expected_json = '{"action": "base", "location": ["INJ"], "managedby": null, "maskedby": null, "screencommand": "/", "source": {' \
                     '"org.jlab.jaws.entity.EPICSSource": {"pv": "channel1"}}}'
 
     entity = serde.from_json(expected_json)

@@ -283,11 +283,12 @@ class InstanceConsoleConsumer(ConsoleConsumer):
         """
         consumer = InstanceConsumer(client_name)
 
-        super().__init__(consumer, ["Alarm Name", "Class", "Source", "Location", "Masked By", "Screen Command"],
+        super().__init__(consumer, ["Alarm Name", "Action", "Source", "Location", "Managed By", "Masked By", "Screen Command"],
                          lambda msg: [msg.key(),
-                                      msg.value().alarm_class,
+                                      msg.value().action,
                                       msg.value().source,
                                       msg.value().location,
+                                      msg.value().managed_by,
                                       msg.value().masked_by,
                                       msg.value().screen_command])
 
